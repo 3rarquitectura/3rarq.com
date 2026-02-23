@@ -144,16 +144,16 @@
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-xs font-bold uppercase text-gray-400 mb-2">Nombre</label>
-                            <input type="text" placeholder="Tu nombre" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-brandGreen outline-none">
+                            <input type="text" name="nombre" placeholder="Tu nombre" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-brandGreen outline-none">
                         </div>
                         <div>
                             <label class="block text-xs font-bold uppercase text-gray-400 mb-2">Email</label>
-                            <input type="email" placeholder="hola@empresa.com" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-brandGreen outline-none">
+                            <input type="email" name="email" placeholder="hola@empresa.com" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-brandGreen outline-none">
                         </div>
                     </div>
                     <div>
                         <label class="block text-xs font-bold uppercase text-gray-400 mb-2">Mensaje</label>
-                        <textarea rows="4" placeholder="Cuéntanos sobre tu proyecto (medidas, presupuesto estimado...)" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-brandGreen outline-none"></textarea>
+                       <textarea name="mensaje" rows="4" placeholder="Cuéntanos sobre tu proyecto (medidas, presupuesto estimado...)" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-brandGreen outline-none"></textarea>
                     </div>
                     <button type="submit" class="w-full bg-brandGreen text-brandDark font-bold py-4 rounded-xl hover:scale-[1.02] transition">ENVIAR MENSAJE</button>
                 </form>
@@ -184,4 +184,5 @@
     </script>
 </body>
 </html>
+
 
