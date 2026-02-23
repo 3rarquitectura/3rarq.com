@@ -3,193 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3R Arquitectura | Diseño, Reformas y Consultoría BIM</title>
+    <title>3R. Arquitectura | Diseño & BIM</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-    
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: {
-                        brandGreen: '#8daf14',
-                        brandDark: '#1a1a1a',
-                        brandGray: '#f9fafb'
-                    },
-                    fontFamily: {
-                        display: ['Outfit', 'sans-serif'],
-                        body: ['Inter', 'sans-serif']
-                    }
+                    colors: { brandGreen: '#8daf14', brandDark: '#1a1a1a' },
+                    fontFamily: { display: ['Outfit', 'sans-serif'], body: ['Inter', 'sans-serif'] }
                 }
             }
         }
     </script>
     <style>
-        .glass-card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            transition: all 0.3s ease;
-        }
-        .reveal { opacity: 0; transform: translateY(20px); transition: all 0.6s ease-out; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .reveal { opacity: 0; transform: translateY(20px); transition: all 0.8s ease-out; }
         .reveal.active { opacity: 1; transform: translateY(0); }
-        .bg-pattern { background-image: radial-gradient(#8daf14 0.5px, transparent 0.5px); background-size: 20px 20px; }
     </style>
 </head>
-<body class="font-body text-brandDark bg-white">
+<body class="font-body text-brandDark bg-white overflow-x-hidden">
 
-    <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-100">
+    <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-brandDark rounded-lg flex items-center justify-center overflow-hidden">
-                    <span class="text-brandGreen font-display font-bold text-xl">3R</span>
-                </div>
-                <div class="flex flex-col">
-                    <span class="font-display font-bold text-lg leading-tight tracking-tighter">3R. ARQUITECTURA</span>
-                    <span class="text-[10px] uppercase tracking-[0.2em] text-brandGreen font-bold">Design & BIM Expert</span>
-                </div>
+                <div class="w-10 h-10 bg-brandDark rounded flex items-center justify-center font-display font-bold text-brandGreen">3R</div>
+                <span class="font-display font-bold text-lg tracking-tighter">3R. ARQUITECTURA</span>
             </div>
-            <div class="hidden md:flex items-center gap-8 font-medium text-xs uppercase tracking-widest">
+            <div class="hidden md:flex items-center gap-8 text-xs font-bold uppercase tracking-widest">
                 <a href="#inicio" class="hover:text-brandGreen transition">Inicio</a>
                 <a href="#servicios" class="hover:text-brandGreen transition">Servicios</a>
                 <a href="#proyectos" class="hover:text-brandGreen transition">Proyectos</a>
-                <a href="#guia" class="text-brandGreen font-bold border-b-2 border-brandGreen">Mi Guía Hotmart</a>
-                <a href="https://portfolio.3rarq.com" target="_blank" class="hover:text-brandGreen transition italic">Portfolio ↗</a>
+                <a href="#guia" class="hover:text-brandGreen transition italic">Mi Guía</a>
+                <a href="https://wa.me/59896699876" target="_blank" class="bg-brandDark text-white px-5 py-2 rounded-full hover:bg-brandGreen transition">Contacto</a>
             </div>
         </div>
     </nav>
 
-    <section id="inicio" class="pt-40 pb-20 px-6 bg-pattern">
-        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+    <section id="inicio" class="pt-40 pb-20 px-6">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
             <div class="reveal active">
-                <span class="bg-brandGreen/10 text-brandGreen px-4 py-1 rounded-full font-bold text-xs uppercase tracking-widest">Estudio de Arquitectura // 2026</span>
-                <h1 class="font-display text-5xl md:text-7xl font-bold leading-tight mt-6">Tu visión con <span class="text-brandGreen">precisión</span> digital.</h1>
-                <p class="text-gray-600 text-lg mt-6 leading-relaxed">
-                    Más de 10 años transformando espacios a través del diseño y la construcción. Expertos en metodología BIM y reformas que generan bienestar.
+                <h1 class="font-display text-5xl md:text-7xl font-bold leading-[1] tracking-tighter mb-8">
+                    Tu visión con <br><span class="text-brandGreen">precisión digital.</span>
+                </h1>
+                <p class="text-lg text-gray-600 leading-relaxed mb-10">
+                    <strong>3R. Arquitectura</strong> es un estudio que integra diseño arquitectónico, reformas y asesoría BIM con enfoque práctico y contemporáneo. Creamos espacios funcionales, luminosos y con identidad, combinando criterio técnico, sensibilidad estética y gestión eficiente. Acompañamos a particulares, estudios y empresas desde la idea hasta la obra y la documentación, optimizando tiempos, costos y decisiones para lograr resultados claros, habitables y durables. Con foco en soluciones simples y bien ejecutadas.
                 </p>
-                <div class="mt-10 flex flex-wrap gap-4">
-                    <a href="https://wa.me/TU_NUMERO" class="bg-brandDark text-white px-8 py-4 rounded-full font-bold hover:bg-brandGreen transition shadow-xl">Contactar ahora</a>
+                <div class="flex flex-wrap gap-4">
+                    <a href="https://wa.me/59896699876" target="_blank" class="bg-brandDark text-white px-8 py-4 rounded-full font-bold hover:bg-brandGreen transition">Contactar ahora</a>
                     <a href="#proyectos" class="border-2 border-brandDark px-8 py-4 rounded-full font-bold hover:bg-brandDark hover:text-white transition">Ver obras</a>
                 </div>
             </div>
-            <div class="relative reveal active md:block">
-                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1000" alt="Arquitectura Innovadora" class="rounded-3xl shadow-2xl">
+            <div class="reveal active relative">
+                <div class="aspect-[4/5] bg-gray-100 rounded-[2rem] overflow-hidden shadow-2xl relative">
+                    <img src="tu-imagen-edificios.jpg" class="w-full h-full object-cover">
+                    <div class="absolute top-8 left-8 w-16 h-16 bg-brandDark rounded-xl flex items-center justify-center font-display font-bold text-2xl text-brandGreen shadow-xl">3R</div>
+                </div>
             </div>
         </div>
     </section>
 
-    <section id="guia" class="py-20 px-6 bg-brandDark text-white overflow-hidden">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
-            <div class="md:w-1/2">
+    <section id="servicios" class="py-24 px-6 bg-gray-50">
+        <div class="max-w-7xl mx-auto text-center mb-16">
+            <h2 class="font-display text-4xl font-bold">Servicios</h2>
+        </div>
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:border-brandGreen transition">
+                <h3 class="font-display font-bold text-xl mb-4">Diseño arquitectónico</h3>
+                <p class="text-gray-500 text-sm">Creamos proyectos residenciales y comerciales únicos, adaptados a las necesidades y visiones de nuestros clientes.</p>
+            </div>
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:border-brandGreen transition">
+                <h3 class="font-display font-bold text-xl mb-4">Consultoría y Metodología BIM</h3>
+                <p class="text-gray-500 text-sm">Ofrecemos servicios de implementación BIM, modelado 3D, documentación técnica y Scan to BIM, optimizando los procesos constructivos y de diseño.</p>
+            </div>
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:border-brandGreen transition">
+                <h3 class="font-display font-bold text-xl mb-4">Asesoría y Reformas</h3>
+                <p class="text-gray-500 text-sm">Te acompañamos en cada paso de tu reforma, brindando asesoría experta y una planificación detallada.</p>
+            </div>
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:border-brandGreen transition">
+                <h3 class="font-display font-bold text-xl mb-4">Montaje de fachadas metálicas</h3>
+                <p class="text-gray-500 text-sm">Somos especialistas en el diseño e instalación de revestimientos metálicos para fachadas, aportando funcionalidad y estética a tus proyectos.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="guia" class="py-24 px-6 bg-brandDark text-white rounded-[3rem] mx-4 my-10 overflow-hidden">
+        <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+            <div>
                 <h2 class="font-display text-4xl font-bold mb-6 italic text-brandGreen">¿Planeas una reforma?</h2>
-                <p class="text-xl mb-8 text-gray-300 italic">"He volcado mis 10 años de experiencia en una guía práctica para que transformes tu hogar sin estrés ni errores costosos."</p>
+                <p class="text-lg italic text-gray-400 mb-8">"He volcado mis 10 años de experiencia en una guía práctica para que transformes tu hogar sin estrés ni errores costosos."</p>
                 <ul class="space-y-4 mb-10">
-                    <li class="flex items-center gap-3"><span class="text-brandGreen">✔</span> Hoja de ruta clara para tu obra.</li>
-                    <li class="flex items-center gap-3"><span class="text-brandGreen">✔</span> Cómo elegir materiales y presupuestos.</li>
-                    <li class="flex items-center gap-3"><span class="text-brandGreen">✔</span> Tips exclusivos de diseño arquitectónico.</li>
+                    <li class="flex items-center gap-3"><span class="text-brandGreen">✓</span> Hoja de ruta clara para tu obra.</li>
+                    <li class="flex items-center gap-3"><span class="text-brandGreen">✓</span> Cómo elegir materiales y presupuestos.</li>
+                    <li class="flex items-center gap-3"><span class="text-brandGreen">✓</span> Tips exclusivos de diseño arquitectónico.</li>
                 </ul>
-                <a href="TU_LINK_DE_HOTMART" target="_blank" class="inline-block bg-brandGreen text-brandDark px-10 py-5 rounded-full font-bold text-lg hover:scale-105 transition shadow-2xl shadow-brandGreen/20">
-                    Descargar Guía en Hotmart
-                </a>
+                <a href="LINK_A_TU_GUIA" target="_blank" class="bg-brandGreen text-brandDark px-10 py-5 rounded-full font-bold text-lg hover:scale-105 transition inline-block">Descargar Guía de Reformas</a>
             </div>
-            <div class="md:w-1/2 glass-card p-4 rounded-3xl border-brandGreen/20">
-                <div class="bg-gray-800 h-80 rounded-2xl flex items-center justify-center">
-                    <p class="text-brandGreen font-bold italic text-2xl">[ PORTADA DE TU GUÍA ]</p>
+            <div class="flex justify-center">
+                <div class="w-64 h-80 bg-white/10 rounded-2xl border border-white/20 flex items-center justify-center p-8 text-center backdrop-blur-md">
+                    <p class="font-display font-bold text-brandGreen uppercase text-xl">[ PORTADA DE TU GUÍA ]</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="proyectos" class="py-24 px-6">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-12">
-                <div>
-                    <h2 class="font-display text-4xl font-bold">Proyectos Destacados</h2>
-                    <div class="w-20 h-1 bg-brandGreen mt-4"></div>
+    <section id="contacto" class="py-24 px-6">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16">
+            <div>
+                <h2 class="font-display text-5xl font-bold mb-8">Contacto</h2>
+                <div class="space-y-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-brandGreen">✉</div>
+                        <div>
+                            <p class="text-xs uppercase font-bold text-gray-400">Email</p>
+                            <p class="font-bold">hola@3rarq.com</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-brandGreen">📞</div>
+                        <div>
+                            <p class="text-xs uppercase font-bold text-gray-400">Teléfono</p>
+                            <p class="font-bold">+598 966 998 76</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-brandGreen">📍</div>
+                        <div>
+                            <p class="text-xs uppercase font-bold text-gray-400">Oficina</p>
+                            <p class="font-bold">Montevideo, Uruguay</p>
+                        </div>
+                    </div>
                 </div>
-                <a href="https://portfolio.3rarq.com" class="text-brandGreen font-bold hover:underline">Ver todo el portfolio ↗</a>
+                <div class="mt-12 flex gap-4">
+                    <a href="https://www.instagram.com/3r.arquitectura" target="_blank" class="text-gray-400 hover:text-brandGreen font-bold uppercase text-xs tracking-widest">Instagram</a>
+                    <a href="https://www.linkedin.com/company/3rarquitectura/" target="_blank" class="text-gray-400 hover:text-brandGreen font-bold uppercase text-xs tracking-widest">LinkedIn</a>
+                </div>
             </div>
-            
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="reveal active group">
-                    <div class="overflow-hidden rounded-2xl mb-4 h-64 bg-gray-100">
-                        <img src="https://images.unsplash.com/photo-1579758629938-03607ccdbaba?q=80&w=1000" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+            <div class="bg-brandDark p-10 rounded-[2.5rem] text-white">
+                <form action="TU_LINK_DE_FORMULARIO" method="POST" class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-gray-400 mb-2">Nombre</label>
+                            <input type="text" placeholder="Tu nombre" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-brandGreen outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-gray-400 mb-2">Email</label>
+                            <input type="email" placeholder="hola@empresa.com" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-brandGreen outline-none">
+                        </div>
                     </div>
-                    <h3 class="font-display font-bold text-xl">Pizzería Requeso</h3>
-                    <p class="text-gray-500 text-sm">Punta Carretas, Montevideo</p>
-                </div>
-                <div class="reveal active group" style="transition-delay: 100ms;">
-                    <div class="overflow-hidden rounded-2xl mb-4 h-64 bg-gray-100">
-                        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-gray-400 mb-2">Mensaje</label>
+                        <textarea rows="4" placeholder="Cuéntanos sobre tu proyecto (medidas, presupuesto estimado...)" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-brandGreen outline-none"></textarea>
                     </div>
-                    <h3 class="font-display font-bold text-xl">Oficina AG</h3>
-                    <p class="text-gray-500 text-sm">Ciudad Vieja, Montevideo</p>
-                </div>
-                <div class="reveal active group" style="transition-delay: 200ms;">
-                    <div class="overflow-hidden rounded-2xl mb-4 h-64 bg-gray-100">
-                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1000" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                    </div>
-                    <h3 class="font-display font-bold text-xl">Casa Sanabria</h3>
-                    <p class="text-gray-500 text-sm">Valencia, Venezuela</p>
-                </div>
+                    <button type="submit" class="w-full bg-brandGreen text-brandDark font-bold py-4 rounded-xl hover:scale-[1.02] transition">ENVIAR MENSAJE</button>
+                </form>
             </div>
         </div>
     </section>
 
-    <section id="servicios" class="py-20 bg-brandGray px-6">
-        <div class="max-w-4xl mx-auto text-center">
-            <h2 class="font-display text-4xl font-bold mb-16">Especialización Técnica</h2>
-            <div class="grid md:grid-cols-2 gap-12 text-left">
-                <div class="glass-card p-10 rounded-3xl border-l-4 border-brandGreen">
-                    <h3 class="font-display font-bold text-2xl mb-4">Metodología BIM</h3>
-                    <p class="text-gray-600 leading-relaxed">Implementamos modelos virtuales tridimensionales (Revit) para asegurar calidad, reducción de costos y una visualización clara antes de construir.</p>
-                </div>
-                <div class="glass-card p-10 rounded-3xl border-l-4 border-brandDark">
-                    <h3 class="font-display font-bold text-2xl mb-4">Montaje de Revestimientos</h3>
-                    <p class="text-gray-600 leading-relaxed">Instalación de revestimientos metálicos con precisión técnica y seguimiento profesional en obra.</p>
-                </div>
+    <footer class="bg-white border-t border-gray-100 py-12 px-6 text-center">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-brandDark rounded flex items-center justify-center font-display font-bold text-xs text-brandGreen">3R</div>
+                <span class="font-display font-bold text-sm">3R. ARQUITECTURA</span>
             </div>
-        </div>
-    </section>
-
-    <footer class="bg-brandDark text-white py-16 px-6">
-        <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-12 border-b border-white/10 pb-12">
-            <div>
-                <h3 class="font-display font-bold text-2xl mb-4">3R. ARQUITECTURA</h3>
-                <p class="text-gray-400">Acompañándote en la experiencia de transformar tus espacios.</p>
+            <div class="flex gap-8 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                <a href="https://wa.me/59896699876" target="_blank" class="hover:text-brandGreen">WhatsApp</a>
+                <a href="https://www.instagram.com/3r.arquitectura" target="_blank" class="hover:text-brandGreen">Instagram</a>
+                <a href="https://www.linkedin.com/company/3rarquitectura/" target="_blank" class="hover:text-brandGreen">LinkedIn</a>
             </div>
-            <div>
-                <h4 class="font-bold mb-4 uppercase text-xs tracking-widest text-brandGreen">Enlaces</h4>
-                <ul class="space-y-2 text-gray-400">
-                    <li><a href="https://portfolio.3rarq.com" class="hover:text-white transition">Portfolio</a></li>
-                    <li><a href="https://blog.3rarq.com" class="hover:text-white transition">Blog</a></li>
-                    <li><a href="#guia" class="hover:text-white transition">Guía de Reformas</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="font-bold mb-4 uppercase text-xs tracking-widest text-brandGreen">Contacto</h4>
-                <p class="text-gray-400">Montevideo, Uruguay</p>
-                <p class="text-gray-400">Escríbenos por WhatsApp para asesorías.</p>
-            </div>
-        </div>
-        <div class="max-w-7xl mx-auto pt-8 flex justify-between items-center text-xs text-gray-500 uppercase tracking-widest">
-            <p>© 2026 3R. Arquitectura</p>
-            <div class="flex gap-4">
-                <a href="#" class="hover:text-brandGreen">Instagram</a>
-                <a href="#" class="hover:text-brandGreen">LinkedIn</a>
-            </div>
+            <p class="text-gray-300 text-[10px] uppercase tracking-widest">© 3R. Arquitectura. Todos los derechos reservados.</p>
         </div>
     </footer>
 
     <script>
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
-            });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); });
+        });
+        document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
     </script>
 </body>
 </html>
