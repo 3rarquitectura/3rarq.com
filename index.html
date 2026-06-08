@@ -1,246 +1,1157 @@
-<!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+﻿<!DOCTYPE html>
+<html lang="es" class="no-js scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3R. Arquitectura | Diseño & BIM</title>
+    <title>3R. Arquitectura | Diseño, Reformas y BIM — Montevideo</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Antonio:ital,wght@0,400;0,700;1,400;1,700&family=Quicksand:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: { brandGreen: '#8daf14', brandDark: '#1a1a1a' },
-                    fontFamily: { display: ['Outfit', 'sans-serif'], body: ['Inter', 'sans-serif'] }
+                    fontFamily: {
+                        display: ['Antonio', 'sans-serif'],
+                        body:    ['Quicksand', 'sans-serif'],
+                        mono:    ['Montserrat', 'sans-serif']
+                    }
                 }
             }
         }
     </script>
     <style>
-        .reveal { opacity: 1; transform: none; }
-        .reveal.active { opacity: 1; transform: translateY(0); }
+        /* ── Motion tokens ─────────────────────────────────────────────────── */
+        :root {
+            --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-in-out:    cubic-bezier(0.4, 0, 0.2, 1);
+            --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);
+            --dur-micro:      180ms;
+            --dur-ui:         220ms;
+            --dur-reveal:     500ms;
+        }
+
+        /* ── Hero: entrada escalonada (fade-up + blur) ─────────────────────── */
+        @keyframes hero-stagger {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+                filter: blur(6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                filter: blur(0px);
+            }
+        }
+        .hs-1   { animation: hero-stagger 700ms var(--ease-out-expo)   0ms  both; }
+        .hs-2   { animation: hero-stagger 700ms var(--ease-out-expo) 220ms  both; }
+        .hs-3   { animation: hero-stagger 700ms var(--ease-out-expo) 400ms  both; }
+        .hs-4   { animation: hero-stagger 700ms var(--ease-out-expo) 580ms  both; }
+        .hs-img { animation: hero-stagger 800ms var(--ease-out-expo) 200ms  both; }
+
+        /* ── Fondo SVG técnico del hero ─────────────────────────────────────── */
+        #hero-bg-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: visible;
+        }
+        #hero-bg-svg [data-depth] { will-change: transform; }
+        @keyframes hb-float-a {
+            0%, 100% { transform: translateY(0px);  }
+            40%      { transform: translateY(-8px); }
+            70%      { transform: translateY(5px);  }
+        }
+        @keyframes hb-float-b {
+            0%, 100% { transform: translateY(0px);  }
+            35%      { transform: translateY(7px);  }
+            65%      { transform: translateY(-6px); }
+        }
+        @keyframes hb-float-c {
+            0%, 100% { transform: translateY(0px);   }
+            50%      { transform: translateY(-10px); }
+        }
+
+                /* ── Scroll reveal ──────────────────────────────────────────────────── */
+        .js .js-reveal {
+            opacity: 0;
+            transform: translateY(22px);
+            transition:
+                opacity   var(--dur-reveal) var(--ease-out-expo),
+                transform var(--dur-reveal) var(--ease-out-expo);
+            transition-delay: var(--delay, 0ms);
+        }
+        .js-reveal.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── Card hover lift ────────────────────────────────────────────────── */
+        .card-hover {
+            transition:
+                transform  var(--dur-micro) var(--ease-in-out),
+                box-shadow var(--dur-micro) var(--ease-in-out),
+                border-color var(--dur-ui) var(--ease-in-out);
+            will-change: transform;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.13);
+        }
+
+        /* ── Button press ───────────────────────────────────────────────────── */
+        .btn-press {
+            transition:
+                transform         var(--dur-micro) var(--ease-in-out),
+                background-color  var(--dur-ui)    var(--ease-in-out),
+                border-color      var(--dur-ui)    var(--ease-in-out),
+                color             var(--dur-ui)    var(--ease-in-out),
+                box-shadow        var(--dur-micro) var(--ease-in-out);
+        }
+        .btn-press:hover  { transform: translateY(-2px); }
+        .btn-press:active { transform: translateY(0) scale(0.97); transition-duration: 80ms; }
+
+        /* ── Floating action buttons ────────────────────────────────────────── */
+        .fab {
+            transition:
+                transform        var(--dur-micro) var(--ease-spring),
+                background-color var(--dur-ui)    var(--ease-in-out);
+            will-change: transform;
+        }
+        .fab:hover  { transform: translateY(-3px) scale(1.04); }
+        .fab:active { transform: scale(0.96); transition-duration: 80ms; }
+
+        /* ── Entrada de los FABs al cargar ──────────────────────────────────── */
+        @keyframes fab-in {
+            from { opacity: 0; transform: translateX(20px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        .fab-enter-1 { animation: fab-in 400ms var(--ease-out-expo) 800ms both; }
+        .fab-enter-2 { animation: fab-in 400ms var(--ease-out-expo) 920ms both; }
+
+        /* ── Nav links: subrayado deslizante ────────────────────────────────── */
+        .nav-link {
+            position: relative;
+            transition: color var(--dur-ui) var(--ease-in-out);
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -3px; left: 0;
+            width: 0; height: 1.5px;
+            background: #8daf14;
+            transition: width var(--dur-ui) var(--ease-out-expo);
+        }
+        .nav-link:hover::after { width: 100%; }
+
+        /* ── Ícono SVG de redes: scale en hover ─────────────────────────────── */
+        .icon-hover {
+            transition:
+                transform var(--dur-micro) var(--ease-spring),
+                color     var(--dur-ui)    var(--ease-in-out);
+        }
+        .icon-hover:hover { transform: scale(1.18); }
+
+        /* ── Imagen de hero: scale muy sutil en hover ───────────────────────── */
+        .hero-img-wrap { overflow: hidden; }
+        .hero-img-wrap img:first-child {
+            transition: transform 600ms var(--ease-out-expo), opacity 300ms var(--ease-in-out);
+        }
+        .hero-img-wrap:hover img:first-child { transform: scale(1.03); }
+
+        /* ── prefers-reduced-motion: desactivar TODO el movimiento ─────────── */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration:        0.01ms !important;
+                animation-iteration-count: 1      !important;
+                transition-duration:       0.01ms !important;
+                scroll-behavior:           auto   !important;
+            }
+            /* Hero stagger: mostrar todo inmediatamente */
+            .hs-1, .hs-2, .hs-3, .hs-4, .hs-img {
+                opacity: 1;
+                transform: none;
+                filter: none;
+                animation: none;
+            }
+            /* SVG hero: grupos quietos, sin flotado */
+            #hero-bg-svg g { animation: none !important; }
+            .js .js-reveal {
+                opacity: 1;
+                transform: none;
+            }
+            .card-hover:hover,
+            .btn-press:hover,
+            .btn-press:active,
+            .fab:hover,
+            .fab:active { transform: none; }
+            .nav-link::after { display: none; }
+            .icon-hover:hover { transform: none; }
+            .hero-img-wrap:hover img:first-child { transform: none; }
+        }
     </style>
 </head>
 <body class="font-body text-brandDark bg-white overflow-x-hidden">
+    <script>document.documentElement.className=document.documentElement.className.replace("no-js","js");</script>
 
+
+    <!-- ═══════════════════════════════════════════ NAV -->
     <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+
             <div class="flex items-center gap-3">
                 <img src="assets/img/logo_3r_t.png" class="h-10 w-auto" alt="Logo 3R">
                 <span class="font-display font-bold text-lg tracking-tighter uppercase">3R. Arquitectura</span>
             </div>
-            <div class="hidden md:flex items-center gap-8 text-xs font-bold uppercase tracking-widest">
-                <a href="#inicio" class="hover:text-brandGreen transition">Inicio</a>
-                <a href="#servicios" class="hover:text-brandGreen transition">Servicios</a>
-                <a href="#proyectos" class="hover:text-brandGreen transition">Proyectos</a>
-                <a href="#guia" class="hover:text-brandGreen transition italic">Mi Guía</a>
-               <a href="https://3rarquitectura.blogspot.com" target="_blank" class="hover:bg-brandGreen transition">Blog</a>
-                <a href="https://wa.me/59896699876" target="_blank" class="bg-brandDark text-white px-5 py-2 rounded-full hover:bg-brandGreen transition">Contacto</a>
+
+            <div class="hidden md:flex items-center gap-7 text-xs font-mono font-bold uppercase tracking-widest">
+                <a href="#inicio"    class="nav-link hover:text-brandGreen">Inicio</a>
+                <a href="#servicios" class="nav-link hover:text-brandGreen">Servicios</a>
+                <a href="#proyectos" class="nav-link hover:text-brandGreen">Proyectos</a>
+                <span class="italic text-gray-400 cursor-default">Mi Guía <span class="normal-case font-normal text-[10px] bg-gray-100 text-gray-400 px-2 py-0.5 rounded-full tracking-normal align-middle">Próximamente</span></span>
+                <a href="https://3rarquitectura.blogspot.com" target="_blank" class="nav-link hover:text-brandGreen">Blog</a>
+
+                <a href="https://www.instagram.com/3r.arquitectura/" target="_blank"
+                   class="icon-hover text-brandDark hover:text-brandGreen" aria-label="Instagram @3r.arquitectura">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5"/>
+                        <circle cx="12" cy="12" r="4"/>
+                        <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/>
+                    </svg>
+                </a>
+                <a href="https://www.linkedin.com/company/3rarquitectura/" target="_blank"
+                   class="icon-hover text-brandDark hover:text-brandGreen" aria-label="LinkedIn 3rarquitectura">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/>
+                        <rect x="2" y="9" width="4" height="12"/>
+                        <circle cx="4" cy="4" r="2"/>
+                    </svg>
+                </a>
+
+                <a href="https://wa.me/59896699876" target="_blank"
+                   class="btn-press bg-brandDark text-white px-5 py-2 rounded-full hover:bg-brandGreen">
+                    Contacto
+                </a>
             </div>
         </div>
     </nav>
 
-    <section id="inicio" class="pt-40 pb-20 px-6 bg-white">
-        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
-            <div class="reveal active">
-                <h1 class="font-display text-5xl md:text-7xl font-bold leading-[1] tracking-tighter mb-8 text-brandDark">
-                    Tu visión con <br><span class="text-brandGreen">precisión digital.</span>
+
+    <!-- ═══════════════════════════════════════════ HERO -->
+    <section id="inicio" class="relative pt-40 pb-20 px-6 bg-white overflow-hidden">
+
+        <!-- ── Fondo SVG técnico ─────────────────────────────────────────────
+             Un único SVG con 7 grupos; cada <g data-depth="…"> recibe el
+             transform del parallax JS. Los grupos animan con CSS float.
+             pointer-events:none + aria-hidden para no afectar accesibilidad. -->
+        <svg id="hero-bg-svg"
+             viewBox="0 0 1440 720"
+             preserveAspectRatio="xMidYMid slice"
+             aria-hidden="true"
+             xmlns="http://www.w3.org/2000/svg">
+
+            <defs>
+                <!-- Sombra suave para rectángulos técnicos -->
+                <filter id="hero-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="3" stdDeviation="7"
+                                  flood-color="#1a1a1a" flood-opacity="0.06"/>
+                </filter>
+            </defs>
+
+            <!-- G0 · Grid base — estático, sin parallax, sin animación ──────── -->
+            <!-- 3 horiz + 3 vert dashed muy tenues dan ritmo sin distraer -->
+            <g id="hero-g0" opacity="1">
+                <line x1="0"    y1="180" x2="1440" y2="180"
+                      stroke="rgba(26,26,26,0.04)" stroke-width="1" stroke-dasharray="4 14"/>
+                <line x1="0"    y1="360" x2="1440" y2="360"
+                      stroke="rgba(26,26,26,0.04)" stroke-width="1" stroke-dasharray="4 14"/>
+                <line x1="0"    y1="540" x2="1440" y2="540"
+                      stroke="rgba(26,26,26,0.04)" stroke-width="1" stroke-dasharray="4 14"/>
+                <line x1="360"  y1="0"   x2="360"  y2="720"
+                      stroke="rgba(26,26,26,0.04)" stroke-width="1" stroke-dasharray="4 14"/>
+                <line x1="720"  y1="0"   x2="720"  y2="720"
+                      stroke="rgba(26,26,26,0.04)" stroke-width="1" stroke-dasharray="4 14"/>
+                <line x1="1080" y1="0"   x2="1080" y2="720"
+                      stroke="rgba(26,26,26,0.04)" stroke-width="1" stroke-dasharray="4 14"/>
+            </g>
+
+            <!-- G1 · Rectángulos técnicos grandes — lado derecho (depth 0.5) ── -->
+            <g data-depth="0.5"
+               style="animation: hb-float-a 32s ease-in-out infinite;">
+                <!-- Marco exterior principal -->
+                <rect x="810" y="36" width="530" height="390" rx="2"
+                      fill="rgba(26,26,26,0.018)" stroke="rgba(26,26,26,0.11)" stroke-width="1"
+                      filter="url(#hero-shadow)"/>
+                <!-- Marco interior dashed (callout interior) -->
+                <rect x="852" y="78" width="446" height="306" rx="1"
+                      fill="none" stroke="rgba(26,26,26,0.06)" stroke-width="0.75"
+                      stroke-dasharray="8 11"/>
+            </g>
+
+            <!-- G2 · Eje de coordenadas — evoca el logo 3R (depth 0.8) ────── -->
+            <g data-depth="0.8"
+               style="animation: hb-float-b 24s ease-in-out 2s infinite;">
+                <!-- Eje vertical -->
+                <line x1="1110" y1="18"  x2="1110" y2="430"
+                      stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                <!-- Eje horizontal -->
+                <line x1="870"  y1="192" x2="1390" y2="192"
+                      stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                <!-- Ticks eje vertical (c/60px) -->
+                <line x1="1103" y1="78"  x2="1117" y2="78"  stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                <line x1="1103" y1="138" x2="1117" y2="138" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                <line x1="1103" y1="252" x2="1117" y2="252" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                <line x1="1103" y1="312" x2="1117" y2="312" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                <line x1="1103" y1="372" x2="1117" y2="372" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                <!-- Ticks eje horizontal (c/60px) -->
+                <line x1="930"  y1="185" x2="930"  y2="199" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                <line x1="990"  y1="185" x2="990"  y2="199" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                <line x1="1050" y1="185" x2="1050" y2="199" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                <line x1="1170" y1="185" x2="1170" y2="199" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                <line x1="1230" y1="185" x2="1230" y2="199" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                <line x1="1290" y1="185" x2="1290" y2="199" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                <line x1="1350" y1="185" x2="1350" y2="199" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+            </g>
+
+            <!-- G3 · Callout box — esquina inferior izquierda (depth 1.2) ──── -->
+            <!-- Evoca notas técnicas de plano arquitectónico -->
+            <g data-depth="1.2"
+               style="animation: hb-float-c 20s ease-in-out 4s infinite;">
+                <rect x="46" y="495" width="230" height="160" rx="2"
+                      fill="rgba(26,26,26,0.015)" stroke="rgba(26,26,26,0.10)" stroke-width="1"
+                      filter="url(#hero-shadow)"/>
+                <!-- Línea líder desde callout hacia el centro -->
+                <line x1="276" y1="552" x2="372" y2="504"
+                      stroke="rgba(26,26,26,0.08)" stroke-width="0.75"/>
+                <!-- Líneas internas (simulan filas de datos) -->
+                <line x1="66"  y1="522" x2="256" y2="522" stroke="rgba(26,26,26,0.08)" stroke-width="0.6"/>
+                <line x1="66"  y1="542" x2="206" y2="542" stroke="rgba(26,26,26,0.08)" stroke-width="0.6"/>
+                <line x1="66"  y1="562" x2="236" y2="562" stroke="rgba(26,26,26,0.08)" stroke-width="0.6"/>
+                <line x1="66"  y1="582" x2="176" y2="582" stroke="rgba(26,26,26,0.08)" stroke-width="0.6"/>
+                <line x1="66"  y1="602" x2="220" y2="602" stroke="rgba(26,26,26,0.08)" stroke-width="0.6"/>
+            </g>
+
+            <!-- G4 · Cotas / líneas de medición — izquierda (depth 0.7) ─────── -->
+            <g data-depth="0.7"
+               style="animation: hb-float-a 28s ease-in-out 6s infinite;">
+                <!-- Cota horizontal con ticks terminales -->
+                <line x1="130" y1="148" x2="460" y2="148"
+                      stroke="rgba(26,26,26,0.10)" stroke-width="0.75"/>
+                <line x1="130" y1="140" x2="130" y2="156" stroke="rgba(26,26,26,0.10)" stroke-width="0.75"/>
+                <line x1="460" y1="140" x2="460" y2="156" stroke="rgba(26,26,26,0.10)" stroke-width="0.75"/>
+                <!-- Cota vertical con ticks terminales -->
+                <line x1="510" y1="58"  x2="510" y2="310"
+                      stroke="rgba(26,26,26,0.10)" stroke-width="0.75"/>
+                <line x1="502" y1="58"  x2="518" y2="58"  stroke="rgba(26,26,26,0.10)" stroke-width="0.75"/>
+                <line x1="502" y1="310" x2="518" y2="310" stroke="rgba(26,26,26,0.10)" stroke-width="0.75"/>
+                <!-- Rectángulo secundario (objeto medido) -->
+                <rect x="130" y="172" width="256" height="120" rx="1"
+                      fill="rgba(26,26,26,0.018)" stroke="rgba(26,26,26,0.09)" stroke-width="0.75"
+                      filter="url(#hero-shadow)"/>
+            </g>
+
+            <!-- G5 · Nodos verdes — marcadores de precisión (depth 1.5) ─────── -->
+            <!-- Pocos, deliberados, solo en intersecciones con significado -->
+            <g data-depth="1.5"
+               style="animation: hb-float-b 18s ease-in-out 1s infinite;">
+                <!-- Nodo principal: intersección del eje de coordenadas -->
+                <circle cx="1110" cy="192" r="5.5" fill="#8daf14" opacity="0.92"/>
+                <circle cx="1110" cy="192" r="11"  fill="none"
+                        stroke="#8daf14" stroke-width="1" opacity="0.38"/>
+                <!-- Nodo esquina rect grande -->
+                <circle cx="810"  cy="36"  r="3.5" fill="#8daf14" opacity="0.82"/>
+                <!-- Nodo extremo línea líder callout -->
+                <circle cx="372"  cy="504" r="3.2" fill="#8daf14" opacity="0.80"/>
+                <circle cx="372"  cy="504" r="7.5" fill="none"
+                        stroke="#8daf14" stroke-width="0.75" opacity="0.32"/>
+                <!-- Nodo extremo cota horizontal -->
+                <circle cx="460"  cy="148" r="3"   fill="#8daf14" opacity="0.78"/>
+                <!-- Nodo esquina rect secundario -->
+                <circle cx="130"  cy="172" r="2.5" fill="#8daf14" opacity="0.70"/>
+                <!-- Nodo lejano top-right (muy sutil, da profundidad) -->
+                <circle cx="1340" cy="36"  r="2.5" fill="#8daf14" opacity="0.42"/>
+            </g>
+
+            <!-- G6 · Diagonal + rect flotante — zona central (depth 1.0) ────── -->
+            <g data-depth="1.0"
+               style="animation: hb-float-c 26s ease-in-out 3s infinite;">
+                <!-- Línea dashed diagonal (guía de composición) -->
+                <line x1="600" y1="590" x2="840" y2="370"
+                      stroke="rgba(26,26,26,0.065)" stroke-width="0.75" stroke-dasharray="3 10"/>
+                <!-- Rect pequeño flotante -->
+                <rect x="642" y="454" width="62" height="62" rx="1"
+                      fill="rgba(26,26,26,0.02)" stroke="rgba(26,26,26,0.085)" stroke-width="0.75"/>
+                <!-- Nodo sobre la diagonal -->
+                <circle cx="720" cy="480" r="2.2" fill="#8daf14" opacity="0.58"/>
+            </g>
+
+        </svg><!-- /hero-bg-svg -->
+
+        <!-- Contenido del hero — z-10 para quedar sobre el SVG de fondo ──────── -->
+        <div class="relative z-10 max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+
+            <div>
+                <h1 class="hs-1 font-display text-5xl md:text-7xl font-bold italic leading-[1.05] tracking-tighter mb-6 text-brandDark">
+                    Arquitectura, <span class="text-brandGreen">BIM</span> y soluciones constructivas especializadas.
                 </h1>
-                <p class="text-lg text-gray-600 leading-relaxed mb-10">
-                    <strong>3R. Arquitectura</strong> es un estudio que integra diseño arquitectónico, reformas y asesoría BIM con enfoque práctico y contemporáneo. Creamos espacios funcionales, luminosos y con identidad, combinando criterio técnico, sensibilidad estética y gestión eficiente. Acompañamos a particulares, estudios y empresas desde la idea hasta la obra y la documentación, optimizando tiempos, costos y decisiones para lograr resultados claros, habitables y durables. Con foco en soluciones simples y bien ejecutadas.
+                <p class="hs-2 font-mono text-xs font-bold uppercase tracking-widest text-brandGreen mb-6">
+                    Diseño · BIM · Reformas · Revestimientos metálicos
                 </p>
-                <div class="flex flex-wrap gap-4">
-                    <a href="https://wa.me/59896699876" target="_blank" class="bg-brandDark text-white px-8 py-4 rounded-full font-bold hover:bg-brandGreen transition shadow-lg">Contactar ahora</a>
-                    <a href="#proyectos" class="border-2 border-brandDark px-8 py-4 rounded-full font-bold hover:bg-brandDark hover:text-white transition">Ver obras</a>
+                <p class="hs-3 text-lg text-gray-600 leading-relaxed mb-10">
+                    Acompañamos a particulares, estudios y empresas en todo el proceso: desde la idea inicial hasta la obra.<br class="hidden md:block">
+                    Criterio técnico, diseño preciso y sin sorpresas en cada etapa.
+                </p>
+                <div class="hs-4 flex flex-wrap gap-4">
+                    <a href="https://wa.me/59896699876" target="_blank"
+                       class="btn-press bg-brandDark text-white px-8 py-4 rounded-full font-bold hover:bg-brandGreen shadow-lg">
+                        Contactar ahora
+                    </a>
+                    <a href="#proyectos"
+                       class="btn-press border-2 border-brandDark px-8 py-4 rounded-full font-bold hover:bg-brandGreen hover:border-brandGreen hover:text-white">
+                        Ver obras
+                    </a>
                 </div>
             </div>
-            <div class="reveal active relative">
-                <div class="aspect-[4/5] bg-brandDark rounded-[2.5rem] overflow-hidden shadow-2xl relative">
-                    <img src="assets/img/portada_servicios_3R.png" class="absolute inset-0 w-full h-full object-cover opacity-90" alt="Proyectos">
-                    <img src="assets/img/logo_3r_t.png" class="h-10 w-auto absolute top-6 left-6 z-10 drop-shadow-lg" alt="Logo 3R">
+
+            <div class="hs-img relative">
+                <div class="hero-img-wrap aspect-[4/5] bg-brandDark rounded-2xl shadow-2xl relative">
+                    <img src="assets/img/portada_servicios_3R.png"
+                         class="absolute inset-0 w-full h-full object-cover opacity-90"
+                         alt="Proyectos 3R Arquitectura">
+                    <img src="assets/img/logo_3r_t.png"
+                         class="h-10 w-auto absolute top-6 left-6 z-10 drop-shadow-lg"
+                         alt="Logo 3R">
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- ═══════════════════════════════════════════ SERVICIOS -->
     <section id="servicios" class="py-24 px-6 bg-gray-50">
         <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16">
+
+            <div class="text-center mb-16 js-reveal">
                 <h2 class="font-display text-4xl font-bold uppercase italic tracking-tight text-brandDark">Servicios</h2>
-                <div class="w-20 h-1 bg-brandGreen mx-auto mt-4"></div>
+                <div class="w-20 h-1 bg-brandDark mx-auto mt-4"></div>
             </div>
+
             <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:border-brandGreen transition">
-                    <h3 class="font-display font-bold text-xl mb-4 text-brandDark">Consultoría y Metodología BIM</h3>
-                    <p class="text-gray-500 text-sm">Modelado 3D, documentación técnica y Scan to BIM para optimizar procesos constructivos.</p>
+
+                <div class="js-reveal card-hover bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-brandGreen"
+                     style="--delay: 0ms">
+                    <div class="w-11 h-11 mb-6 text-brandGreen">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                            <path d="M2 17l10 5 10-5"/>
+                            <path d="M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-display font-bold text-xl mb-3 text-brandDark">Consultoría y Metodología BIM</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">
+                        Transformamos relevamientos y nubes de puntos en modelos BIM precisos para proyectos, mantenimiento y documentación As Built.
+                    </p>
                 </div>
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:border-brandGreen transition">
-                    <h3 class="font-display font-bold text-xl mb-4 text-brandDark">Asesoría y Reformas</h3>
-                    <p class="text-gray-500 text-sm">Acompañamiento integral en tu reforma con planificación detallada y criterio estético.</p>
+
+                <div class="js-reveal card-hover bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-brandGreen"
+                     style="--delay: 80ms">
+                    <div class="w-11 h-11 mb-6 text-brandGreen">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            <polyline points="9 22 9 12 15 12 15 22"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-display font-bold text-xl mb-3 text-brandDark">Asesoría y Reformas</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">
+                        Te ayudamos a planificar y ejecutar reformas minimizando errores, sobrecostos e improvisaciones.
+                    </p>
                 </div>
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:border-brandGreen transition">
-                    <h3 class="font-display font-bold text-xl mb-4 text-brandDark">Montaje de fachadas metálicas</h3>
-                    <p class="text-gray-500 text-sm">Especialistas en instalación de revestimientos metálicos, aportando funcionalidad y diseño.</p>
+
+                <div class="js-reveal card-hover bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:border-brandGreen"
+                     style="--delay: 160ms">
+                    <div class="w-11 h-11 mb-6 text-brandGreen">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="3"  width="20" height="4" rx="1"/>
+                            <rect x="2" y="10" width="20" height="4" rx="1"/>
+                            <rect x="2" y="17" width="20" height="4" rx="1"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-display font-bold text-xl mb-3 text-brandDark">Fachadas metálicas</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">
+                        Diseño y montaje de revestimientos metálicos que aportan identidad, durabilidad y bajo mantenimiento.
+                    </p>
                 </div>
+
             </div>
         </div>
     </section>
 
-   <section id="proyectos" class="py-24 px-6 bg-white text-center">
-    <div class="max-w-7xl mx-auto">
-        <h2 class="font-display text-4xl font-bold uppercase italic mb-16 text-brandDark">Proyectos Destacados</h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-20">
-            
-            <div class="group">
-                <div class="aspect-square bg-gray-100 rounded-[2.5rem] overflow-hidden shadow-lg mb-6">
-                    <img src="assets/img/Escuela_65.png" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" alt="Escuela 65">
-                </div>
-                <p class="text-brandGreen-500 text-sm">Scan to BIM</p>
-                <h3 class="text-2xl font-display font-bold text-brandDark">Escuela 65</h3>
-                <p class="text-gray-500 text-sm">Canelones, Uruguay</p>
+
+    <!-- ═══════════════════════════════════════════ POR QUÉ 3R -->
+    <section id="por-que" class="py-24 px-6 bg-white">
+        <div class="max-w-7xl mx-auto">
+
+            <div class="text-center mb-16 js-reveal">
+                <h2 class="font-display text-4xl font-bold uppercase italic tracking-tight text-brandDark">
+                    ¿Por qué trabajar con 3R. Arquitectura?
+                </h2>
+                <div class="w-20 h-1 bg-brandDark mx-auto mt-4"></div>
             </div>
 
-            <div class="group">
-                <div class="aspect-square bg-gray-100 rounded-[2.5rem] overflow-hidden shadow-lg mb-6">
-                    <img src="assets/img/cocina_lavieverde1.png" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" alt="Reforma">
-                </div>
-                <p class="text-brandGreen-500 text-sm">Reforma & Asesoría</p>
-                <h3 class="text-2xl font-display font-bold text-brandDark">Reforma de Cocina</h3>
-                <p class="text-gray-500 text-sm">Rocha, Uruguay</p>
-            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
 
-            <div class="group">
-                <div class="aspect-square bg-gray-100 rounded-[2.5rem] overflow-hidden shadow-lg mb-6">
-                    <img src="assets/img/montaje-revestimiento-metalico-3R_carrasco1.png" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" alt="Fachada">
+                <div class="js-reveal text-center px-4 py-6" style="--delay: 0ms">
+                    <div class="w-11 h-11 mx-auto mb-5 text-brandGreen">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="2"  x2="12" y2="6"/>
+                            <line x1="12" y1="18" x2="12" y2="22"/>
+                            <line x1="2"  y1="12" x2="6"  y2="12"/>
+                            <line x1="18" y1="12" x2="22" y2="12"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-display font-bold text-lg mb-2 text-brandDark">Diseño con criterio técnico</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Las decisiones estéticas y constructivas se desarrollan en conjunto.</p>
                 </div>
-                <p class="text-brandGreen-500 text-sm">Montaje de revestimiento metálico</p>
-                <h3 class="text-2xl font-display font-bold text-brandDark">Divisor metálico para paisajismo</h3>
-                <p class="text-gray-500 text-sm">Jardines de Carrasco, Uruguay</p>
+
+                <div class="js-reveal text-center px-4 py-6" style="--delay: 80ms">
+                    <div class="w-11 h-11 mx-auto mb-5 text-brandGreen">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                            <path d="M2 17l10 5 10-5"/>
+                            <path d="M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-display font-bold text-lg mb-2 text-brandDark">Precisión BIM</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Reducimos errores y mejoramos la coordinación entre disciplinas.</p>
+                </div>
+
+                <div class="js-reveal text-center px-4 py-6" style="--delay: 160ms">
+                    <div class="w-11 h-11 mx-auto mb-5 text-brandGreen">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="3 22 12 2 21 22"/>
+                            <line x1="8"  y1="14" x2="16" y2="14"/>
+                            <line x1="12" y1="10" x2="12" y2="18"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-display font-bold text-lg mb-2 text-brandDark">Experiencia en obra</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Diseñamos pensando en cómo se construye.</p>
+                </div>
+
+                <div class="js-reveal text-center px-4 py-6" style="--delay: 240ms">
+                    <div class="w-11 h-11 mx-auto mb-5 text-brandGreen">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20h9"/>
+                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-display font-bold text-lg mb-2 text-brandDark">Soluciones a medida</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Cada proyecto responde a necesidades específicas.</p>
+                </div>
+
             </div>
         </div>
+    </section>
 
-        <a href="https://drive.google.com/file/d/1b6bBWild0piCCRsIRGNUk3N-zDD2tP4c/view?usp=sharing" target="_blank" 
-           class="inline-block bg-brandGreen text-white px-12 py-5 rounded-full font-bold shadow-xl hover:bg-brandDark transition uppercase tracking-widest">
-            Ver todo el portfolio ↗
-        </a>
-    </div>
-</section>
-    <section id="guia" class="py-24 px-6 bg-brandDark text-white rounded-[3rem] mx-4 my-10 overflow-hidden">
-    <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-        <div class="reveal active text-left">
-            <h2 class="font-display text-4xl font-bold mb-6 italic text-brandGreen">¿Planeas una reforma?</h2>
-            <p class="text-lg italic text-gray-400 mb-8">He volcado mis 10 años de experiencia en una guía práctica para que transformes tu hogar sin estrés ni errores costosos.</p>
-            <ul class="space-y-4 mb-10">
-                <li class="flex items-center gap-3"><span class="text-brandGreen">✓</span> Hoja de ruta clara para tu obra.</li>
-                <li class="flex items-center gap-3"><span class="text-brandGreen">✓</span> Cómo elegir materiales y presupuestos.</li>
-                <li class="flex items-center gap-3"><span class="text-brandGreen">✓</span> Tips exclusivos de diseño arquitectónico.</li>
-            </ul>
-            <a href="LINK_A_TU_GUIA" target="_blank" class="bg-brandGreen text-brandDark px-10 py-5 rounded-full font-bold text-lg hover:scale-105 transition inline-block">Descargar Guía de Reformas</a>
-        </div>
 
-        <div class="reveal active">
-            <div class="relative rounded-[2rem] overflow-hidden shadow-2xl max-w-sm mx-auto">
-                <img src="assets/img/guia1.png" class="w-full h-auto object-cover" alt="Guía de Reformas 3R">
+    <!-- ═══════════════════════════════════════════ MISIÓN Y VISIÓN -->
+    <section id="mision" class="py-24 px-6 bg-gray-50">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12">
+
+            <div class="js-reveal pl-6 border-l-2 border-brandGreen" style="--delay: 0ms">
+                <h3 class="font-display text-2xl font-bold italic uppercase mb-4 text-brandDark">Misión</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Diseñar, planificar y materializar proyectos arquitectónicos mediante soluciones integrales que combinan diseño, tecnología BIM y ejecución especializada, brindando a nuestros clientes claridad, confianza y resultados de calidad.
+                </p>
             </div>
-        </div>
-    </div>
-</section>
 
+            <div class="js-reveal pl-6 border-l-2 border-gray-300" style="--delay: 120ms">
+                <h3 class="font-display text-2xl font-bold italic uppercase mb-4 text-brandDark">Visión</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Convertirnos en un referente de arquitectura y BIM en Uruguay, reconocidos por nuestra capacidad de integrar diseño, innovación y construcción especializada para crear proyectos eficientes, sostenibles y duraderos.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════ PROYECTOS -->
+    <section id="proyectos" class="py-24 px-6 bg-white text-center">
+        <div class="max-w-7xl mx-auto">
+
+            <h2 class="js-reveal font-display text-4xl font-bold uppercase italic mb-16 text-brandDark">Proyectos Destacados</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-20">
+
+                <div class="js-reveal group text-left" style="--delay: 0ms">
+                    <div class="aspect-square bg-gray-100 rounded-2xl overflow-hidden shadow-lg mb-5
+                                transition-shadow duration-200" style="transition: box-shadow 200ms cubic-bezier(0.4,0,0.2,1);">
+                        <img src="assets/img/Escuela_65.png"
+                             class="w-full h-full object-cover transition duration-500 group-hover:scale-105"
+                             style="transition: transform 500ms cubic-bezier(0.16,1,0.3,1);"
+                             alt="Escuela 65 — Scan to BIM">
+                    </div>
+                    <span class="inline-block bg-brandGreen/10 text-brandGreen text-xs font-mono font-bold px-3 py-1 rounded-full mb-2">Scan to BIM</span>
+                    <h3 class="text-2xl font-display font-bold text-brandDark">Escuela 65</h3>
+                    <p class="text-gray-500 text-sm">Canelones, Uruguay</p>
+                </div>
+
+                <div class="js-reveal group text-left" style="--delay: 100ms">
+                    <div class="aspect-square bg-gray-100 rounded-2xl overflow-hidden shadow-lg mb-5">
+                        <img src="assets/img/cocina_lavieverde1.png"
+                             class="w-full h-full object-cover"
+                             style="transition: transform 500ms cubic-bezier(0.16,1,0.3,1);"
+                             alt="Reforma de Cocina La Vie en Verde">
+                    </div>
+                    <span class="inline-block bg-brandGreen/10 text-brandGreen text-xs font-mono font-bold px-3 py-1 rounded-full mb-2">Reforma &amp; Asesoría</span>
+                    <h3 class="text-2xl font-display font-bold text-brandDark">Reforma de Cocina</h3>
+                    <p class="text-gray-500 text-sm">La Pedrera, Rocha — Uruguay</p>
+                </div>
+
+                <div class="js-reveal group text-left" style="--delay: 200ms">
+                    <div class="aspect-square bg-gray-100 rounded-2xl overflow-hidden shadow-lg mb-5">
+                        <img src="assets/img/montaje-revestimiento-metalico-3R_carrasco1.png"
+                             class="w-full h-full object-cover"
+                             style="transition: transform 500ms cubic-bezier(0.16,1,0.3,1);"
+                             alt="Divisor metálico Jardines de Carrasco">
+                    </div>
+                    <span class="inline-block bg-brandGreen/10 text-brandGreen text-xs font-mono font-bold px-3 py-1 rounded-full mb-2">Revestimiento metálico</span>
+                    <h3 class="text-2xl font-display font-bold text-brandDark">Divisor metálico para paisajismo</h3>
+                    <p class="text-gray-500 text-sm">Jardines de Carrasco, Montevideo</p>
+                </div>
+
+            </div>
+
+            <div class="js-reveal" style="--delay: 120ms">
+                <a href="https://drive.google.com/file/d/1b6bBWild0piCCRsIRGNUk3N-zDD2tP4c/view?usp=sharing"
+                   target="_blank"
+                   class="btn-press inline-block bg-brandDark text-white px-12 py-5 rounded-full font-bold shadow-xl hover:bg-brandGreen uppercase tracking-widest">
+                    Ver todo el portfolio ↗
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════ SOLICITAR PRESUPUESTO -->
+    <section id="presupuesto" class="py-24 px-6 bg-gray-50">
+        <div class="max-w-2xl mx-auto">
+
+            <div class="js-reveal text-center mb-10">
+                <h2 class="font-display text-4xl font-bold italic uppercase mb-4 text-brandDark">Solicitar presupuesto</h2>
+                <p class="text-gray-500 text-base leading-relaxed">
+                    Seleccioná los espacios que querés intervenir, adjuntá medidas, fotos o planos del espacio,
+                    y te respondemos con una propuesta adaptada a tu proyecto.
+                </p>
+            </div>
+
+            <form id="presupuestoForm"
+                  class="js-reveal space-y-7"
+                  action="https://formspree.io/f/mvzbvgyp"
+                  method="POST"
+                  novalidate
+                  style="--delay: 80ms">
+
+                <div class="grid sm:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs font-mono font-bold uppercase mb-2">Nombre *</label>
+                        <input type="text" name="nombre" required placeholder="Tu nombre"
+                               class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm"
+                               style="transition: border-color 180ms cubic-bezier(0.4,0,0.2,1);"
+                               onfocus="this.style.borderColor='#8daf14'" onblur="this.style.borderColor='#e5e7eb'">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-mono font-bold uppercase mb-2">Email *</label>
+                        <input type="email" name="email" required placeholder="hola@empresa.com"
+                               class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm"
+                               style="transition: border-color 180ms cubic-bezier(0.4,0,0.2,1);"
+                               onfocus="this.style.borderColor='#8daf14'" onblur="this.style.borderColor='#e5e7eb'">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-mono font-bold uppercase mb-3">Espacios a intervenir</label>
+                    <div class="flex flex-wrap gap-3" id="espaciosSelector">
+
+                        <label class="cursor-pointer select-none">
+                            <input type="checkbox" class="hidden peer" name="espacio" value="Cocina">
+                            <span class="block px-5 py-2 rounded-full border border-gray-300 text-sm font-mono font-semibold text-gray-600
+                                         peer-checked:bg-brandDark peer-checked:text-white peer-checked:border-brandDark"
+                                  style="transition: background-color 160ms cubic-bezier(0.4,0,0.2,1), color 160ms cubic-bezier(0.4,0,0.2,1), border-color 160ms cubic-bezier(0.4,0,0.2,1);">Cocina</span>
+                        </label>
+                        <label class="cursor-pointer select-none">
+                            <input type="checkbox" class="hidden peer" name="espacio" value="Baño">
+                            <span class="block px-5 py-2 rounded-full border border-gray-300 text-sm font-mono font-semibold text-gray-600
+                                         peer-checked:bg-brandDark peer-checked:text-white peer-checked:border-brandDark"
+                                  style="transition: background-color 160ms cubic-bezier(0.4,0,0.2,1), color 160ms cubic-bezier(0.4,0,0.2,1), border-color 160ms cubic-bezier(0.4,0,0.2,1);">Baño</span>
+                        </label>
+                        <label class="cursor-pointer select-none">
+                            <input type="checkbox" class="hidden peer" name="espacio" value="Living">
+                            <span class="block px-5 py-2 rounded-full border border-gray-300 text-sm font-mono font-semibold text-gray-600
+                                         peer-checked:bg-brandDark peer-checked:text-white peer-checked:border-brandDark"
+                                  style="transition: background-color 160ms cubic-bezier(0.4,0,0.2,1), color 160ms cubic-bezier(0.4,0,0.2,1), border-color 160ms cubic-bezier(0.4,0,0.2,1);">Living</span>
+                        </label>
+                        <label class="cursor-pointer select-none">
+                            <input type="checkbox" class="hidden peer" name="espacio" value="Dormitorio">
+                            <span class="block px-5 py-2 rounded-full border border-gray-300 text-sm font-mono font-semibold text-gray-600
+                                         peer-checked:bg-brandDark peer-checked:text-white peer-checked:border-brandDark"
+                                  style="transition: background-color 160ms cubic-bezier(0.4,0,0.2,1), color 160ms cubic-bezier(0.4,0,0.2,1), border-color 160ms cubic-bezier(0.4,0,0.2,1);">Dormitorio</span>
+                        </label>
+                        <label class="cursor-pointer select-none">
+                            <input type="checkbox" class="hidden peer" name="espacio" value="Oficina">
+                            <span class="block px-5 py-2 rounded-full border border-gray-300 text-sm font-mono font-semibold text-gray-600
+                                         peer-checked:bg-brandDark peer-checked:text-white peer-checked:border-brandDark"
+                                  style="transition: background-color 160ms cubic-bezier(0.4,0,0.2,1), color 160ms cubic-bezier(0.4,0,0.2,1), border-color 160ms cubic-bezier(0.4,0,0.2,1);">Oficina</span>
+                        </label>
+                        <label class="cursor-pointer select-none">
+                            <input type="checkbox" class="hidden peer" name="espacio" value="Local comercial">
+                            <span class="block px-5 py-2 rounded-full border border-gray-300 text-sm font-mono font-semibold text-gray-600
+                                         peer-checked:bg-brandDark peer-checked:text-white peer-checked:border-brandDark"
+                                  style="transition: background-color 160ms cubic-bezier(0.4,0,0.2,1), color 160ms cubic-bezier(0.4,0,0.2,1), border-color 160ms cubic-bezier(0.4,0,0.2,1);">Local comercial</span>
+                        </label>
+                        <label class="cursor-pointer select-none">
+                            <input type="checkbox" class="hidden peer" name="espacio" value="Fachada">
+                            <span class="block px-5 py-2 rounded-full border border-gray-300 text-sm font-mono font-semibold text-gray-600
+                                         peer-checked:bg-brandDark peer-checked:text-white peer-checked:border-brandDark"
+                                  style="transition: background-color 160ms cubic-bezier(0.4,0,0.2,1), color 160ms cubic-bezier(0.4,0,0.2,1), border-color 160ms cubic-bezier(0.4,0,0.2,1);">Fachada</span>
+                        </label>
+                        <label class="cursor-pointer select-none">
+                            <input type="checkbox" class="hidden peer" name="espacio" value="Exterior">
+                            <span class="block px-5 py-2 rounded-full border border-gray-300 text-sm font-mono font-semibold text-gray-600
+                                         peer-checked:bg-brandDark peer-checked:text-white peer-checked:border-brandDark"
+                                  style="transition: background-color 160ms cubic-bezier(0.4,0,0.2,1), color 160ms cubic-bezier(0.4,0,0.2,1), border-color 160ms cubic-bezier(0.4,0,0.2,1);">Exterior</span>
+                        </label>
+                        <label class="cursor-pointer select-none">
+                            <input type="checkbox" class="hidden peer" name="espacio" value="Otro">
+                            <span class="block px-5 py-2 rounded-full border border-gray-300 text-sm font-mono font-semibold text-gray-600
+                                         peer-checked:bg-brandDark peer-checked:text-white peer-checked:border-brandDark"
+                                  style="transition: background-color 160ms cubic-bezier(0.4,0,0.2,1), color 160ms cubic-bezier(0.4,0,0.2,1), border-color 160ms cubic-bezier(0.4,0,0.2,1);">Otro</span>
+                        </label>
+
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-mono font-bold uppercase mb-2">Descripción del proyecto</label>
+                    <textarea name="descripcion" rows="3" placeholder="Contanos sobre el espacio, qué querés lograr, si tenés planos, etc."
+                              class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm"
+                              style="transition: border-color 180ms cubic-bezier(0.4,0,0.2,1);"
+                              onfocus="this.style.borderColor='#8daf14'" onblur="this.style.borderColor='#e5e7eb'"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-mono font-bold uppercase mb-2">
+                        Link de fotos/planos
+                        <span class="normal-case font-normal text-gray-400 ml-1">(Google Drive, WeTransfer, etc. — opcional)</span>
+                    </label>
+                    <input type="url" name="link_archivos" placeholder="https://drive.google.com/..."
+                           class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm"
+                           style="transition: border-color 180ms cubic-bezier(0.4,0,0.2,1);"
+                           onfocus="this.style.borderColor='#8daf14'" onblur="this.style.borderColor='#e5e7eb'">
+                    <p class="mt-2 text-xs text-gray-400">
+                        También podés enviarnos las fotos y planos por
+                        <a href="https://wa.me/59896699876" target="_blank"
+                           class="underline"
+                           style="transition: color 160ms cubic-bezier(0.4,0,0.2,1);"
+                           onmouseover="this.style.color='#8daf14'" onmouseout="this.style.color=''">WhatsApp</a>.
+                    </p>
+                </div>
+
+                <button type="submit"
+                        class="btn-press w-full bg-brandGreen text-white font-mono font-bold py-4 rounded-xl hover:bg-brandDark uppercase tracking-wide text-sm">
+                    Enviar solicitud →
+                </button>
+
+            </form>
+
+            <div id="formSuccess"
+                 class="hidden mt-8 p-6 bg-white border border-brandGreen rounded-2xl text-center">
+                <div class="w-10 h-10 mx-auto mb-4 text-brandGreen">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                </div>
+                <h3 class="font-display text-xl font-bold italic text-brandDark mb-2">¡Solicitud enviada!</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">
+                    Recibimos tu consulta. Te respondemos en las próximas 24–48 horas hábiles a tu email.<br>
+                    Si tenés urgencia, escribinos por <a href="https://wa.me/59896699876" target="_blank"
+                    class="underline hover:text-brandGreen" style="transition: color 160ms cubic-bezier(0.4,0,0.2,1);">WhatsApp</a>.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════ GUÍA -->
+    <section id="guia" class="py-24 px-6 bg-brandDark text-white rounded-2xl mx-4 my-10 overflow-hidden">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+
+            <div class="js-reveal text-left" style="--delay: 0ms">
+                <h2 class="font-display text-4xl font-bold mb-6 italic text-white">¿Planeas una reforma?</h2>
+                <p class="text-lg italic text-gray-400 mb-8">
+                    Volcé mis 10 años de experiencia en una guía práctica para que transformes tu hogar sin estrés ni errores costosos.
+                </p>
+                <ul class="space-y-4 mb-10">
+                    <li class="flex items-center gap-3">
+                        <span class="text-brandGreen font-bold text-lg">✓</span>
+                        Hoja de ruta clara para tu obra.
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="text-brandGreen font-bold text-lg">✓</span>
+                        Cómo elegir materiales y presupuestos.
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <span class="text-brandGreen font-bold text-lg">✓</span>
+                        Tips exclusivos de diseño arquitectónico.
+                    </li>
+                </ul>
+                <span class="btn-press inline-block bg-white/20 text-white/50 px-10 py-5 rounded-full font-bold text-lg cursor-default select-none">Próximamente</span>
+            </div>
+
+            <div class="js-reveal" style="--delay: 120ms">
+                <div class="relative rounded-xl overflow-hidden shadow-2xl max-w-sm mx-auto">
+                    <img src="assets/img/guia1.png" class="w-full h-auto object-cover" alt="Guía de Reformas 3R">
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════ CONTACTO -->
     <section id="contacto" class="py-24 px-6">
         <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16">
-            <div>
+
+            <div class="js-reveal" style="--delay: 0ms">
                 <h2 class="font-display text-5xl font-bold mb-8">Contacto</h2>
                 <div class="space-y-6">
+
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-brandGreen">✉</div>
+                        <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0 text-brandGreen">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                        </div>
                         <div>
-                            <p class="text-xs uppercase font-bold text-gray-400">Email</p>
-                            <p class="font-bold">3r.arquitectura@gmail.com</p>
+                            <p class="text-xs uppercase font-mono font-bold text-gray-400 mb-0.5">Email</p>
+                            <a href="mailto:3r.arquitectura@gmail.com"
+                               class="font-bold"
+                               style="transition: color 160ms cubic-bezier(0.4,0,0.2,1);"
+                               onmouseover="this.style.color='#8daf14'" onmouseout="this.style.color=''">
+                                3r.arquitectura@gmail.com
+                            </a>
                         </div>
                     </div>
+
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-brandGreen">📞</div>
+                        <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0 text-brandGreen">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                        </div>
                         <div>
-                            <p class="text-xs uppercase font-bold text-gray-400">Teléfono</p>
-                            <p class="font-bold">+598 96 699 876</p>
+                            <p class="text-xs uppercase font-mono font-bold text-gray-400 mb-0.5">Teléfono / WhatsApp</p>
+                            <a href="https://wa.me/59896699876" target="_blank"
+                               class="font-bold"
+                               style="transition: color 160ms cubic-bezier(0.4,0,0.2,1);"
+                               onmouseover="this.style.color='#8daf14'" onmouseout="this.style.color=''">
+                                +598 96 699 876
+                            </a>
                         </div>
                     </div>
+
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-brandGreen">📍</div>
+                        <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0 text-brandGreen">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                        </div>
                         <div>
-                            <p class="text-xs uppercase font-bold text-gray-400">Oficina</p>
+                            <p class="text-xs uppercase font-mono font-bold text-gray-400 mb-0.5">Ubicación</p>
                             <p class="font-bold">Montevideo, Uruguay</p>
                         </div>
                     </div>
+
                 </div>
             </div>
-            <div class="bg-gray-50 p-10 rounded-[2.5rem] border border-gray-100">
-               <form action="https://formspree.io/f/mvzbvgyp" method="POST" class="space-y-6">
-    <div class="grid md:grid-cols-2 gap-6">
-        <div>
-            <label class="block text-xs font-bold uppercase mb-2">Nombre</label>
-            <input type="text" name="nombre" required placeholder="Tu nombre" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-brandGreen">
-        </div>
-        <div>
-            <label class="block text-xs font-bold uppercase mb-2">Email</label>
-            <input type="email" name="email" required placeholder="hola@empresa.com" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-brandGreen">
-        </div>
-    </div>
-    <div>
-        <label class="block text-xs font-bold uppercase mb-2">Mensaje</label>
-        <textarea name="mensaje" rows="4" required placeholder="Cuéntanos sobre tu proyecto..." class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-brandGreen"></textarea>
-    </div>
-    <button type="submit" class="w-full bg-brandGreen text-brandDark font-bold py-4 rounded-xl hover:bg-brandDark hover:text-white transition uppercase">
-        ENVIAR MENSAJE
-    </button>
-</form>
+
+            <div class="js-reveal bg-gray-50 p-10 rounded-2xl border border-gray-100" style="--delay: 120ms">
+                <form action="https://formspree.io/f/mvzbvgyp" method="POST" class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-mono font-bold uppercase mb-2">Nombre</label>
+                            <input type="text" name="nombre" required placeholder="Tu nombre"
+                                   class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 outline-none"
+                                   style="transition: border-color 180ms cubic-bezier(0.4,0,0.2,1);"
+                                   onfocus="this.style.borderColor='#8daf14'" onblur="this.style.borderColor='#e5e7eb'">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-mono font-bold uppercase mb-2">Email</label>
+                            <input type="email" name="email" required placeholder="hola@empresa.com"
+                                   class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 outline-none"
+                                   style="transition: border-color 180ms cubic-bezier(0.4,0,0.2,1);"
+                                   onfocus="this.style.borderColor='#8daf14'" onblur="this.style.borderColor='#e5e7eb'">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-mono font-bold uppercase mb-2">Mensaje</label>
+                        <textarea name="mensaje" rows="4" required placeholder="Contanos sobre tu proyecto..."
+                                  class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 outline-none"
+                                  style="transition: border-color 180ms cubic-bezier(0.4,0,0.2,1);"
+                                  onfocus="this.style.borderColor='#8daf14'" onblur="this.style.borderColor='#e5e7eb'"></textarea>
+                    </div>
+                    <button type="submit"
+                            class="btn-press w-full bg-brandDark text-white font-mono font-bold py-4 rounded-xl hover:bg-brandGreen uppercase tracking-wide">
+                        Enviar mensaje
+                    </button>
+                </form>
             </div>
+
         </div>
     </section>
 
-    <footer class="py-12 border-t border-gray-100">
-        <div
+
+    <!-- ═══════════════════════════════════════════ FOOTER -->
+    <footer class="py-16 border-t border-gray-100 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+
+            <div class="grid md:grid-cols-3 gap-12 mb-12">
+
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <img src="assets/img/logo_3r_t.png" class="h-9 w-auto" alt="Logo 3R">
+                        <span class="font-display font-bold text-base tracking-tighter uppercase">3R. Arquitectura</span>
+                    </div>
+                    <p class="text-sm text-gray-500 italic leading-relaxed">Diseñamos sensaciones creando tus espacios.</p>
+                </div>
+
+                <div>
+                    <p class="text-xs font-mono font-bold uppercase tracking-widest text-gray-400 mb-4">Navegación</p>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#inicio"    class="nav-link text-gray-600 hover:text-brandGreen">Inicio</a></li>
+                        <li><a href="#servicios" class="nav-link text-gray-600 hover:text-brandGreen">Servicios</a></li>
+                        <li><a href="#proyectos" class="nav-link text-gray-600 hover:text-brandGreen">Proyectos</a></li>
+                        <li><span class="text-gray-400 cursor-default">Mi Guía <span class="text-[10px] bg-gray-100 text-gray-400 px-2 py-0.5 rounded-full align-middle">Próximamente</span></span></li>
+                        <li><a href="https://3rarquitectura.blogspot.com" target="_blank"
+                               class="nav-link text-gray-600 hover:text-brandGreen">Blog</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <p class="text-xs font-mono font-bold uppercase tracking-widest text-gray-400 mb-4">Contacto</p>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li>
+                            <a href="mailto:3r.arquitectura@gmail.com"
+                               class="nav-link hover:text-brandGreen">
+                                3r.arquitectura@gmail.com
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://wa.me/59896699876" target="_blank"
+                               class="nav-link hover:text-brandGreen">
+                                +598 96 699 876
+                            </a>
+                        </li>
+                        <li class="pt-3 flex items-center gap-4">
+                            <a href="https://www.instagram.com/3r.arquitectura/" target="_blank"
+                               class="icon-hover text-gray-500 hover:text-brandGreen" aria-label="Instagram @3r.arquitectura">
+                                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2" y="2" width="20" height="20" rx="5"/>
+                                    <circle cx="12" cy="12" r="4"/>
+                                    <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/>
+                                </svg>
+                            </a>
+                            <a href="https://www.linkedin.com/company/3rarquitectura/" target="_blank"
+                               class="icon-hover text-gray-500 hover:text-brandGreen" aria-label="LinkedIn 3rarquitectura">
+                                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/>
+                                    <rect x="2" y="9" width="4" height="12"/>
+                                    <circle cx="4" cy="4" r="2"/>
+                                </svg>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="border-t border-gray-100 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-400 font-mono">
+                <p>© 2026 3R.Arquitectura · Montevideo, Uruguay</p>
+                <p>Arq. Rocío Rojas Romero</p>
+            </div>
+
+        </div>
+    </footer>
 
 
+    <!-- ═══════════════════════════════════════════ BOTONES FLOTANTES -->
+    <div class="fixed bottom-6 right-4 z-40 flex flex-col gap-3 items-end">
+
+        <a href="https://wa.me/59896699876" target="_blank"
+           class="fab fab-enter-1 flex items-center gap-2 bg-brandDark text-white pl-3 pr-5 py-3 rounded-full shadow-xl hover:bg-brandGreen text-sm font-mono font-bold"
+           aria-label="Contactar por WhatsApp">
+            <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+            </svg>
+            <span class="hidden sm:inline">WhatsApp</span>
+        </a>
+
+        <a href="#presupuesto"
+           class="fab fab-enter-2 flex items-center gap-2 bg-brandDark text-white pl-3 pr-5 py-3 rounded-full shadow-xl hover:bg-brandGreen text-sm font-mono font-bold"
+           aria-label="Solicitar presupuesto">
+            <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+            <span class="hidden sm:inline">Solicitar presupuesto</span>
+        </a>
+
+    </div>
 
 
+    <!-- ═══════════════════════════════════════════ SCRIPTS -->
+    <script>
+        // ── Parallax de cursor sobre bloques del hero ─────────────────────────
+        (function () {
+            // Respeta prefers-reduced-motion
+            const prefersReduced = window.matchMedia(
+                '(prefers-reduced-motion: reduce)'
+            ).matches;
+
+            const wraps = document.querySelectorAll('#hero-bg-svg [data-depth]');
+            if (!wraps.length) return;
+
+            // Posición del mouse normalizada: -1 → 1
+            let targetX = 0, targetY = 0;
+            let currentX = 0, currentY = 0;
+            const MAX_SHIFT = 18; // px máximo de desplazamiento
+            const LERP = 0.06;    // suavidad (menor = más suave)
+
+            if (!prefersReduced) {
+                // Desktop: mouse
+                document.addEventListener('mousemove', function (e) {
+                    targetX = (e.clientX / window.innerWidth  - 0.5) * 2;
+                    targetY = (e.clientY / window.innerHeight - 0.5) * 2;
+                });
+
+                // Mobile: giroscopio / orientación (muy sutil)
+                if (window.DeviceOrientationEvent) {
+                    window.addEventListener('deviceorientation', function (e) {
+                        if (e.gamma !== null && e.beta !== null) {
+                            // gamma: inclinación lateral (-90 a 90)
+                            // beta:  inclinación adelante/atrás (-180 a 180)
+                            targetX = Math.max(-1, Math.min(1, e.gamma / 20));
+                            targetY = Math.max(-1, Math.min(1, (e.beta - 40) / 30));
+                        }
+                    }, false);
+                }
+
+                // RAF loop con lerp para suavidad
+                function tick() {
+                    currentX += (targetX - currentX) * LERP;
+                    currentY += (targetY - currentY) * LERP;
+
+                    wraps.forEach(function (el) {
+                        var depth = parseFloat(el.dataset.depth) || 1;
+                        var dx = currentX * MAX_SHIFT * depth;
+                        var dy = currentY * MAX_SHIFT * depth;
+                        el.style.transform = 'translate(' + dx + 'px, ' + dy + 'px)';
+                    });
+
+                    requestAnimationFrame(tick);
+                }
+                requestAnimationFrame(tick);
+            }
+        })();
+
+        // ── Scroll reveal — IntersectionObserver ─────────────────────────────
+        // Respeta prefers-reduced-motion: si el usuario lo activó, los
+        // elementos ya son visibles vía CSS; el observer solo añade in-view
+        // sin efecto visual.
+        const revealObserver = new IntersectionObserver(
+            (entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                        revealObserver.unobserve(entry.target); // fire once
+                    }
+                });
+            },
+            {
+                threshold:  0.1,
+                rootMargin: '0px 0px -48px 0px'   // dispara un poco antes del borde
+            }
+        );
+        document.querySelectorAll('.js-reveal').forEach(el => revealObserver.observe(el));
+
+        // ── Formulario presupuesto: envío AJAX a Formspree ───────────────────
+        const form        = document.getElementById('presupuestoForm');
+        const formSuccess = document.getElementById('formSuccess');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitBtn = form.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Enviando…';
+
+            try {
+                const data = new FormData(form);
+
+                const espacios = [...form.querySelectorAll('input[name="espacio"]:checked')]
+                    .map(cb => cb.value).join(', ');
+                if (espacios) data.set('espacios_seleccionados', espacios);
+
+                const res  = await fetch('https://formspree.io/f/mvzbvgyp', {
+                    method:  'POST',
+                    headers: { 'Accept': 'application/json' },
+                    body:    data
+                });
+                const json = await res.json();
+
+                if (json.ok) {
+                    form.classList.add('hidden');
+                    formSuccess.classList.remove('hidden');
+                } else {
+                    throw new Error((json.errors || []).map(e => e.message).join(', ') || 'Error al enviar');
+                }
+            } catch (err) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Enviar solicitud →';
+                alert('Hubo un problema al enviar el formulario. Por favor escribinos directamente a 3r.arquitectura@gmail.com o por WhatsApp.');
+                console.error(err);
+            }
+        });
+    </script>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+</body>
+</html>
