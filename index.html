@@ -156,7 +156,120 @@
         }
         .icon-hover:hover { transform: scale(1.18); }
 
-        /* ── Imagen de hero: scale muy sutil en hover ───────────────────────── */
+        /* ── Coverflow proyectos ───────────────────────────────────────────── */
+
+        /* Tarjeta: posición absoluta gestionada por JS */
+        .cf-card {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: min(72vw, 340px);
+            transform-origin: center top;
+            transform: translateX(-50%);
+            transition:
+                transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
+                opacity   320ms cubic-bezier(0.4,  0, 0.2, 1);
+            cursor: pointer;
+            will-change: transform, opacity;
+        }
+        .cf-img-wrap {
+            position: relative;
+            aspect-ratio: 3 / 4;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 8px 32px -8px rgba(0,0,0,0.18);
+        }
+        .cf-img-wrap img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .cf-card[data-active=true] .cf-img-wrap img { transform: scale(1.03); }
+        .cf-img-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top,
+                rgba(0,0,0,0.50) 0%,
+                rgba(0,0,0,0.08) 45%,
+                transparent      100%);
+            pointer-events: none;
+        }
+        .cf-badge {
+            position: absolute;
+            top: 14px; left: 14px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 999px;
+        }
+        .cf-badge-bim      { background: rgba(141,175,20,0.15); color: #8daf14; }
+        .cf-badge-reforma  { background: rgba(255,255,255,0.88); color: #1a1a1a; }
+        .cf-badge-asesoria { background: rgba(255,255,255,0.88); color: #1a1a1a; }
+        .cf-badge-metalico { background: rgba(255,255,255,0.88); color: #1a1a1a; }
+
+        .cf-info {
+            padding: 14px 4px 0;
+            /* oculto en tarjetas laterales, visible solo en activa */
+            transition: opacity 320ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .cf-card:not([data-active=true]) .cf-info { opacity: 0; pointer-events: none; }
+        .cf-title {
+            font-family: 'Antonio', sans-serif;
+            font-weight: 700; font-style: italic;
+            font-size: 1.25rem; line-height: 1.2;
+            color: #1a1a1a; margin: 0 0 4px;
+        }
+        .cf-meta {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 11px; font-weight: 600;
+            color: #9ca3af; letter-spacing: 0.04em;
+            margin: 0 0 6px;
+        }
+        .cf-desc {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 0.875rem; color: #6b7280;
+            line-height: 1.5; margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Flechas de navegación */
+        .cf-arrow {
+            position: absolute; top: 38%;
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            background: white;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.09);
+            align-items: center; justify-content: center;
+            color: #1a1a1a;
+            z-index: 20;
+            transition:
+                background 220ms cubic-bezier(0.4,0,0.2,1),
+                border-color 220ms cubic-bezier(0.4,0,0.2,1),
+                transform 180ms cubic-bezier(0.4,0,0.2,1),
+                box-shadow 180ms cubic-bezier(0.4,0,0.2,1);
+        }
+        .cf-arrow:hover {
+            background: #1a1a1a; color: white;
+            border-color: #1a1a1a;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+        }
+        .cf-arrow:active { transform: scale(0.94); }
+        .cf-arrow-prev { left:  -22px; }
+        .cf-arrow-next { right: -22px; }
+        .cf-arrow:disabled { opacity: 0.3; cursor: default; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .cf-card, .cf-img-wrap img, #cf-progress-bar {
+                transition: none !important;
+            }
+        }
+
+                /* ── Imagen de hero: scale muy sutil en hover ───────────────────────── */
         .hero-img-wrap { overflow: hidden; }
         .hero-img-wrap img:first-child {
             transition: transform 600ms var(--ease-out-expo), opacity 300ms var(--ease-in-out);
@@ -248,9 +361,11 @@
     <section id="inicio" class="relative pt-40 pb-20 px-6 bg-white overflow-hidden">
 
         <!-- ── Fondo SVG técnico ─────────────────────────────────────────────
-             Un único SVG con 7 grupos; cada <g data-depth="…"> recibe el
-             transform del parallax JS. Los grupos animan con CSS float.
-             pointer-events:none + aria-hidden para no afectar accesibilidad. -->
+             Estructura de DOS capas anidadas por grupo (G1–G6):
+               <g data-depth>  → recibe SOLO el transform del parallax JS
+                 <g style="animation:…">  → recibe SOLO la animación CSS float
+             Así las dos responsabilidades nunca se pisan en la prop transform.
+             G0 es estático: sin data-depth, sin animación. -->
         <svg id="hero-bg-svg"
              viewBox="0 0 1440 720"
              preserveAspectRatio="xMidYMid slice"
@@ -258,16 +373,14 @@
              xmlns="http://www.w3.org/2000/svg">
 
             <defs>
-                <!-- Sombra suave para rectángulos técnicos -->
                 <filter id="hero-shadow" x="-20%" y="-20%" width="140%" height="140%">
                     <feDropShadow dx="0" dy="3" stdDeviation="7"
                                   flood-color="#1a1a1a" flood-opacity="0.06"/>
                 </filter>
             </defs>
 
-            <!-- G0 · Grid base — estático, sin parallax, sin animación ──────── -->
-            <!-- 3 horiz + 3 vert dashed muy tenues dan ritmo sin distraer -->
-            <g id="hero-g0" opacity="1">
+            <!-- G0 · Grid base — estático, sin parallax ni animación ───────── -->
+            <g id="hero-g0">
                 <line x1="0"    y1="180" x2="1440" y2="180"
                       stroke="rgba(26,26,26,0.04)" stroke-width="1" stroke-dasharray="4 14"/>
                 <line x1="0"    y1="360" x2="1440" y2="360"
@@ -282,119 +395,103 @@
                       stroke="rgba(26,26,26,0.04)" stroke-width="1" stroke-dasharray="4 14"/>
             </g>
 
-            <!-- G1 · Rectángulos técnicos grandes — lado derecho (depth 0.5) ── -->
-            <g data-depth="0.5"
-               style="animation: hb-float-a 32s ease-in-out infinite;">
-                <!-- Marco exterior principal -->
-                <rect x="810" y="36" width="530" height="390" rx="2"
-                      fill="rgba(26,26,26,0.018)" stroke="rgba(26,26,26,0.11)" stroke-width="1"
-                      filter="url(#hero-shadow)"/>
-                <!-- Marco interior dashed (callout interior) -->
-                <rect x="852" y="78" width="446" height="306" rx="1"
-                      fill="none" stroke="rgba(26,26,26,0.06)" stroke-width="0.75"
-                      stroke-dasharray="8 11"/>
+            <!-- G1 · Rectángulos técnicos — derecha (parallax 0.5) ──────────── -->
+            <g data-depth="0.5">
+                <g style="animation: hb-float-a 32s ease-in-out infinite;">
+                    <rect x="810" y="36" width="530" height="390" rx="2"
+                          fill="rgba(26,26,26,0.018)" stroke="rgba(26,26,26,0.11)" stroke-width="1"
+                          filter="url(#hero-shadow)"/>
+                    <rect x="852" y="78" width="446" height="306" rx="1"
+                          fill="none" stroke="rgba(26,26,26,0.06)" stroke-width="0.75"
+                          stroke-dasharray="8 11"/>
+                </g>
             </g>
 
-            <!-- G2 · Eje de coordenadas — evoca el logo 3R (depth 0.8) ────── -->
-            <g data-depth="0.8"
-               style="animation: hb-float-b 24s ease-in-out 2s infinite;">
-                <!-- Eje vertical -->
-                <line x1="1110" y1="18"  x2="1110" y2="430"
-                      stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
-                <!-- Eje horizontal -->
-                <line x1="870"  y1="192" x2="1390" y2="192"
-                      stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
-                <!-- Ticks eje vertical (c/60px) -->
-                <line x1="1103" y1="78"  x2="1117" y2="78"  stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
-                <line x1="1103" y1="138" x2="1117" y2="138" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
-                <line x1="1103" y1="252" x2="1117" y2="252" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
-                <line x1="1103" y1="312" x2="1117" y2="312" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
-                <line x1="1103" y1="372" x2="1117" y2="372" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
-                <!-- Ticks eje horizontal (c/60px) -->
-                <line x1="930"  y1="185" x2="930"  y2="199" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
-                <line x1="990"  y1="185" x2="990"  y2="199" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
-                <line x1="1050" y1="185" x2="1050" y2="199" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
-                <line x1="1170" y1="185" x2="1170" y2="199" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
-                <line x1="1230" y1="185" x2="1230" y2="199" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
-                <line x1="1290" y1="185" x2="1290" y2="199" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
-                <line x1="1350" y1="185" x2="1350" y2="199" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+            <!-- G2 · Eje de coordenadas — evoca el logo 3R (parallax 0.8) ──── -->
+            <g data-depth="0.8">
+                <g style="animation: hb-float-b 24s ease-in-out 2s infinite;">
+                    <line x1="1110" y1="18"  x2="1110" y2="430"
+                          stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                    <line x1="870"  y1="192" x2="1390" y2="192"
+                          stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                    <line x1="1103" y1="78"  x2="1117" y2="78"  stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                    <line x1="1103" y1="138" x2="1117" y2="138" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                    <line x1="1103" y1="252" x2="1117" y2="252" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                    <line x1="1103" y1="312" x2="1117" y2="312" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                    <line x1="1103" y1="372" x2="1117" y2="372" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                    <line x1="930"  y1="185" x2="930"  y2="199" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                    <line x1="990"  y1="185" x2="990"  y2="199" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                    <line x1="1050" y1="185" x2="1050" y2="199" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                    <line x1="1170" y1="185" x2="1170" y2="199" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                    <line x1="1230" y1="185" x2="1230" y2="199" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                    <line x1="1290" y1="185" x2="1290" y2="199" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                    <line x1="1350" y1="185" x2="1350" y2="199" stroke="rgba(26,26,26,0.13)" stroke-width="1"/>
+                </g>
             </g>
 
-            <!-- G3 · Callout box — esquina inferior izquierda (depth 1.2) ──── -->
-            <!-- Evoca notas técnicas de plano arquitectónico -->
-            <g data-depth="1.2"
-               style="animation: hb-float-c 20s ease-in-out 4s infinite;">
-                <rect x="46" y="495" width="230" height="160" rx="2"
-                      fill="rgba(26,26,26,0.015)" stroke="rgba(26,26,26,0.10)" stroke-width="1"
-                      filter="url(#hero-shadow)"/>
-                <!-- Línea líder desde callout hacia el centro -->
-                <line x1="276" y1="552" x2="372" y2="504"
-                      stroke="rgba(26,26,26,0.08)" stroke-width="0.75"/>
-                <!-- Líneas internas (simulan filas de datos) -->
-                <line x1="66"  y1="522" x2="256" y2="522" stroke="rgba(26,26,26,0.08)" stroke-width="0.6"/>
-                <line x1="66"  y1="542" x2="206" y2="542" stroke="rgba(26,26,26,0.08)" stroke-width="0.6"/>
-                <line x1="66"  y1="562" x2="236" y2="562" stroke="rgba(26,26,26,0.08)" stroke-width="0.6"/>
-                <line x1="66"  y1="582" x2="176" y2="582" stroke="rgba(26,26,26,0.08)" stroke-width="0.6"/>
-                <line x1="66"  y1="602" x2="220" y2="602" stroke="rgba(26,26,26,0.08)" stroke-width="0.6"/>
+            <!-- G3 · Callout box — inferior izquierda (parallax 1.2) ─────────── -->
+            <g data-depth="1.2">
+                <g style="animation: hb-float-c 20s ease-in-out 4s infinite;">
+                    <rect x="46" y="495" width="230" height="160" rx="2"
+                          fill="rgba(26,26,26,0.015)" stroke="rgba(26,26,26,0.10)" stroke-width="1"
+                          filter="url(#hero-shadow)"/>
+                    <line x1="276" y1="552" x2="372" y2="504"
+                          stroke="rgba(26,26,26,0.08)" stroke-width="0.75"/>
+                    <line x1="66"  y1="522" x2="256" y2="522" stroke="rgba(26,26,26,0.08)" stroke-width="0.6"/>
+                    <line x1="66"  y1="542" x2="206" y2="542" stroke="rgba(26,26,26,0.08)" stroke-width="0.6"/>
+                    <line x1="66"  y1="562" x2="236" y2="562" stroke="rgba(26,26,26,0.08)" stroke-width="0.6"/>
+                    <line x1="66"  y1="582" x2="176" y2="582" stroke="rgba(26,26,26,0.08)" stroke-width="0.6"/>
+                    <line x1="66"  y1="602" x2="220" y2="602" stroke="rgba(26,26,26,0.08)" stroke-width="0.6"/>
+                </g>
             </g>
 
-            <!-- G4 · Cotas / líneas de medición — izquierda (depth 0.7) ─────── -->
-            <g data-depth="0.7"
-               style="animation: hb-float-a 28s ease-in-out 6s infinite;">
-                <!-- Cota horizontal con ticks terminales -->
-                <line x1="130" y1="148" x2="460" y2="148"
-                      stroke="rgba(26,26,26,0.10)" stroke-width="0.75"/>
-                <line x1="130" y1="140" x2="130" y2="156" stroke="rgba(26,26,26,0.10)" stroke-width="0.75"/>
-                <line x1="460" y1="140" x2="460" y2="156" stroke="rgba(26,26,26,0.10)" stroke-width="0.75"/>
-                <!-- Cota vertical con ticks terminales -->
-                <line x1="510" y1="58"  x2="510" y2="310"
-                      stroke="rgba(26,26,26,0.10)" stroke-width="0.75"/>
-                <line x1="502" y1="58"  x2="518" y2="58"  stroke="rgba(26,26,26,0.10)" stroke-width="0.75"/>
-                <line x1="502" y1="310" x2="518" y2="310" stroke="rgba(26,26,26,0.10)" stroke-width="0.75"/>
-                <!-- Rectángulo secundario (objeto medido) -->
-                <rect x="130" y="172" width="256" height="120" rx="1"
-                      fill="rgba(26,26,26,0.018)" stroke="rgba(26,26,26,0.09)" stroke-width="0.75"
-                      filter="url(#hero-shadow)"/>
+            <!-- G4 · Cotas / líneas de medición — izquierda (parallax 0.7) ──── -->
+            <g data-depth="0.7">
+                <g style="animation: hb-float-a 28s ease-in-out 6s infinite;">
+                    <line x1="130" y1="148" x2="460" y2="148"
+                          stroke="rgba(26,26,26,0.10)" stroke-width="0.75"/>
+                    <line x1="130" y1="140" x2="130" y2="156" stroke="rgba(26,26,26,0.10)" stroke-width="0.75"/>
+                    <line x1="460" y1="140" x2="460" y2="156" stroke="rgba(26,26,26,0.10)" stroke-width="0.75"/>
+                    <line x1="510" y1="58"  x2="510" y2="310"
+                          stroke="rgba(26,26,26,0.10)" stroke-width="0.75"/>
+                    <line x1="502" y1="58"  x2="518" y2="58"  stroke="rgba(26,26,26,0.10)" stroke-width="0.75"/>
+                    <line x1="502" y1="310" x2="518" y2="310" stroke="rgba(26,26,26,0.10)" stroke-width="0.75"/>
+                    <rect x="130" y="172" width="256" height="120" rx="1"
+                          fill="rgba(26,26,26,0.018)" stroke="rgba(26,26,26,0.09)" stroke-width="0.75"
+                          filter="url(#hero-shadow)"/>
+                </g>
             </g>
 
-            <!-- G5 · Nodos verdes — marcadores de precisión (depth 1.5) ─────── -->
-            <!-- Pocos, deliberados, solo en intersecciones con significado -->
-            <g data-depth="1.5"
-               style="animation: hb-float-b 18s ease-in-out 1s infinite;">
-                <!-- Nodo principal: intersección del eje de coordenadas -->
-                <circle cx="1110" cy="192" r="5.5" fill="#8daf14" opacity="0.92"/>
-                <circle cx="1110" cy="192" r="11"  fill="none"
-                        stroke="#8daf14" stroke-width="1" opacity="0.38"/>
-                <!-- Nodo esquina rect grande -->
-                <circle cx="810"  cy="36"  r="3.5" fill="#8daf14" opacity="0.82"/>
-                <!-- Nodo extremo línea líder callout -->
-                <circle cx="372"  cy="504" r="3.2" fill="#8daf14" opacity="0.80"/>
-                <circle cx="372"  cy="504" r="7.5" fill="none"
-                        stroke="#8daf14" stroke-width="0.75" opacity="0.32"/>
-                <!-- Nodo extremo cota horizontal -->
-                <circle cx="460"  cy="148" r="3"   fill="#8daf14" opacity="0.78"/>
-                <!-- Nodo esquina rect secundario -->
-                <circle cx="130"  cy="172" r="2.5" fill="#8daf14" opacity="0.70"/>
-                <!-- Nodo lejano top-right (muy sutil, da profundidad) -->
-                <circle cx="1340" cy="36"  r="2.5" fill="#8daf14" opacity="0.42"/>
+            <!-- G5 · Nodos verdes — marcadores de precisión (parallax 1.5) ───── -->
+            <g data-depth="1.5">
+                <g style="animation: hb-float-b 18s ease-in-out 1s infinite;">
+                    <circle cx="1110" cy="192" r="5.5" fill="#8daf14" opacity="0.92"/>
+                    <circle cx="1110" cy="192" r="11"  fill="none"
+                            stroke="#8daf14" stroke-width="1" opacity="0.38"/>
+                    <circle cx="810"  cy="36"  r="3.5" fill="#8daf14" opacity="0.82"/>
+                    <circle cx="372"  cy="504" r="3.2" fill="#8daf14" opacity="0.80"/>
+                    <circle cx="372"  cy="504" r="7.5" fill="none"
+                            stroke="#8daf14" stroke-width="0.75" opacity="0.32"/>
+                    <circle cx="460"  cy="148" r="3"   fill="#8daf14" opacity="0.78"/>
+                    <circle cx="130"  cy="172" r="2.5" fill="#8daf14" opacity="0.70"/>
+                    <circle cx="1340" cy="36"  r="2.5" fill="#8daf14" opacity="0.42"/>
+                </g>
             </g>
 
-            <!-- G6 · Diagonal + rect flotante — zona central (depth 1.0) ────── -->
-            <g data-depth="1.0"
-               style="animation: hb-float-c 26s ease-in-out 3s infinite;">
-                <!-- Línea dashed diagonal (guía de composición) -->
-                <line x1="600" y1="590" x2="840" y2="370"
-                      stroke="rgba(26,26,26,0.065)" stroke-width="0.75" stroke-dasharray="3 10"/>
-                <!-- Rect pequeño flotante -->
-                <rect x="642" y="454" width="62" height="62" rx="1"
-                      fill="rgba(26,26,26,0.02)" stroke="rgba(26,26,26,0.085)" stroke-width="0.75"/>
-                <!-- Nodo sobre la diagonal -->
-                <circle cx="720" cy="480" r="2.2" fill="#8daf14" opacity="0.58"/>
+            <!-- G6 · Diagonal + rect flotante — zona central (parallax 1.0) ──── -->
+            <g data-depth="1.0">
+                <g style="animation: hb-float-c 26s ease-in-out 3s infinite;">
+                    <line x1="600" y1="590" x2="840" y2="370"
+                          stroke="rgba(26,26,26,0.065)" stroke-width="0.75" stroke-dasharray="3 10"/>
+                    <rect x="642" y="454" width="62" height="62" rx="1"
+                          fill="rgba(26,26,26,0.02)" stroke="rgba(26,26,26,0.085)" stroke-width="0.75"/>
+                    <circle cx="720" cy="480" r="2.2" fill="#8daf14" opacity="0.58"/>
+                </g>
             </g>
 
         </svg><!-- /hero-bg-svg -->
 
-        <!-- Contenido del hero — z-10 para quedar sobre el SVG de fondo ──────── -->
+        <!-- Contenido del hero — z-10 para quedar sobre el SVG de fondo -->
         <div class="relative z-10 max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
 
             <div>
@@ -591,63 +688,271 @@
 
 
     <!-- ═══════════════════════════════════════════ PROYECTOS -->
-    <section id="proyectos" class="py-24 px-6 bg-white text-center">
-        <div class="max-w-7xl mx-auto">
+    <section id="proyectos" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
 
-            <h2 class="js-reveal font-display text-4xl font-bold uppercase italic mb-16 text-brandDark">Proyectos Destacados</h2>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-20">
-
-                <div class="js-reveal group text-left" style="--delay: 0ms">
-                    <div class="aspect-square bg-gray-100 rounded-2xl overflow-hidden shadow-lg mb-5
-                                transition-shadow duration-200" style="transition: box-shadow 200ms cubic-bezier(0.4,0,0.2,1);">
-                        <img src="assets/img/Escuela_65.png"
-                             class="w-full h-full object-cover transition duration-500 group-hover:scale-105"
-                             style="transition: transform 500ms cubic-bezier(0.16,1,0.3,1);"
-                             alt="Escuela 65 — Scan to BIM">
-                    </div>
-                    <span class="inline-block bg-brandGreen/10 text-brandGreen text-xs font-mono font-bold px-3 py-1 rounded-full mb-2">Scan to BIM</span>
-                    <h3 class="text-2xl font-display font-bold text-brandDark">Escuela 65</h3>
-                    <p class="text-gray-500 text-sm">Canelones, Uruguay</p>
-                </div>
-
-                <div class="js-reveal group text-left" style="--delay: 100ms">
-                    <div class="aspect-square bg-gray-100 rounded-2xl overflow-hidden shadow-lg mb-5">
-                        <img src="assets/img/cocina_lavieverde1.png"
-                             class="w-full h-full object-cover"
-                             style="transition: transform 500ms cubic-bezier(0.16,1,0.3,1);"
-                             alt="Reforma de Cocina La Vie en Verde">
-                    </div>
-                    <span class="inline-block bg-brandGreen/10 text-brandGreen text-xs font-mono font-bold px-3 py-1 rounded-full mb-2">Reforma &amp; Asesoría</span>
-                    <h3 class="text-2xl font-display font-bold text-brandDark">Reforma de Cocina</h3>
-                    <p class="text-gray-500 text-sm">La Pedrera, Rocha — Uruguay</p>
-                </div>
-
-                <div class="js-reveal group text-left" style="--delay: 200ms">
-                    <div class="aspect-square bg-gray-100 rounded-2xl overflow-hidden shadow-lg mb-5">
-                        <img src="assets/img/montaje-revestimiento-metalico-3R_carrasco1.png"
-                             class="w-full h-full object-cover"
-                             style="transition: transform 500ms cubic-bezier(0.16,1,0.3,1);"
-                             alt="Divisor metálico Jardines de Carrasco">
-                    </div>
-                    <span class="inline-block bg-brandGreen/10 text-brandGreen text-xs font-mono font-bold px-3 py-1 rounded-full mb-2">Revestimiento metálico</span>
-                    <h3 class="text-2xl font-display font-bold text-brandDark">Divisor metálico para paisajismo</h3>
-                    <p class="text-gray-500 text-sm">Jardines de Carrasco, Montevideo</p>
-                </div>
-
+            <!-- Título -->
+            <div class="js-reveal text-center mb-14">
+                <h2 class="font-display text-4xl font-bold uppercase italic tracking-tight text-brandDark">
+                    Proyectos
+                </h2>
+                <div class="w-20 h-1 bg-brandDark mx-auto mt-4"></div>
             </div>
 
-            <div class="js-reveal" style="--delay: 120ms">
-                <a href="https://drive.google.com/file/d/1b6bBWild0piCCRsIRGNUk3N-zDD2tP4c/view?usp=sharing"
-                   target="_blank"
-                   class="btn-press inline-block bg-brandDark text-white px-12 py-5 rounded-full font-bold shadow-xl hover:bg-brandGreen uppercase tracking-widest">
-                    Ver todo el portfolio ↗
+            <!-- ── Coverflow ──────────────────────────────────────────────────── -->
+            <div class="relative">
+
+                <!-- Viewport: recorta las tarjetas lejanas -->
+                <div id="cf-viewport"
+                     class="relative mx-auto overflow-hidden"
+                     style="height: 560px; max-width: 100%;">
+
+                    <!-- Las tarjetas se posicionan absolutamente vía JS -->
+                    <!-- Proyecto 1 — Apartamento MET (Marzo 2026) -->
+                    <article class="cf-card" data-index="0">
+                        <div class="cf-img-wrap">
+                            <img src="assets/img/proyectos/airbnb.png" alt="Apartamento MET" loading="lazy">
+                            <div class="cf-img-overlay"></div>
+                            <span class="cf-badge cf-badge-reforma">Reforma</span>
+                        </div>
+                        <div class="cf-info">
+                            <h3 class="cf-title">Apartamento MET</h3>
+                            <p class="cf-meta">Montevideo &middot; Marzo 2026</p>
+                            <p class="cf-desc">Reforma de apartamento monoambiente para Airbnb.</p>
+                        </div>
+                    </article>
+
+                    <!-- Proyecto 2 — Escuela 27 (Nov 2025) -->
+                    <article class="cf-card" data-index="1">
+                        <div class="cf-img-wrap">
+                            <img src="assets/img/proyectos/escuela-27.png" alt="Escuela 27" loading="lazy">
+                            <div class="cf-img-overlay"></div>
+                            <span class="cf-badge cf-badge-bim">BIM</span>
+                        </div>
+                        <div class="cf-info">
+                            <h3 class="cf-title">Escuela 27</h3>
+                            <p class="cf-meta">Treinta y Tres &middot; Nov 2025</p>
+                            <p class="cf-desc">Modelado BIM (LOD 200) de exteriores a partir de documentación 2D.</p>
+                        </div>
+                    </article>
+
+                    <!-- Proyecto 3 — Escuela 65 (Abril 2025) -->
+                    <article class="cf-card" data-index="2">
+                        <div class="cf-img-wrap">
+                            <img src="assets/img/proyectos/escuela-65.png" alt="Escuela 65" loading="lazy">
+                            <div class="cf-img-overlay"></div>
+                            <span class="cf-badge cf-badge-bim">BIM</span>
+                        </div>
+                        <div class="cf-info">
+                            <h3 class="cf-title">Escuela 65</h3>
+                            <p class="cf-meta">Canelones, Uruguay &middot; Abril 2025</p>
+                            <p class="cf-desc">Modelado BIM (LOD 200) de edificación y exteriores a partir de nube de puntos y documentación 2D.</p>
+                        </div>
+                    </article>
+
+                    <!-- Proyecto 4 — Cocina La Vie en Verde (Mayo 2024) -->
+                    <article class="cf-card" data-index="3">
+                        <div class="cf-img-wrap">
+                            <img src="assets/img/proyectos/cocina-lavieenverde.png" alt="Cocina La Vie en Verde" loading="lazy">
+                            <div class="cf-img-overlay"></div>
+                            <span class="cf-badge cf-badge-asesoria">Asesoría</span>
+                        </div>
+                        <div class="cf-info">
+                            <h3 class="cf-title">Cocina La Vie en Verde</h3>
+                            <p class="cf-meta">La Pedrera, Rocha &middot; Mayo 2024</p>
+                            <p class="cf-desc">Asesoría y diseño de cocina, vivienda unifamiliar.</p>
+                        </div>
+                    </article>
+
+                    <!-- Proyecto 5 — Sunflower (Mayo 2024) -->
+                    <article class="cf-card" data-index="4">
+                        <div class="cf-img-wrap">
+                            <img src="assets/img/proyectos/sunflower.png" alt="Centro de Estética Sunflower" loading="lazy">
+                            <div class="cf-img-overlay"></div>
+                            <span class="cf-badge cf-badge-reforma">Diseño</span>
+                        </div>
+                        <div class="cf-info">
+                            <h3 class="cf-title">Centro de Estética Sunflower</h3>
+                            <p class="cf-meta">Cordón, Montevideo &middot; Mayo 2024</p>
+                            <p class="cf-desc">Diseño para reforma de centro de estética.</p>
+                        </div>
+                    </article>
+
+                    <!-- Proyecto 6 — Fachada Yerba Canarias (Abril 2024) -->
+                    <article class="cf-card" data-index="5">
+                        <div class="cf-img-wrap">
+                            <img src="assets/img/proyectos/fachada-yerbacanarias.jpg" alt="Fachada Interior Metálica" loading="lazy">
+                            <div class="cf-img-overlay"></div>
+                            <span class="cf-badge cf-badge-metalico">Metálico</span>
+                        </div>
+                        <div class="cf-info">
+                            <h3 class="cf-title">Fachada Interior Metálica</h3>
+                            <p class="cf-meta">Yerba Canarias, Canelones &middot; Abril 2024</p>
+                            <p class="cf-desc">Montaje de revestimiento metálico.</p>
+                        </div>
+                    </article>
+
+                    <!-- Proyecto 7 — Jade Esthetic (Marzo 2024) -->
+                    <article class="cf-card" data-index="6">
+                        <div class="cf-img-wrap">
+                            <img src="assets/img/proyectos/jade-esthetic.png" alt="Centro Estético Jade Esthetic" loading="lazy">
+                            <div class="cf-img-overlay"></div>
+                            <span class="cf-badge cf-badge-reforma">Reforma</span>
+                        </div>
+                        <div class="cf-info">
+                            <h3 class="cf-title">Centro Estético Jade Esthetic</h3>
+                            <p class="cf-meta">Cordón, Montevideo &middot; Marzo 2024</p>
+                            <p class="cf-desc">Reforma de centro de estética.</p>
+                        </div>
+                    </article>
+
+                    <!-- Proyecto 8 — Pantalla Carrasco (Oct 2023) -->
+                    <article class="cf-card" data-index="7">
+                        <div class="cf-img-wrap">
+                            <img src="assets/img/proyectos/pantalla-carrasco.jpg" alt="Pantalla Metálica Carrasco" loading="lazy">
+                            <div class="cf-img-overlay"></div>
+                            <span class="cf-badge cf-badge-metalico">Metálico</span>
+                        </div>
+                        <div class="cf-info">
+                            <h3 class="cf-title">Pantalla Metálica</h3>
+                            <p class="cf-meta">Jardines de Carrasco, Montevideo &middot; Oct 2023</p>
+                            <p class="cf-desc">Estructura metálica para paisajismo (con Identidad Paisajismo).</p>
+                        </div>
+                    </article>
+
+                    <!-- Proyecto 9 — Apartamento AS (Abril 2023) -->
+                    <article class="cf-card" data-index="8">
+                        <div class="cf-img-wrap">
+                            <img src="assets/img/proyectos/apartamento-as.png" alt="Apartamento AS" loading="lazy">
+                            <div class="cf-img-overlay"></div>
+                            <span class="cf-badge cf-badge-reforma">Reforma</span>
+                        </div>
+                        <div class="cf-info">
+                            <h3 class="cf-title">Apartamento AS</h3>
+                            <p class="cf-meta">Centro, Montevideo &middot; Abril 2023</p>
+                            <p class="cf-desc">Reforma de apartamento de 2 habitaciones.</p>
+                        </div>
+                    </article>
+
+                    <!-- Proyecto 10 — Pizzería Requeso (Julio 2022) -->
+                    <article class="cf-card" data-index="9">
+                        <div class="cf-img-wrap">
+                            <img src="assets/img/proyectos/pizzeria-requeso.png" alt="Pizzería Requeso" loading="lazy">
+                            <div class="cf-img-overlay"></div>
+                            <span class="cf-badge cf-badge-reforma">Diseño</span>
+                        </div>
+                        <div class="cf-info">
+                            <h3 class="cf-title">Pizzería Requeso</h3>
+                            <p class="cf-meta">Punta Carretas, Montevideo &middot; Julio 2022</p>
+                            <p class="cf-desc">Diseño de reforma.</p>
+                        </div>
+                    </article>
+
+                    <!-- Proyecto 11 — Oficina AG (Oct 2019) -->
+                    <article class="cf-card" data-index="10">
+                        <div class="cf-img-wrap">
+                            <img src="assets/img/proyectos/oficina-ag.png" alt="Oficina AG" loading="lazy">
+                            <div class="cf-img-overlay"></div>
+                            <span class="cf-badge cf-badge-reforma">Diseño</span>
+                        </div>
+                        <div class="cf-info">
+                            <h3 class="cf-title">Oficina AG</h3>
+                            <p class="cf-meta">Ciudad Vieja, Montevideo &middot; Oct 2019</p>
+                            <p class="cf-desc">Oficina para 16 personas.</p>
+                        </div>
+                    </article>
+
+                    <!-- Proyecto 12 — Diafano (2018) -->
+                    <article class="cf-card" data-index="11">
+                        <div class="cf-img-wrap">
+                            <img src="assets/img/proyectos/diafano.png" alt="Diafano" loading="lazy">
+                            <div class="cf-img-overlay"></div>
+                            <span class="cf-badge cf-badge-reforma">Diseño</span>
+                        </div>
+                        <div class="cf-info">
+                            <h3 class="cf-title">Diafano</h3>
+                            <p class="cf-meta">Mobiliario exterior &middot; 2018</p>
+                            <p class="cf-desc">Parrillero + jardín vertical.</p>
+                        </div>
+                    </article>
+
+                    <!-- Proyecto 13 — Casa Sanabria (Sept 2016) -->
+                    <article class="cf-card" data-index="12">
+                        <div class="cf-img-wrap">
+                            <img src="assets/img/proyectos/casa-sanabria.png" alt="Casa Sanabria" loading="lazy">
+                            <div class="cf-img-overlay"></div>
+                            <span class="cf-badge cf-badge-reforma">Vivienda</span>
+                        </div>
+                        <div class="cf-info">
+                            <h3 class="cf-title">Casa Sanabria</h3>
+                            <p class="cf-meta">Valencia, Venezuela &middot; Sept 2016</p>
+                            <p class="cf-desc">Vivienda unifamiliar de 2 plantas.</p>
+                        </div>
+                    </article>
+
+                    <!-- Proyecto 14 — Foodie House (2016) -->
+                    <article class="cf-card" data-index="13">
+                        <div class="cf-img-wrap">
+                            <img src="assets/img/proyectos/foodie-house-pa.png" alt="Restaurante Foodie House" loading="lazy">
+                            <div class="cf-img-overlay"></div>
+                            <span class="cf-badge cf-badge-reforma">Diseño</span>
+                        </div>
+                        <div class="cf-info">
+                            <h3 class="cf-title">Restaurante Foodie House</h3>
+                            <p class="cf-meta">Ciudad de Panamá &middot; 2016</p>
+                            <p class="cf-desc">Diseño de reforma de local gastronómico.</p>
+                        </div>
+                    </article>
+
+                </div><!-- /cf-viewport -->
+
+                <!-- Flechas de navegación (desktop) -->
+                <button id="cf-prev"
+                        class="cf-arrow cf-arrow-prev btn-press hidden md:flex"
+                        aria-label="Proyecto anterior">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"/>
+                    </svg>
+                </button>
+                <button id="cf-next"
+                        class="cf-arrow cf-arrow-next btn-press hidden md:flex"
+                        aria-label="Proyecto siguiente">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </button>
+
+            </div><!-- /relative -->
+
+            <!-- Barra de progreso -->
+            <div class="flex items-center justify-center gap-4 mt-8">
+                <span id="cf-current" class="text-xs font-mono font-bold text-brandDark w-6 text-right">01</span>
+                <div class="relative w-40 h-px bg-gray-200">
+                    <div id="cf-progress-bar"
+                         class="absolute left-0 top-0 h-px bg-brandGreen"
+                         style="width: 7.14%; transition: width 420ms cubic-bezier(0.16,1,0.3,1);"></div>
+                </div>
+                <span class="text-xs font-mono text-gray-400">14</span>
+            </div>
+
+            <!-- CTA -->
+            <div class=js-reveal text-center mt-14 style=--delay: 0ms>
+            <div class="js-reveal text-center mt-14" style="--delay: 0ms">
+                <a href="#presupuesto"
+                   class="btn-press inline-block bg-brandGreen text-white px-12 py-5 rounded-full font-bold shadow-xl hover:bg-brandDark uppercase tracking-widest text-sm">
+                    Solicitar presupuesto →
                 </a>
+                <p class="mt-4 text-xs font-mono text-gray-400">
+                    ¿Querés trabajar juntos? Contanos tu proyecto.
+                </p>
             </div>
 
         </div>
     </section>
-
 
     <!-- ═══════════════════════════════════════════ SOLICITAR PRESUPUESTO -->
     <section id="presupuesto" class="py-24 px-6 bg-gray-50">
@@ -1039,6 +1344,162 @@
 
     <!-- ═══════════════════════════════════════════ SCRIPTS -->
     <script>
+        // ── Coverflow de proyectos ────────────────────────────────────────────
+        (function () {
+            const viewport  = document.getElementById('cf-viewport');
+            const cards     = Array.from(document.querySelectorAll('.cf-card'));
+            const btnPrev   = document.getElementById('cf-prev');
+            const btnNext   = document.getElementById('cf-next');
+            const counter   = document.getElementById('cf-current');
+            const progBar   = document.getElementById('cf-progress-bar');
+            const total     = cards.length;
+            if (!viewport || !cards.length) return;
+
+            let active = 0;
+            let isAnimating = false;
+
+            // Respeta prefers-reduced-motion
+            const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            // ── Geometría responsive ──────────────────────────────────────────
+            function cardWidth() {
+                return Math.min(viewport.offsetWidth * 0.72, 340);
+            }
+            function gapPx() { return 24; }
+
+            // Altura del viewport = imagen (aspect 3:4) + info fija (~110px)
+            function setViewportHeight() {
+                const cw = cardWidth();
+                const imgH = cw * (4 / 3);
+                viewport.style.height = (imgH + 116) + 'px';
+                // Actualizar ancho de cada tarjeta (CSS min() no siempre disponible en todos los ctx)
+                cards.forEach(c => { c.style.width = cw + 'px'; });
+            }
+
+            // ── Render de las tarjetas ────────────────────────────────────────
+            function render(skipTransition) {
+                const cw  = cardWidth();
+                const gap = gapPx();
+
+                cards.forEach((card, i) => {
+                    const offset   = i - active;
+                    const absOff   = Math.abs(offset);
+                    const sign     = Math.sign(offset) || 1;
+
+                    let scale, tx, opacity, zIndex;
+
+                    if (absOff === 0) {
+                        scale = 1; tx = 0; opacity = 1; zIndex = 10;
+                    } else if (absOff === 1) {
+                        scale = 0.83;
+                        tx    = sign * (cw * 0.80 + gap);
+                        opacity = 0.68; zIndex = 6;
+                    } else if (absOff === 2) {
+                        scale = 0.68;
+                        tx    = sign * (cw * 1.50 + gap * 2);
+                        opacity = 0.40; zIndex = 3;
+                    } else {
+                        scale = 0.56;
+                        tx    = sign * (cw * 2.10 + gap * 3);
+                        opacity = 0; zIndex = 0;
+                    }
+
+                    if (skipTransition || reduced) {
+                        card.style.transition = 'none';
+                    } else {
+                        card.style.transition =
+                            'transform 420ms cubic-bezier(0.16,1,0.3,1), ' +
+                            'opacity 320ms cubic-bezier(0.4,0,0.2,1)';
+                    }
+
+                    // translateX(-50%) centra la tarjeta en left:50% del viewport
+                    card.style.transform = 'translateX(calc(-50% + ' + tx + 'px)) scale(' + scale + ')';
+                    card.style.opacity   = opacity;
+                    card.style.zIndex    = zIndex;
+                    card.setAttribute('data-active', absOff === 0 ? 'true' : 'false');
+                    card.setAttribute('aria-hidden',  absOff > 2  ? 'true' : 'false');
+                });
+
+                // Actualizar contador y barra
+                counter.textContent = String(active + 1).padStart(2, '0');
+                const pct = ((active + 1) / total * 100).toFixed(2);
+                progBar.style.width = pct + '%';
+
+                // Habilitar / deshabilitar flechas en extremos
+                btnPrev.disabled = active === 0;
+                btnNext.disabled = active === total - 1;
+            }
+
+            // ── Navegación ────────────────────────────────────────────────────
+            function goTo(idx) {
+                if (idx < 0 || idx >= total) return;
+                active = idx;
+                render(false);
+            }
+            function goPrev() { goTo(active - 1); }
+            function goNext() { goTo(active + 1); }
+
+            // Botones
+            btnPrev.addEventListener('click', goPrev);
+            btnNext.addEventListener('click', goNext);
+
+            // Clic en tarjeta lateral → navega a ella
+            cards.forEach((card, i) => {
+                card.addEventListener('click', () => {
+                    if (i !== active) goTo(i);
+                });
+            });
+
+            // Teclado ← →
+            document.addEventListener('keydown', function (e) {
+                // Solo activa si el usuario está "cerca" de la sección
+                const rect = viewport.getBoundingClientRect();
+                const inView = rect.top < window.innerHeight && rect.bottom > 0;
+                if (!inView) return;
+                if (e.key === 'ArrowLeft')  { e.preventDefault(); goPrev(); }
+                if (e.key === 'ArrowRight') { e.preventDefault(); goNext(); }
+            });
+
+            // Rueda del mouse (desktop, throttled)
+            let wheelTimer = null;
+            viewport.addEventListener('wheel', function (e) {
+                e.preventDefault();
+                if (wheelTimer) return;
+                if (e.deltaX > 30 || e.deltaY > 30)  goNext();
+                if (e.deltaX < -30 || e.deltaY < -30) goPrev();
+                wheelTimer = setTimeout(() => { wheelTimer = null; }, 600);
+            }, { passive: false });
+
+            // Swipe táctil (mobile)
+            let touchStartX = 0, touchStartY = 0;
+            viewport.addEventListener('touchstart', function (e) {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+            viewport.addEventListener('touchend', function (e) {
+                const dx = touchStartX - e.changedTouches[0].clientX;
+                const dy = Math.abs(touchStartY - e.changedTouches[0].clientY);
+                // Solo swipe horizontal significativo (no scroll vertical)
+                if (Math.abs(dx) > 50 && Math.abs(dx) > dy * 1.5) {
+                    dx > 0 ? goNext() : goPrev();
+                }
+            }, { passive: true });
+
+            // Redimensionado responsive
+            let resizeTimer;
+            window.addEventListener('resize', function () {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function () {
+                    setViewportHeight();
+                    render(true); // sin transición al redimensionar
+                }, 120);
+            });
+
+            // ── Init ──────────────────────────────────────────────────────────
+            setViewportHeight();
+            render(true); // primer render sin transición
+        })();
+
         // ── Parallax de cursor sobre bloques del hero ─────────────────────────
         (function () {
             // Respeta prefers-reduced-motion
