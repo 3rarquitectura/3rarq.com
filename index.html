@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es" class="no-js scroll-smooth">
 <head>
     <meta charset="UTF-8">
@@ -264,58 +264,176 @@
         .cf-arrow:disabled { opacity: 0.3; cursor: default; }
 
 
-        /* ── Lightbox de proyectos ──────────────────────────────────────────── */
+        /* ── Galería lightbox de proyectos ────────────────────────────────────────
+           Estructura: overlay > stage(img+flechas) > info-bar > thumbs-wrap      */
         #cf-lightbox {
             position: fixed; inset: 0; z-index: 9000;
-            background: rgba(10, 10, 10, 0.88);
+            background: rgba(8, 8, 8, 0.97);
             display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            padding: 24px;
             opacity: 0; pointer-events: none;
             transition: opacity 260ms cubic-bezier(0.4, 0, 0.2, 1);
         }
-        #cf-lightbox.open {
-            opacity: 1; pointer-events: auto;
+        #cf-lightbox.open { opacity: 1; pointer-events: auto; }
+
+        /* Botón cerrar ─────────────────────────────────────────────── */
+        #cf-lb-close {
+            position: absolute; top: 16px; right: 16px; z-index: 10;
+            width: 44px; height: 44px; border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: white; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 180ms ease, transform 180ms ease;
         }
-        #cf-lightbox-img {
-            max-width: min(90vw, 1100px);
-            max-height: 78vh;
+        #cf-lb-close:hover  { background: rgba(255,255,255,0.18); }
+        #cf-lb-close:active { transform: scale(0.90); }
+
+        /* Stage: imagen principal + flechas ────────────────────────── */
+        #cf-lb-stage {
+            flex: 1; min-height: 0;
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+            padding: 64px 72px 12px;
+        }
+        #cf-lb-img {
+            max-width: 100%;
+            max-height: calc(100vh - 230px);
             width: auto; height: auto;
             object-fit: contain;
-            border-radius: 12px;
-            box-shadow: 0 24px 64px rgba(0,0,0,0.5);
-            transform: scale(0.96);
-            transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
             display: block;
+            border-radius: 6px;
+            user-select: none;
+            opacity: 1;
+            transition: opacity 200ms ease;
         }
-        #cf-lightbox.open #cf-lightbox-img { transform: scale(1); }
-        #cf-lightbox-title {
-            margin-top: 16px;
-            font-family: 'Antonio', sans-serif;
-            font-size: 1.125rem; font-weight: 700; font-style: italic;
-            color: rgba(255,255,255,0.90);
-            letter-spacing: 0.02em;
-        }
-        #cf-lightbox-close {
-            position: absolute; top: 20px; right: 20px;
-            width: 44px; height: 44px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.10);
-            border: 1px solid rgba(255,255,255,0.20);
-            color: white;
+        #cf-lb-img.fading { opacity: 0; }
+
+        /* Flechas ──────────────────────────────────────────────────── */
+        .cf-lb-arrow {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            width: 56px; height: 88px;
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer;
-            transition:
-                background 180ms cubic-bezier(0.4,0,0.2,1),
-                transform  180ms cubic-bezier(0.4,0,0.2,1);
+            background: transparent; border: none; cursor: pointer;
+            color: rgba(255,255,255,0.35);
+            transition: color 180ms ease;
+            z-index: 5;
         }
-        #cf-lightbox-close:hover  { background: rgba(255,255,255,0.22); }
-        #cf-lightbox-close:active { transform: scale(0.92); }
-        @media (prefers-reduced-motion: reduce) {
-            #cf-lightbox, #cf-lightbox-img { transition: none !important; }
+        .cf-lb-arrow:hover,
+        .cf-lb-arrow:focus-visible { color: #8daf14; outline: none; }
+        .cf-lb-arrow svg { pointer-events: none; }
+        #cf-lb-prev { left: 6px; }
+        #cf-lb-next { right: 6px; }
+
+        /* Barra de info: título + descripción + contador ───────────── */
+        #cf-lb-info-bar {
+            display: flex; align-items: flex-start;
+            justify-content: space-between;
+            padding: 0 max(24px, calc((100vw - 1100px) / 2)) 10px;
+            gap: 20px;
+            flex-shrink: 0;
+        }
+        #cf-lb-title {
+            font-family: 'Antonio', sans-serif;
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            font-weight: 700; font-style: italic;
+            color: rgba(255,255,255,0.92);
+            letter-spacing: 0.02em;
+            margin: 0 0 2px;
+        }
+        #cf-lb-desc {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 0.8125rem;
+            color: rgba(200,200,200,0.65);
+            margin: 0; line-height: 1.4;
+        }
+        #cf-lb-counter {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.6875rem; font-weight: 500;
+            color: rgba(255,255,255,0.35);
+            white-space: nowrap; flex-shrink: 0;
+            padding-top: 4px;
         }
 
+        /* Tira de miniaturas ───────────────────────────────────────── */
+        #cf-lb-thumbs-wrap {
+            flex-shrink: 0;
+            padding: 0 max(24px, calc((100vw - 1100px) / 2)) 24px;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(141,175,20,0.35) transparent;
+        }
+        #cf-lb-thumbs-wrap::-webkit-scrollbar { height: 3px; }
+        #cf-lb-thumbs-wrap::-webkit-scrollbar-thumb { background: rgba(141,175,20,0.35); border-radius: 2px; }
+        #cf-lb-thumbs {
+            display: flex; gap: 8px;
+            width: max-content;
+        }
+        .cf-lb-thumb {
+            width: 76px; height: 57px;
+            border-radius: 5px; overflow: hidden;
+            cursor: pointer; flex-shrink: 0;
+            opacity: 0.38;
+            border: 2px solid transparent;
+            transform: scale(0.93);
+            transition: opacity 180ms ease, border-color 180ms ease, transform 180ms ease;
+            background: none; padding: 0;
+        }
+        .cf-lb-thumb img {
+            width: 100%; height: 100%; object-fit: cover; display: block;
+            pointer-events: none;
+        }
+        .cf-lb-thumb:hover  { opacity: 0.72; transform: scale(0.97); }
+        .cf-lb-thumb.active { opacity: 1; border-color: #8daf14; transform: scale(1); }
+        .cf-lb-thumb:focus-visible { outline: 2px solid #8daf14; outline-offset: 2px; }
+
+        /* Imagen única: ocultar flechas, miniaturas y contador ──────── */
+        #cf-lightbox.single-img #cf-lb-prev,
+        #cf-lightbox.single-img #cf-lb-next,
+        #cf-lightbox.single-img #cf-lb-thumbs-wrap,
+        #cf-lightbox.single-img #cf-lb-counter { display: none; }
+
+        /* Mobile ───────────────────────────────────────────────────── */
+        @media (max-width: 767px) {
+            #cf-lb-stage       { padding: 56px 48px 8px; }
+            #cf-lb-img         { max-height: calc(100vh - 210px); }
+            .cf-lb-arrow       { width: 44px; height: 72px; }
+            #cf-lb-info-bar    { padding: 0 16px 8px; flex-wrap: wrap; }
+            #cf-lb-thumbs-wrap { padding: 0 16px 16px; }
+            .cf-lb-thumb       { width: 60px; height: 45px; }
+        }
+
+        /* Reduced motion ───────────────────────────────────────────── */
+                /* Video element (mismo tamaño que img) */
+        #cf-lb-video {
+            display: none;
+            max-width: 100%;
+            max-height: calc(100vh - 230px);
+            width: auto; height: auto;
+            border-radius: 6px;
+            background: #000;
+            outline: none;
+        }
+        @media (max-width: 767px) {
+            #cf-lb-video { max-height: calc(100vh - 210px); }
+        }
+
+        /* Icono play superpuesto en miniaturas de video */
+        .cf-lb-thumb { position: relative; }
+        .cf-lb-play-icon {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(0, 0, 0, 0.42);
+            border-radius: 3px;
+            pointer-events: none;
+            color: #8daf14;
+        }
+        .cf-lb-play-icon svg { filter: drop-shadow(0 1px 4px rgba(0,0,0,0.6)); }
+
         @media (prefers-reduced-motion: reduce) {
+            #cf-lightbox, #cf-lb-img, #cf-lb-video, .cf-lb-thumb { transition: none !important; }
+        }
+
+                @media (prefers-reduced-motion: reduce) {
             .cf-card, .cf-img-wrap img, #cf-progress-bar {
                 transition: none !important;
             }
@@ -360,6 +478,18 @@
             .icon-hover:hover { transform: none; }
             .hero-img-wrap:hover img:first-child { transform: none; }
         }
+
+        /* ── Menú mobile (hamburguesa) ──────────────────────────────────────── */
+                #mob-toggle { display: flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; border-radius: 0.5rem; color: #1a1a1a; background: transparent; border: none; cursor: pointer; }
+        @media (min-width: 768px) { #mob-toggle { display: none !important; } }
+        #mobile-menu { position: fixed; top: 80px; left: 0; right: 0; z-index: 49; background: white; border-bottom: 1px solid #f0f0f0; box-shadow: 0 8px 32px -8px rgba(0,0,0,0.10); max-height: calc(100vh - 80px); overflow-y: auto; opacity: 0; transform: translateY(-6px); pointer-events: none; transition: opacity 220ms cubic-bezier(0.4,0,0.2,1), transform 260ms cubic-bezier(0.16,1,0.3,1); }
+        #mobile-menu.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        #ham-icon, #close-icon { transition: opacity 160ms ease; }
+        #close-icon { display: none; }
+        .mob-menu-open #ham-icon  { display: none; }
+        .mob-menu-open #close-icon { display: block; }
+        @media (prefers-reduced-motion: reduce) { #mobile-menu { transition: none !important; } #mob-toggle { transition: none !important; } #ham-icon, #close-icon { transition: none !important; } }
+
     </style>
 </head>
 <body class="font-body text-brandDark bg-white overflow-x-hidden">
@@ -375,6 +505,7 @@
                 <span class="font-display font-bold text-lg tracking-tighter uppercase">3R. Arquitectura</span>
             </div>
 
+            <!-- Nav desktop -->
             <div class="hidden md:flex items-center gap-7 text-xs font-mono font-bold uppercase tracking-widest">
                 <a href="#inicio"    class="nav-link hover:text-brandGreen">Inicio</a>
                 <a href="#servicios" class="nav-link hover:text-brandGreen">Servicios</a>
@@ -405,11 +536,94 @@
                     Contacto
                 </a>
             </div>
+
+            <!-- Botón hamburguesa (solo mobile) -->
+            <button id="mob-toggle"
+                    aria-label="Abrir menú"
+                    aria-expanded="false"
+                    aria-controls="mobile-menu">
+                <!-- Ícono ☰ -->
+                <svg id="ham-icon" class="w-6 h-6" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="6"  x2="21" y2="6"/>
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+                <!-- Ícono ✕ -->
+                <svg id="close-icon" class="w-6 h-6" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6"  x2="6" y2="18"/>
+                    <line x1="6"  y1="6"  x2="18" y2="18"/>
+                </svg>
+            </button>
+
         </div>
     </nav>
 
+    <!-- Panel menú mobile -->
+    <div id="mobile-menu" role="navigation" aria-label="Menú mobile">
+        <ul class="flex flex-col px-6 py-6 gap-1 font-mono font-bold uppercase tracking-widest text-sm">
+            <li>
+                <a href="#inicio"
+                   class="mob-link flex items-center h-12 border-b border-gray-100 hover:text-brandGreen transition-colors">
+                    Inicio
+                </a>
+            </li>
+            <li>
+                <a href="#servicios"
+                   class="mob-link flex items-center h-12 border-b border-gray-100 hover:text-brandGreen transition-colors">
+                    Servicios
+                </a>
+            </li>
+            <li>
+                <a href="#proyectos"
+                   class="mob-link flex items-center h-12 border-b border-gray-100 hover:text-brandGreen transition-colors">
+                    Proyectos
+                </a>
+            </li>
+            <li>
+                <span class="flex items-center h-12 border-b border-gray-100 italic text-gray-400 cursor-default">
+                    Mi Guía
+                    <span class="ml-2 normal-case font-normal text-[10px] bg-gray-100 text-gray-400 px-2 py-0.5 rounded-full tracking-normal">Próximamente</span>
+                </span>
+            </li>
+            <li>
+                <a href="https://3rarquitectura.blogspot.com" target="_blank"
+                   class="mob-link flex items-center h-12 border-b border-gray-100 hover:text-brandGreen transition-colors">
+                    Blog
+                </a>
+            </li>
+            <li class="pt-4 flex items-center gap-4">
+                <a href="https://www.instagram.com/3r.arquitectura/" target="_blank"
+                   class="icon-hover text-brandDark hover:text-brandGreen" aria-label="Instagram @3r.arquitectura">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5"/>
+                        <circle cx="12" cy="12" r="4"/>
+                        <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/>
+                    </svg>
+                </a>
+                <a href="https://www.linkedin.com/company/3rarquitectura/" target="_blank"
+                   class="icon-hover text-brandDark hover:text-brandGreen" aria-label="LinkedIn 3rarquitectura">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/>
+                        <rect x="2" y="9" width="4" height="12"/>
+                        <circle cx="4" cy="4" r="2"/>
+                    </svg>
+                </a>
+            </li>
+            <li class="pt-4">
+                <a href="https://wa.me/59896699876" target="_blank"
+                   class="mob-link btn-press inline-block bg-brandDark text-white px-6 py-3 rounded-full hover:bg-brandGreen normal-case tracking-normal font-bold">
+                    Contacto →
+                </a>
+            </li>
+        </ul>
+    </div>
 
-    <!-- ═══════════════════════════════════════════ HERO -->
+
     <section id="inicio" class="relative pt-40 pb-20 px-6 bg-white overflow-hidden">
 
         <!-- ── Fondo SVG técnico ─────────────────────────────────────────────
@@ -775,7 +989,7 @@
                     </article>
 
                     <!-- Proyecto 2 — Escuela 27 (Nov 2025) -->
-                    <article class="cf-card" data-index="1">
+                    <article class="cf-card" data-index="1" data-media='["proyectos/Escuela-27-1.png","proyectos/Escuela-27-2.png"]'>
                         <div class="cf-img-wrap">
                             <img src="proyectos/escuela-27.png" alt="Escuela 27" loading="lazy">
                             <div class="cf-img-overlay"></div>
@@ -789,7 +1003,7 @@
                     </article>
 
                     <!-- Proyecto 3 — Escuela 65 (Abril 2025) -->
-                    <article class="cf-card" data-index="2">
+                    <article class="cf-card" data-index="2" data-media='["proyectos/escuela-65a.png","proyectos/escuela-65b.png"]'>
                         <div class="cf-img-wrap">
                             <img src="proyectos/Escuela-65.png" alt="Escuela 65" loading="lazy">
                             <div class="cf-img-overlay"></div>
@@ -803,7 +1017,7 @@
                     </article>
 
                     <!-- Proyecto 4 — Cocina La Vie en Verde (Mayo 2024) -->
-                    <article class="cf-card" data-index="3">
+                    <article class="cf-card" data-index="3" data-media='["proyectos/cocina_lavieverde-video.mp4"]'>
                         <div class="cf-img-wrap">
                             <img src="proyectos/cocina-lavieenverde.png" alt="Cocina La Vie en Verde" loading="lazy">
                             <div class="cf-img-overlay"></div>
@@ -1007,18 +1221,57 @@
     </section>
 
     <!-- ── Lightbox ─────────────────────────────────────────────────────── -->
-    <div id="cf-lightbox" role="dialog" aria-modal="true" aria-label="Imagen del proyecto">
-        <button id="cf-lightbox-close" aria-label="Cerrar">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+    <div id="cf-lightbox" role="dialog" aria-modal="true" aria-label="Galería del proyecto">
+
+        <!-- Botón cerrar -->
+        <button id="cf-lb-close" aria-label="Cerrar galería">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                  stroke="currentColor" stroke-width="2.2"
                  stroke-linecap="round" stroke-linejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"/>
-                <line x1="6" y1="6" x2="18" y2="18"/>
+                <line x1="6"  y1="6" x2="18" y2="18"/>
             </svg>
         </button>
-        <img id="cf-lightbox-img" src="" alt="">
-        <p id="cf-lightbox-title"></p>
+
+        <!-- Stage: imagen principal + flechas prev/next -->
+        <div id="cf-lb-stage">
+            <button id="cf-lb-prev" class="cf-lb-arrow" aria-label="Imagen anterior">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="1.8"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"/>
+                </svg>
+            </button>
+
+            <img id="cf-lb-img" src="" alt="" draggable="false">
+
+            <video id="cf-lb-video" muted loop playsinline preload="metadata" controls style="display:none"></video>
+
+            <button id="cf-lb-next" class="cf-lb-arrow" aria-label="Siguiente imagen">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="1.8"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Barra de info: título + descripción (izq) y contador (der) -->
+        <div id="cf-lb-info-bar">
+            <div>
+                <h2 id="cf-lb-title"></h2>
+                <p  id="cf-lb-desc"></p>
+            </div>
+            <span id="cf-lb-counter"></span>
+        </div>
+
+        <!-- Tira de miniaturas -->
+        <div id="cf-lb-thumbs-wrap" aria-label="Miniaturas del proyecto">
+            <div id="cf-lb-thumbs" role="list"></div>
+        </div>
+
     </div>
+
 
     <!-- ═══════════════════════════════════════════ SOLICITAR PRESUPUESTO -->
     <section id="presupuesto" class="py-24 px-6 bg-gray-50">
@@ -1410,46 +1663,232 @@
 
     <!-- ═══════════════════════════════════════════ SCRIPTS -->
     <script>
-        // ── Lightbox de proyectos ─────────────────────────────────────────────
+        // ── Menú hamburguesa mobile ───────────────────────────────────────────
         (function () {
-            const lb      = document.getElementById('cf-lightbox');
-            const lbImg   = document.getElementById('cf-lightbox-img');
-            const lbTitle = document.getElementById('cf-lightbox-title');
-            const lbClose = document.getElementById('cf-lightbox-close');
-            if (!lb) return;
+            const toggle = document.getElementById('mob-toggle');
+            const menu   = document.getElementById('mobile-menu');
+            if (!toggle || !menu) return;
 
-            const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            function openMenu() {
+                menu.classList.add('open');
+                document.body.classList.add('mob-menu-open');
+                toggle.setAttribute('aria-expanded', 'true');
+                toggle.setAttribute('aria-label', 'Cerrar menú');
+            }
+            function closeMenu() {
+                menu.classList.remove('open');
+                document.body.classList.remove('mob-menu-open');
+                toggle.setAttribute('aria-expanded', 'false');
+                toggle.setAttribute('aria-label', 'Abrir menú');
+            }
+            function toggleMenu() {
+                menu.classList.contains('open') ? closeMenu() : openMenu();
+            }
 
-            function openLightbox(src, alt, title) {
-                lbImg.src = src;
-                lbImg.alt = alt;
-                lbTitle.textContent = title;
+            // Botón hamburguesa / X
+            toggle.addEventListener('click', function (e) {
+                e.stopPropagation();
+                toggleMenu();
+            });
+
+            // Cerrar al tocar cualquier link del menú
+            menu.querySelectorAll('.mob-link').forEach(function (link) {
+                link.addEventListener('click', closeMenu);
+            });
+
+            // Cerrar al tocar fuera del panel y del nav
+            document.addEventListener('click', function (e) {
+                if (!menu.contains(e.target) && !toggle.contains(e.target)) {
+                    closeMenu();
+                }
+            });
+
+            // Cerrar con Esc
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') closeMenu();
+            });
+
+            // Cerrar al pasar a desktop (evita que quede abierto al rotar)
+            window.addEventListener('resize', function () {
+                if (window.innerWidth >= 768) closeMenu();
+            });
+        })();
+
+        // -- Galeria lightbox de proyectos (imagen + video) ---------------------
+        (function () {
+            var lb        = document.getElementById('cf-lightbox');
+            var lbImg     = document.getElementById('cf-lb-img');
+            var lbVideo   = document.getElementById('cf-lb-video');
+            var lbPrev    = document.getElementById('cf-lb-prev');
+            var lbNext    = document.getElementById('cf-lb-next');
+            var lbClose   = document.getElementById('cf-lb-close');
+            var lbTitle   = document.getElementById('cf-lb-title');
+            var lbDesc    = document.getElementById('cf-lb-desc');
+            var lbCounter = document.getElementById('cf-lb-counter');
+            var lbThumbs  = document.getElementById('cf-lb-thumbs');
+            if (!lb || !lbVideo) return;
+
+            var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            var media   = [];   // [{src, type:'image'|'video', alt}]
+            var poster  = '';   // foto principal del proyecto (card img src)
+            var current = 0;
+
+            function isVideo(src) {
+                return /\.(mp4|webm|mov)(\?|$)/i.test(src);
+            }
+
+            function pauseVideo() {
+                if (lbVideo && !lbVideo.paused) lbVideo.pause();
+            }
+
+            /* Construye la tira de miniaturas */
+            function buildThumbs() {
+                lbThumbs.innerHTML = '';
+                media.forEach(function (item, i) {
+                    var btn = document.createElement('button');
+                    btn.className = 'cf-lb-thumb';
+                    btn.setAttribute('role', 'listitem');
+                    btn.setAttribute('aria-label',
+                        (item.type === 'video' ? 'Ver video ' : 'Ver imagen ') +
+                        (i + 1) + ' de ' + media.length);
+
+                    var im = document.createElement('img');
+                    im.src = poster;
+                    im.alt = '';
+                    im.loading = 'lazy';
+                    btn.appendChild(im);
+
+                    if (item.type === 'video') {
+                        var ov = document.createElement('span');
+                        ov.className = 'cf-lb-play-icon';
+                        ov.setAttribute('aria-hidden', 'true');
+                        ov.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>';
+                        btn.appendChild(ov);
+                    }
+
+                    btn.addEventListener('click', function () { goTo(i); });
+                    lbThumbs.appendChild(btn);
+                });
+            }
+
+            /* Actualiza resaltado de miniaturas */
+            function updateThumbs(idx) {
+                lbThumbs.querySelectorAll('.cf-lb-thumb').forEach(function (btn, i) {
+                    btn.classList.toggle('active', i === idx);
+                });
+                var activeBtn = lbThumbs.querySelectorAll('.cf-lb-thumb')[idx];
+                if (activeBtn) {
+                    activeBtn.scrollIntoView({
+                        behavior: reduced ? 'instant' : 'smooth',
+                        block: 'nearest', inline: 'center'
+                    });
+                }
+            }
+
+            /* Aplica el elemento activo (sin animacion) */
+            function applyMedia(idx) {
+                current = idx;
+                var item = media[idx];
+                lbCounter.textContent = media.length > 1
+                    ? (idx + 1) + ' / ' + media.length : '';
+                updateThumbs(idx);
+
+                if (item.type === 'video') {
+                    lbImg.style.display   = 'none';
+                    lbVideo.style.display = 'block';
+                    lbVideo.src    = item.src;
+                    lbVideo.poster = poster;
+                    lbVideo.load();
+                    if (!reduced) {
+                        lbVideo.play().catch(function () {});
+                    }
+                } else {
+                    pauseVideo();
+                    lbVideo.style.display = 'none';
+                    lbImg.style.display   = 'block';
+                    lbImg.src = item.src;
+                    lbImg.alt = item.alt || '';
+                }
+            }
+
+            /* Navega con crossfade (o instantaneo si reduced-motion) */
+            function goTo(idx) {
+                idx = ((idx % media.length) + media.length) % media.length;
+                pauseVideo();
+                if (reduced) { applyMedia(idx); return; }
+                var curItem  = media[current];
+                var activeEl = curItem && curItem.type === 'video' ? lbVideo : lbImg;
+                activeEl.classList.add('fading');
+                setTimeout(function () {
+                    applyMedia(idx);
+                    activeEl.classList.remove('fading');
+                    var newEl = media[idx] && media[idx].type === 'video' ? lbVideo : lbImg;
+                    if (newEl !== activeEl) newEl.classList.remove('fading');
+                }, 200);
+            }
+
+            /* Abre la galeria */
+            function openLightbox(items, title, desc, cardPoster) {
+                poster  = cardPoster || '';
+                media   = items;
+                current = 0;
+                lb.classList.toggle('single-img', media.length === 1);
+                lbTitle.textContent = title || '';
+                lbDesc.textContent  = desc  || '';
+                buildThumbs();
+                lbImg.classList.remove('fading');
+                lbVideo.classList.remove('fading');
+                pauseVideo();
+                lbVideo.removeAttribute('src');
+                lbImg.style.display   = 'block';
+                lbVideo.style.display = 'none';
+                applyMedia(0);
                 lb.classList.add('open');
                 document.body.style.overflow = 'hidden';
                 lbClose.focus();
             }
 
+            /* Cierra la galeria */
             function closeLightbox() {
+                pauseVideo();
                 lb.classList.remove('open');
                 document.body.style.overflow = '';
             }
 
-            // Cerrar con botón X
+            /* Eventos */
             lbClose.addEventListener('click', closeLightbox);
+            lbPrev.addEventListener('click', function () { goTo(current - 1); });
+            lbNext.addEventListener('click', function () { goTo(current + 1); });
 
-            // Cerrar al clicar el fondo (fuera de la imagen)
             lb.addEventListener('click', function (e) {
-                if (e.target === lb) closeLightbox();
+                if (e.target === lb || e.target === document.getElementById('cf-lb-stage')) {
+                    closeLightbox();
+                }
             });
 
-            // Cerrar con Esc
             document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape' && lb.classList.contains('open')) closeLightbox();
+                if (!lb.classList.contains('open')) return;
+                if (e.key === 'Escape')     { closeLightbox(); return; }
+                if (e.key === 'ArrowLeft')  { goTo(current - 1); }
+                if (e.key === 'ArrowRight') { goTo(current + 1); }
             });
 
-            // Exponer openLightbox para que el coverflow lo llame
+            var touchStartX = null;
+            lb.addEventListener('touchstart', function (e) {
+                touchStartX = e.touches[0].clientX;
+            }, { passive: true });
+            lb.addEventListener('touchend', function (e) {
+                if (touchStartX === null) return;
+                var dx = e.changedTouches[0].clientX - touchStartX;
+                touchStartX = null;
+                if (Math.abs(dx) < 44) return;
+                goTo(dx < 0 ? current + 1 : current - 1);
+            }, { passive: true });
+
             window._cfOpenLightbox = openLightbox;
         })();
+
+
 
         // ── Coverflow de proyectos ────────────────────────────────────────────
         (function () {
@@ -1558,11 +1997,19 @@
                     } else if (window._cfOpenLightbox) {
                         const img   = card.querySelector('img');
                         const title = card.querySelector('.cf-title');
-                        window._cfOpenLightbox(
-                            img.src,
-                            img.alt,
-                            title ? title.textContent : img.alt
-                        );
+                        var _titleText = title ? title.textContent.trim() : img.alt;
+                        var _descText  = card.querySelector('.cf-desc') ? card.querySelector('.cf-desc').textContent.trim() : '';
+                        var _poster    = img.src;
+                        var _rawMedia  = card.dataset.media || card.dataset.images;
+                        var _mediaList;
+                        if (_rawMedia) {
+                            _mediaList = JSON.parse(_rawMedia).map(function (s) {
+                                return { src: s, type: /\.(mp4|webm|mov)(\?|$)/i.test(s) ? 'video' : 'image', alt: _titleText };
+                            });
+                        } else {
+                            _mediaList = [{ src: img.src, type: 'image', alt: img.alt }];
+                        }
+                        window._cfOpenLightbox(_mediaList, _titleText, _descText, _poster);
                     }
                 });
             });
