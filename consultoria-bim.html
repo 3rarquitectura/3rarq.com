@@ -1,0 +1,803 @@
+﻿<!DOCTYPE html>
+<html lang="es" class="no-js scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultoría y Metodología BIM — 3R.Arquitectura</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Antonio:ital,wght@0,400;0,700;1,400;1,700&family=Quicksand:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { brandGreen: '#8daf14', brandDark: '#1a1a1a' },
+                    fontFamily: {
+                        display: ['Antonio', 'sans-serif'],
+                        body:    ['Quicksand', 'sans-serif'],
+                        mono:    ['Montserrat', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* ── Motion tokens ─────────────────────────────────────────────────── */
+        :root {
+            --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-in-out:    cubic-bezier(0.4, 0, 0.2, 1);
+            --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);
+            --dur-micro:      180ms;
+            --dur-ui:         220ms;
+            --dur-reveal:     500ms;
+        }
+
+        /* ── Hero: entrada escalonada (fade-up + blur) ─────────────────────── */
+        @keyframes hero-stagger {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+                filter: blur(6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                filter: blur(0px);
+            }
+        }
+        .hs-1   { animation: hero-stagger 700ms var(--ease-out-expo)   0ms  both; }
+        .hs-2   { animation: hero-stagger 700ms var(--ease-out-expo) 220ms  both; }
+        .hs-3   { animation: hero-stagger 700ms var(--ease-out-expo) 400ms  both; }
+        .hs-4   { animation: hero-stagger 700ms var(--ease-out-expo) 580ms  both; }
+        .hs-img { animation: hero-stagger 800ms var(--ease-out-expo) 200ms  both; }
+
+        /* ── Fondo SVG técnico del hero ─────────────────────────────────────── */
+        #hero-bg-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: visible;
+        }
+        #hero-bg-svg [data-depth] { will-change: transform; }
+        @keyframes hb-float-a {
+            0%, 100% { transform: translateY(0px);  }
+            40%      { transform: translateY(-8px); }
+            70%      { transform: translateY(5px);  }
+        }
+        @keyframes hb-float-b {
+            0%, 100% { transform: translateY(0px);  }
+            35%      { transform: translateY(7px);  }
+            65%      { transform: translateY(-6px); }
+        }
+        @keyframes hb-float-c {
+            0%, 100% { transform: translateY(0px);   }
+            50%      { transform: translateY(-10px); }
+        }
+
+                /* ── Scroll reveal ──────────────────────────────────────────────────── */
+        .js .js-reveal {
+            opacity: 0;
+            transform: translateY(22px);
+            transition:
+                opacity   var(--dur-reveal) var(--ease-out-expo),
+                transform var(--dur-reveal) var(--ease-out-expo);
+            transition-delay: var(--delay, 0ms);
+        }
+        .js-reveal.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── Card hover lift ────────────────────────────────────────────────── */
+        .card-hover {
+            transition:
+                transform  var(--dur-micro) var(--ease-in-out),
+                box-shadow var(--dur-micro) var(--ease-in-out),
+                border-color var(--dur-ui) var(--ease-in-out);
+            will-change: transform;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.13);
+        }
+
+        /* ── Button press ───────────────────────────────────────────────────── */
+        .btn-press {
+            transition:
+                transform         var(--dur-micro) var(--ease-in-out),
+                background-color  var(--dur-ui)    var(--ease-in-out),
+                border-color      var(--dur-ui)    var(--ease-in-out),
+                color             var(--dur-ui)    var(--ease-in-out),
+                box-shadow        var(--dur-micro) var(--ease-in-out);
+        }
+        .btn-press:hover  { transform: translateY(-2px); }
+        .btn-press:active { transform: translateY(0) scale(0.97); transition-duration: 80ms; }
+
+        /* ── Floating action buttons ────────────────────────────────────────── */
+        .fab {
+            transition:
+                transform        var(--dur-micro) var(--ease-spring),
+                background-color var(--dur-ui)    var(--ease-in-out);
+            will-change: transform;
+        }
+        .fab:hover  { transform: translateY(-3px) scale(1.04); }
+        .fab:active { transform: scale(0.96); transition-duration: 80ms; }
+
+        /* ── Entrada de los FABs al cargar ──────────────────────────────────── */
+        @keyframes fab-in {
+            from { opacity: 0; transform: translateX(20px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        .fab-enter-1 { animation: fab-in 400ms var(--ease-out-expo) 800ms both; }
+        .fab-enter-2 { animation: fab-in 400ms var(--ease-out-expo) 920ms both; }
+
+        /* ── Nav links: subrayado deslizante ────────────────────────────────── */
+        .nav-link {
+            position: relative;
+            transition: color var(--dur-ui) var(--ease-in-out);
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -3px; left: 0;
+            width: 0; height: 1.5px;
+            background: #8daf14;
+            transition: width var(--dur-ui) var(--ease-out-expo);
+        }
+        .nav-link:hover::after { width: 100%; }
+
+        /* ── Ícono SVG de redes: scale en hover ─────────────────────────────── */
+        .icon-hover {
+            transition:
+                transform var(--dur-micro) var(--ease-spring),
+                color     var(--dur-ui)    var(--ease-in-out);
+        }
+        .icon-hover:hover { transform: scale(1.18); }
+
+        /* ── Coverflow proyectos ───────────────────────────────────────────── */
+
+        /* Tarjeta: posición absoluta gestionada por JS */
+        .cf-card {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: min(84vw, 480px);
+            transform-origin: center top;
+            transform: translateX(-50%);
+            transition:
+                transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
+                opacity   320ms cubic-bezier(0.4,  0, 0.2, 1);
+            cursor: pointer;
+            will-change: transform, opacity;
+        }
+        .cf-img-wrap {
+            position: relative;
+            aspect-ratio: 4 / 3;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 8px 32px -8px rgba(0,0,0,0.18);
+        }
+        .cf-img-wrap img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .cf-card[data-active=true] .cf-img-wrap img { transform: scale(1.03); }
+        .cf-img-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top,
+                rgba(0,0,0,0.50) 0%,
+                rgba(0,0,0,0.08) 45%,
+                transparent      100%);
+            pointer-events: none;
+        }
+        .cf-badge {
+            position: absolute;
+            top: 14px; left: 14px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 999px;
+        }
+        .cf-badge-bim      { background: rgba(141,175,20,0.15); color: #8daf14; }
+        .cf-badge-reforma  { background: rgba(255,255,255,0.88); color: #1a1a1a; }
+        .cf-badge-asesoria { background: rgba(255,255,255,0.88); color: #1a1a1a; }
+        .cf-badge-metalico { background: rgba(255,255,255,0.88); color: #1a1a1a; }
+
+        .cf-info {
+            padding: 14px 4px 0;
+            /* oculto en tarjetas laterales, visible solo en activa */
+            transition: opacity 320ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .cf-card:not([data-active=true]) .cf-info { opacity: 0; pointer-events: none; }
+        .cf-title {
+            font-family: 'Antonio', sans-serif;
+            font-weight: 700; font-style: italic;
+            font-size: 1.25rem; line-height: 1.2;
+            color: #1a1a1a; margin: 0 0 4px;
+        }
+        .cf-meta {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 11px; font-weight: 600;
+            color: #9ca3af; letter-spacing: 0.04em;
+            margin: 0 0 6px;
+        }
+        .cf-desc {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 0.875rem; color: #6b7280;
+            line-height: 1.5; margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Flechas de navegación */
+        .cf-arrow {
+            position: absolute; top: 38%;
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            background: white;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.09);
+            align-items: center; justify-content: center;
+            color: #1a1a1a;
+            z-index: 20;
+            transition:
+                background 220ms cubic-bezier(0.4,0,0.2,1),
+                border-color 220ms cubic-bezier(0.4,0,0.2,1),
+                transform 180ms cubic-bezier(0.4,0,0.2,1),
+                box-shadow 180ms cubic-bezier(0.4,0,0.2,1);
+        }
+        .cf-arrow:hover {
+            background: #1a1a1a; color: white;
+            border-color: #1a1a1a;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+        }
+        .cf-arrow:active { transform: scale(0.94); }
+        .cf-arrow-prev { left:  -22px; }
+        .cf-arrow-next { right: -22px; }
+        .cf-arrow:disabled { opacity: 0.3; cursor: default; }
+
+
+        /* ── Galería lightbox de proyectos ────────────────────────────────────────
+           Estructura: overlay > stage(img+flechas) > info-bar > thumbs-wrap      */
+        #cf-lightbox {
+            position: fixed; inset: 0; z-index: 9000;
+            background: rgba(8, 8, 8, 0.97);
+            display: flex; flex-direction: column;
+            opacity: 0; pointer-events: none;
+            transition: opacity 260ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        #cf-lightbox.open { opacity: 1; pointer-events: auto; }
+
+        /* Botón cerrar ─────────────────────────────────────────────── */
+        #cf-lb-close {
+            position: absolute; top: 16px; right: 16px; z-index: 10;
+            width: 44px; height: 44px; border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: white; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 180ms ease, transform 180ms ease;
+        }
+        #cf-lb-close:hover  { background: rgba(255,255,255,0.18); }
+        #cf-lb-close:active { transform: scale(0.90); }
+
+        /* Stage: imagen principal + flechas ────────────────────────── */
+        #cf-lb-stage {
+            flex: 1; min-height: 0;
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+            padding: 64px 72px 12px;
+        }
+        #cf-lb-img {
+            max-width: 100%;
+            max-height: calc(100vh - 230px);
+            width: auto; height: auto;
+            object-fit: contain;
+            display: block;
+            border-radius: 6px;
+            user-select: none;
+            opacity: 1;
+            transition: opacity 200ms ease;
+        }
+        #cf-lb-img.fading { opacity: 0; }
+
+        /* Flechas ──────────────────────────────────────────────────── */
+        .cf-lb-arrow {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            width: 56px; height: 88px;
+            display: flex; align-items: center; justify-content: center;
+            background: transparent; border: none; cursor: pointer;
+            color: rgba(255,255,255,0.35);
+            transition: color 180ms ease;
+            z-index: 5;
+        }
+        .cf-lb-arrow:hover,
+        .cf-lb-arrow:focus-visible { color: #8daf14; outline: none; }
+        .cf-lb-arrow svg { pointer-events: none; }
+        #cf-lb-prev { left: 6px; }
+        #cf-lb-next { right: 6px; }
+
+        /* Barra de info: título + descripción + contador ───────────── */
+        #cf-lb-info-bar {
+            display: flex; align-items: flex-start;
+            justify-content: space-between;
+            padding: 0 max(24px, calc((100vw - 1100px) / 2)) 10px;
+            gap: 20px;
+            flex-shrink: 0;
+        }
+        #cf-lb-title {
+            font-family: 'Antonio', sans-serif;
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            font-weight: 700; font-style: italic;
+            color: rgba(255,255,255,0.92);
+            letter-spacing: 0.02em;
+            margin: 0 0 2px;
+        }
+        #cf-lb-desc {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 0.8125rem;
+            color: rgba(200,200,200,0.65);
+            margin: 0; line-height: 1.4;
+        }
+        #cf-lb-counter {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.6875rem; font-weight: 500;
+            color: rgba(255,255,255,0.35);
+            white-space: nowrap; flex-shrink: 0;
+            padding-top: 4px;
+        }
+
+        /* Tira de miniaturas ───────────────────────────────────────── */
+        #cf-lb-thumbs-wrap {
+            flex-shrink: 0;
+            padding: 0 max(24px, calc((100vw - 1100px) / 2)) 24px;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(141,175,20,0.35) transparent;
+        }
+        #cf-lb-thumbs-wrap::-webkit-scrollbar { height: 3px; }
+        #cf-lb-thumbs-wrap::-webkit-scrollbar-thumb { background: rgba(141,175,20,0.35); border-radius: 2px; }
+        #cf-lb-thumbs {
+            display: flex; gap: 8px;
+            width: max-content;
+        }
+        .cf-lb-thumb {
+            width: 76px; height: 57px;
+            border-radius: 5px; overflow: hidden;
+            cursor: pointer; flex-shrink: 0;
+            opacity: 0.38;
+            border: 2px solid transparent;
+            transform: scale(0.93);
+            transition: opacity 180ms ease, border-color 180ms ease, transform 180ms ease;
+            background: none; padding: 0;
+        }
+        .cf-lb-thumb img {
+            width: 100%; height: 100%; object-fit: cover; display: block;
+            pointer-events: none;
+        }
+        .cf-lb-thumb:hover  { opacity: 0.72; transform: scale(0.97); }
+        .cf-lb-thumb.active { opacity: 1; border-color: #8daf14; transform: scale(1); }
+        .cf-lb-thumb:focus-visible { outline: 2px solid #8daf14; outline-offset: 2px; }
+
+        /* Imagen única: ocultar flechas, miniaturas y contador ──────── */
+        #cf-lightbox.single-img #cf-lb-prev,
+        #cf-lightbox.single-img #cf-lb-next,
+        #cf-lightbox.single-img #cf-lb-thumbs-wrap,
+        #cf-lightbox.single-img #cf-lb-counter { display: none; }
+
+        /* Mobile ───────────────────────────────────────────────────── */
+        @media (max-width: 767px) {
+            #cf-lb-stage       { padding: 56px 48px 8px; }
+            #cf-lb-img         { max-height: calc(100vh - 210px); }
+            .cf-lb-arrow       { width: 44px; height: 72px; }
+            #cf-lb-info-bar    { padding: 0 16px 8px; flex-wrap: wrap; }
+            #cf-lb-thumbs-wrap { padding: 0 16px 16px; }
+            .cf-lb-thumb       { width: 60px; height: 45px; }
+        }
+
+        /* Reduced motion ───────────────────────────────────────────── */
+                /* Video element (mismo tamaño que img) */
+        #cf-lb-video {
+            display: none;
+            max-width: 100%;
+            max-height: calc(100vh - 230px);
+            width: auto; height: auto;
+            border-radius: 6px;
+            background: #000;
+            outline: none;
+        }
+        @media (max-width: 767px) {
+            #cf-lb-video { max-height: calc(100vh - 210px); }
+        }
+
+        /* Icono play superpuesto en miniaturas de video */
+        .cf-lb-thumb { position: relative; }
+        .cf-lb-play-icon {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(0, 0, 0, 0.42);
+            border-radius: 3px;
+            pointer-events: none;
+            color: #8daf14;
+        }
+        .cf-lb-play-icon svg { filter: drop-shadow(0 1px 4px rgba(0,0,0,0.6)); }
+
+        @media (prefers-reduced-motion: reduce) {
+            #cf-lightbox, #cf-lb-img, #cf-lb-video, .cf-lb-thumb { transition: none !important; }
+        }
+
+                @media (prefers-reduced-motion: reduce) {
+            .cf-card, .cf-img-wrap img, #cf-progress-bar {
+                transition: none !important;
+            }
+        }
+
+                /* ── Imagen de hero: scale muy sutil en hover ───────────────────────── */
+        .hero-img-wrap { overflow: hidden; }
+        .hero-img-wrap img:first-child {
+            transition: transform 600ms var(--ease-out-expo), opacity 300ms var(--ease-in-out);
+        }
+        .hero-img-wrap:hover img:first-child { transform: scale(1.03); }
+
+        /* ── prefers-reduced-motion: desactivar TODO el movimiento ─────────── */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration:        0.01ms !important;
+                animation-iteration-count: 1      !important;
+                transition-duration:       0.01ms !important;
+                scroll-behavior:           auto   !important;
+            }
+            /* Hero stagger: mostrar todo inmediatamente */
+            .hs-1, .hs-2, .hs-3, .hs-4, .hs-img {
+                opacity: 1;
+                transform: none;
+                filter: none;
+                animation: none;
+            }
+            /* SVG hero: grupos quietos, sin flotado */
+            #hero-bg-svg g { animation: none !important; }
+            .js .js-reveal {
+                opacity: 1;
+                transform: none;
+            }
+            .card-hover:hover,
+            .btn-press:hover,
+            .btn-press:active,
+            .fab:hover,
+            .fab:active { transform: none; }
+            .nav-link::after { display: none; }
+            .icon-hover:hover { transform: none; }
+            .hero-img-wrap:hover img:first-child { transform: none; }
+        }
+
+        /* ── Menú mobile (hamburguesa) ──────────────────────────────────────── */
+                #mob-toggle { display: flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; border-radius: 0.5rem; color: #1a1a1a; background: transparent; border: none; cursor: pointer; }
+        @media (min-width: 768px) { #mob-toggle { display: none !important; } }
+        #mobile-menu { position: fixed; top: 80px; left: 0; right: 0; z-index: 49; background: white; border-bottom: 1px solid #f0f0f0; box-shadow: 0 8px 32px -8px rgba(0,0,0,0.10); max-height: calc(100vh - 80px); overflow-y: auto; opacity: 0; transform: translateY(-6px); pointer-events: none; transition: opacity 220ms cubic-bezier(0.4,0,0.2,1), transform 260ms cubic-bezier(0.16,1,0.3,1); }
+        #mobile-menu.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        #ham-icon, #close-icon { transition: opacity 160ms ease; }
+        #close-icon { display: none; }
+        .mob-menu-open #ham-icon  { display: none; }
+        .mob-menu-open #close-icon { display: block; }
+        @media (prefers-reduced-motion: reduce) { #mobile-menu { transition: none !important; } #mob-toggle { transition: none !important; } #ham-icon, #close-icon { transition: none !important; } }
+
+    </style>
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+    <link rel="apple-touch-icon" href="assets/img/favicon.png">
+</head>
+<body class="font-body text-brandDark bg-white overflow-x-hidden">
+<script>document.documentElement.className=document.documentElement.className.replace("no-js","js");</script>
+    <!-- ═══════════════════════════════════════════ NAV -->
+    <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+
+            <a href="/" class="flex items-center gap-3">
+                <img src="assets/img/logo_3r_t.png" class="h-10 w-auto" alt="Logo 3R">
+                <span class="font-display font-bold text-lg tracking-tighter uppercase">3R. Arquitectura</span>
+            </a>
+
+            <!-- Nav desktop -->
+            <div class="hidden md:flex items-center gap-7 text-xs font-mono font-bold uppercase tracking-widest">
+                <a href="/#inicio"    class="nav-link hover:text-brandGreen">Inicio</a>
+                <a href="/#servicios" class="nav-link hover:text-brandGreen">Servicios</a>
+                <a href="/#proyectos" class="nav-link hover:text-brandGreen">Proyectos</a>
+                <span class="italic text-gray-400 cursor-default">Mi Guía <span class="normal-case font-normal text-[10px] bg-gray-100 text-gray-400 px-2 py-0.5 rounded-full tracking-normal align-middle">Próximamente</span></span>
+                <a href="https://3rarquitectura.blogspot.com" target="_blank" class="nav-link hover:text-brandGreen">Blog</a>
+
+                <a href="https://www.instagram.com/3r.arquitectura/" target="_blank"
+                   class="icon-hover text-brandDark hover:text-brandGreen" aria-label="Instagram @3r.arquitectura">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5"/>
+                        <circle cx="12" cy="12" r="4"/>
+                        <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/>
+                    </svg>
+                </a>
+                <a href="https://www.linkedin.com/company/3rarquitectura/" target="_blank"
+                   class="icon-hover text-brandDark hover:text-brandGreen" aria-label="LinkedIn 3rarquitectura">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/>
+                        <rect x="2" y="9" width="4" height="12"/>
+                        <circle cx="4" cy="4" r="2"/>
+                    </svg>
+                </a>
+
+                <a href="https://wa.me/59896699876" target="_blank"
+                   class="btn-press bg-brandDark text-white px-5 py-2 rounded-full hover:bg-brandGreen">
+                    Contacto
+                </a>
+            </div>
+
+            <!-- Botón hamburguesa (solo mobile) -->
+            <button id="mob-toggle"
+                    aria-label="Abrir menú"
+                    aria-expanded="false"
+                    aria-controls="mobile-menu">
+                <!-- Ícono ☰ -->
+                <svg id="ham-icon" class="w-6 h-6" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="6"  x2="21" y2="6"/>
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+                <!-- Ícono ✕ -->
+                <svg id="close-icon" class="w-6 h-6" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6"  x2="6" y2="18"/>
+                    <line x1="6"  y1="6"  x2="18" y2="18"/>
+                </svg>
+            </button>
+
+        </div>
+    </nav>
+
+    <!-- Panel menú mobile -->
+    <div id="mobile-menu" role="navigation" aria-label="Menú mobile">
+        <ul class="flex flex-col px-6 py-6 gap-1 font-mono font-bold uppercase tracking-widest text-sm">
+            <li>
+                <a href="/#inicio"
+                   class="mob-link flex items-center h-12 border-b border-gray-100 hover:text-brandGreen transition-colors">
+                    Inicio
+                </a>
+            </li>
+            <li>
+                <a href="/#servicios"
+                   class="mob-link flex items-center h-12 border-b border-gray-100 hover:text-brandGreen transition-colors">
+                    Servicios
+                </a>
+            </li>
+            <li>
+                <a href="/#proyectos"
+                   class="mob-link flex items-center h-12 border-b border-gray-100 hover:text-brandGreen transition-colors">
+                    Proyectos
+                </a>
+            </li>
+            <li>
+                <span class="flex items-center h-12 border-b border-gray-100 italic text-gray-400 cursor-default">
+                    Mi Guía
+                    <span class="ml-2 normal-case font-normal text-[10px] bg-gray-100 text-gray-400 px-2 py-0.5 rounded-full tracking-normal">Próximamente</span>
+                </span>
+            </li>
+            <li>
+                <a href="https://3rarquitectura.blogspot.com" target="_blank"
+                   class="mob-link flex items-center h-12 border-b border-gray-100 hover:text-brandGreen transition-colors">
+                    Blog
+                </a>
+            </li>
+            <li class="pt-4 flex items-center gap-4">
+                <a href="https://www.instagram.com/3r.arquitectura/" target="_blank"
+                   class="icon-hover text-brandDark hover:text-brandGreen" aria-label="Instagram @3r.arquitectura">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5"/>
+                        <circle cx="12" cy="12" r="4"/>
+                        <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/>
+                    </svg>
+                </a>
+                <a href="https://www.linkedin.com/company/3rarquitectura/" target="_blank"
+                   class="icon-hover text-brandDark hover:text-brandGreen" aria-label="LinkedIn 3rarquitectura">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/>
+                        <rect x="2" y="9" width="4" height="12"/>
+                        <circle cx="4" cy="4" r="2"/>
+                    </svg>
+                </a>
+            </li>
+            <li class="pt-4">
+                <a href="https://wa.me/59896699876" target="_blank"
+                   class="mob-link btn-press inline-block bg-brandDark text-white px-6 py-3 rounded-full hover:bg-brandGreen normal-case tracking-normal font-bold">
+                    Contacto →
+                </a>
+            </li>
+        </ul>
+    </div>
+
+
+<main>
+<section class="relative pt-36 pb-16 px-6 bg-white overflow-hidden">
+  <div class="max-w-4xl mx-auto js-reveal">
+    <a href="/#servicios" class="text-xs font-mono font-bold uppercase tracking-widest text-gray-400 hover:text-brandGreen">← Servicios</a>
+    <p class="mt-6 text-xs font-mono font-bold uppercase tracking-widest text-brandGreen">Servicio</p>
+    <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-bold uppercase italic tracking-tight text-brandDark mt-3 leading-none">Consultoría y Metodología BIM</h1>
+    <p class="mt-6 text-lg text-gray-500 leading-relaxed max-w-2xl">Transformamos relevamientos y nubes de puntos en modelos BIM precisos para proyectos, mantenimiento y documentación As-Built.</p>
+    <a href="#solicitar" class="btn-press inline-block mt-8 bg-brandDark text-white font-mono font-bold py-3.5 px-8 rounded-full hover:bg-brandGreen uppercase tracking-wide text-sm">Pedir cotización →</a>
+  </div>
+</section>
+<section class="py-16 px-6 bg-gray-50">
+  <div class="max-w-4xl mx-auto">
+    <div class="js-reveal max-w-2xl">
+      <h2 class="font-display text-3xl font-bold uppercase italic tracking-tight text-brandDark">De la realidad al modelo</h2>
+      <p class="mt-4 text-gray-500 leading-relaxed">Cuando partís de datos precisos, todo lo demás es más fácil. Capturamos tu edificio tal como está y lo convertimos en un modelo BIM confiable, para que decidas y construyas sobre información real —no sobre suposiciones.</p>
+    </div>
+    <p class="mt-10 mb-5 text-xs font-mono font-bold uppercase tracking-widest text-gray-400 js-reveal">Qué incluye</p>
+    <div class="grid sm:grid-cols-2 gap-x-10 gap-y-4">
+      <div class="flex items-start gap-3 js-reveal"><span class="text-brandGreen font-bold leading-6">✓</span><span class="text-gray-600 leading-relaxed">Relevamiento con escáner láser: nube de puntos de alta precisión.</span></div>
+      <div class="flex items-start gap-3 js-reveal"><span class="text-brandGreen font-bold leading-6">✓</span><span class="text-gray-600 leading-relaxed">Modelado BIM a medida, con el nivel de detalle (LOD) que tu proyecto necesita.</span></div>
+      <div class="flex items-start gap-3 js-reveal"><span class="text-brandGreen font-bold leading-6">✓</span><span class="text-gray-600 leading-relaxed">Documentación As-Built y planos 2D listos para usar.</span></div>
+      <div class="flex items-start gap-3 js-reveal"><span class="text-brandGreen font-bold leading-6">✓</span><span class="text-gray-600 leading-relaxed">Detección de interferencias y coordinación entre disciplinas.</span></div>
+      <div class="flex items-start gap-3 js-reveal"><span class="text-brandGreen font-bold leading-6">✓</span><span class="text-gray-600 leading-relaxed">Entregables compatibles con tu flujo de trabajo (Revit / IFC).</span></div>
+      <div class="flex items-start gap-3 js-reveal"><span class="text-brandGreen font-bold leading-6">✓</span><span class="text-gray-600 leading-relaxed">Una base confiable para proyecto, mantenimiento o ampliación.</span></div>
+    </div>
+  </div>
+</section>
+<section id="solicitar" class="py-20 px-6 bg-white">
+  <div class="max-w-2xl mx-auto">
+    <div class="text-center mb-10 js-reveal">
+      <h2 class="font-display text-3xl sm:text-4xl font-bold uppercase italic tracking-tight text-brandDark">Solicitá tu cotización</h2>
+      <p class="mt-3 text-gray-500 text-sm leading-relaxed">Contanos sobre tu proyecto y te respondemos con una propuesta a medida.</p>
+    </div>
+    <form id="presupuestoForm" class="js-reveal space-y-7" action="https://formspree.io/f/mvzbvgyp" method="POST" novalidate>
+      <input type="hidden" name="servicio" value="Consultoría y Metodología BIM">
+      <input type="hidden" name="_subject" value="Cotización — Consultoría y Metodología BIM">
+      <div class="grid sm:grid-cols-2 gap-6">
+        <div><label class="block text-xs font-mono font-bold uppercase mb-2">Nombre *</label>
+          <input type="text" name="nombre" required placeholder="Tu nombre" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm" style="transition: border-color 180ms cubic-bezier(0.4,0,0.2,1);" onfocus="this.style.borderColor='#8daf14'" onblur="this.style.borderColor='#e5e7eb'"></div>
+        <div><label class="block text-xs font-mono font-bold uppercase mb-2">Email *</label>
+          <input type="email" name="email" required placeholder="tunombre@correo.com" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm" style="transition: border-color 180ms cubic-bezier(0.4,0,0.2,1);" onfocus="this.style.borderColor='#8daf14'" onblur="this.style.borderColor='#e5e7eb'"></div>
+      </div>
+      <div>
+  <label class="block text-xs font-mono font-bold uppercase mb-3">¿Qué necesitás?</label>
+  <div class="flex flex-wrap gap-3">
+    <label class="cursor-pointer select-none"><input type="checkbox" class="hidden peer" name="interes" value="Nube de puntos → BIM"><span class="block px-5 py-2 rounded-full border border-gray-300 text-sm font-mono font-semibold text-gray-600 peer-checked:bg-brandDark peer-checked:text-white peer-checked:border-brandDark" style="transition: background-color 160ms cubic-bezier(0.4,0,0.2,1), color 160ms cubic-bezier(0.4,0,0.2,1), border-color 160ms cubic-bezier(0.4,0,0.2,1);">Nube de puntos → BIM</span></label>
+    <label class="cursor-pointer select-none"><input type="checkbox" class="hidden peer" name="interes" value="Modelo As-Built"><span class="block px-5 py-2 rounded-full border border-gray-300 text-sm font-mono font-semibold text-gray-600 peer-checked:bg-brandDark peer-checked:text-white peer-checked:border-brandDark" style="transition: background-color 160ms cubic-bezier(0.4,0,0.2,1), color 160ms cubic-bezier(0.4,0,0.2,1), border-color 160ms cubic-bezier(0.4,0,0.2,1);">Modelo As-Built</span></label>
+    <label class="cursor-pointer select-none"><input type="checkbox" class="hidden peer" name="interes" value="Documentación 2D"><span class="block px-5 py-2 rounded-full border border-gray-300 text-sm font-mono font-semibold text-gray-600 peer-checked:bg-brandDark peer-checked:text-white peer-checked:border-brandDark" style="transition: background-color 160ms cubic-bezier(0.4,0,0.2,1), color 160ms cubic-bezier(0.4,0,0.2,1), border-color 160ms cubic-bezier(0.4,0,0.2,1);">Documentación 2D</span></label>
+    <label class="cursor-pointer select-none"><input type="checkbox" class="hidden peer" name="interes" value="Coordinación / interferencias"><span class="block px-5 py-2 rounded-full border border-gray-300 text-sm font-mono font-semibold text-gray-600 peer-checked:bg-brandDark peer-checked:text-white peer-checked:border-brandDark" style="transition: background-color 160ms cubic-bezier(0.4,0,0.2,1), color 160ms cubic-bezier(0.4,0,0.2,1), border-color 160ms cubic-bezier(0.4,0,0.2,1);">Coordinación / interferencias</span></label>
+    <label class="cursor-pointer select-none"><input type="checkbox" class="hidden peer" name="interes" value="Relevamiento con escáner"><span class="block px-5 py-2 rounded-full border border-gray-300 text-sm font-mono font-semibold text-gray-600 peer-checked:bg-brandDark peer-checked:text-white peer-checked:border-brandDark" style="transition: background-color 160ms cubic-bezier(0.4,0,0.2,1), color 160ms cubic-bezier(0.4,0,0.2,1), border-color 160ms cubic-bezier(0.4,0,0.2,1);">Relevamiento con escáner</span></label>
+    <label class="cursor-pointer select-none"><input type="checkbox" class="hidden peer" name="interes" value="Otro"><span class="block px-5 py-2 rounded-full border border-gray-300 text-sm font-mono font-semibold text-gray-600 peer-checked:bg-brandDark peer-checked:text-white peer-checked:border-brandDark" style="transition: background-color 160ms cubic-bezier(0.4,0,0.2,1), color 160ms cubic-bezier(0.4,0,0.2,1), border-color 160ms cubic-bezier(0.4,0,0.2,1);">Otro</span></label>
+  </div>
+</div>
+      <div><label class="block text-xs font-mono font-bold uppercase mb-2">Descripción del proyecto</label>
+        <textarea name="descripcion" rows="3" placeholder="Contanos qué necesitás, plazos, si tenés planos o fotos, etc." class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm" style="transition: border-color 180ms cubic-bezier(0.4,0,0.2,1);" onfocus="this.style.borderColor='#8daf14'" onblur="this.style.borderColor='#e5e7eb'"></textarea></div>
+      <div><label class="block text-xs font-mono font-bold uppercase mb-2">Link de fotos/planos <span class="normal-case font-normal text-gray-400 ml-1">(Google Drive, WeTransfer — opcional)</span></label>
+        <input type="url" name="link_archivos" placeholder="https://drive.google.com/..." class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm" style="transition: border-color 180ms cubic-bezier(0.4,0,0.2,1);" onfocus="this.style.borderColor='#8daf14'" onblur="this.style.borderColor='#e5e7eb'">
+        <p class="mt-2 text-xs text-gray-400">También podés enviarnos archivos por <a href="https://wa.me/59896699876" target="_blank" class="underline hover:text-brandGreen">WhatsApp</a>.</p></div>
+      <button type="submit" class="btn-press w-full bg-brandGreen text-white font-mono font-bold py-4 rounded-xl hover:bg-brandDark uppercase tracking-wide text-sm">Enviar solicitud →</button>
+    </form>
+            <div id="formSuccess" class="hidden mt-8 p-6 bg-white border border-brandGreen rounded-2xl text-center">
+                <div class="w-10 h-10 mx-auto mb-4 text-brandGreen">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                </div>
+                <h3 class="font-display text-xl font-bold italic text-brandDark mb-2">¡Solicitud enviada!</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Recibimos tu consulta. Te respondemos en las próximas 24–48 horas hábiles a tu email.<br>Si tenés urgencia, escribinos por <a href="https://wa.me/59896699876" target="_blank" class="underline hover:text-brandGreen">WhatsApp</a>.</p>
+            </div>
+  </div>
+</section>
+</main>
+    <footer class="py-16 border-t border-gray-100 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+
+            <div class="grid md:grid-cols-3 gap-12 mb-12">
+
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <img src="assets/img/logo_3r_t.png" class="h-9 w-auto" alt="Logo 3R">
+                        <span class="font-display font-bold text-base tracking-tighter uppercase">3R. Arquitectura</span>
+                    </div>
+                    <p class="text-sm text-gray-500 italic leading-relaxed">Diseñamos sensaciones creando tus espacios.</p>
+                </div>
+
+                <div>
+                    <p class="text-xs font-mono font-bold uppercase tracking-widest text-gray-400 mb-4">Navegación</p>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/#inicio"    class="nav-link text-gray-600 hover:text-brandGreen">Inicio</a></li>
+                        <li><a href="/#servicios" class="nav-link text-gray-600 hover:text-brandGreen">Servicios</a></li>
+                        <li><a href="/#proyectos" class="nav-link text-gray-600 hover:text-brandGreen">Proyectos</a></li>
+                        <li><span class="text-gray-400 cursor-default">Mi Guía <span class="text-[10px] bg-gray-100 text-gray-400 px-2 py-0.5 rounded-full align-middle">Próximamente</span></span></li>
+                        <li><a href="https://3rarquitectura.blogspot.com" target="_blank"
+                               class="nav-link text-gray-600 hover:text-brandGreen">Blog</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <p class="text-xs font-mono font-bold uppercase tracking-widest text-gray-400 mb-4">Contacto</p>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li>
+                            <a href="mailto:contacto@3rarq.com"
+                               class="nav-link hover:text-brandGreen">
+                                contacto@3rarq.com
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://wa.me/59896699876" target="_blank"
+                               class="nav-link hover:text-brandGreen">
+                                +598 96 699 876
+                            </a>
+                        </li>
+                        <li class="pt-3 flex items-center gap-4">
+                            <a href="https://www.instagram.com/3r.arquitectura/" target="_blank"
+                               class="icon-hover text-gray-500 hover:text-brandGreen" aria-label="Instagram @3r.arquitectura">
+                                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2" y="2" width="20" height="20" rx="5"/>
+                                    <circle cx="12" cy="12" r="4"/>
+                                    <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/>
+                                </svg>
+                            </a>
+                            <a href="https://www.linkedin.com/company/3rarquitectura/" target="_blank"
+                               class="icon-hover text-gray-500 hover:text-brandGreen" aria-label="LinkedIn 3rarquitectura">
+                                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/>
+                                    <rect x="2" y="9" width="4" height="12"/>
+                                    <circle cx="4" cy="4" r="2"/>
+                                </svg>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="border-t border-gray-100 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-400 font-mono">
+                <p>© 2026 3R.Arquitectura · Montevideo, Uruguay</p>
+                <p>Arq. Rocío Rojas Romero</p>
+            </div>
+
+        </div>
+    </footer>
+<script>
+(function(){
+  var toggle=document.getElementById('mob-toggle'), menu=document.getElementById('mobile-menu');
+  if(!toggle||!menu) return;
+  function open(){menu.classList.add('open');document.body.classList.add('mob-menu-open');toggle.setAttribute('aria-expanded','true');toggle.setAttribute('aria-label','Cerrar menú');}
+  function close(){menu.classList.remove('open');document.body.classList.remove('mob-menu-open');toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Abrir menú');}
+  toggle.addEventListener('click',function(e){e.stopPropagation();menu.classList.contains('open')?close():open();});
+  menu.querySelectorAll('.mob-link').forEach(function(l){l.addEventListener('click',close);});
+  document.addEventListener('click',function(e){if(!menu.contains(e.target)&&!toggle.contains(e.target))close();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  window.addEventListener('resize',function(){if(window.innerWidth>=768)close();});
+})();
+var revealObserver=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in-view');revealObserver.unobserve(en.target);}});},{threshold:0.1,rootMargin:'0px 0px -48px 0px'});
+document.querySelectorAll('.js-reveal').forEach(function(el){revealObserver.observe(el);});
+(function(){
+  var form=document.getElementById('presupuestoForm'), formSuccess=document.getElementById('formSuccess');
+  if(!form) return;
+  form.addEventListener('submit',async function(e){
+    e.preventDefault();
+    var btn=form.querySelector('button[type="submit"]'); btn.disabled=true; btn.textContent='Enviando…';
+    try{
+      var data=new FormData(form);
+      var sel=[].slice.call(form.querySelectorAll('input[type="checkbox"]:checked')).map(function(c){return c.value;}).join(', ');
+      if(sel) data.set('seleccion',sel);
+      var res=await fetch('https://formspree.io/f/mvzbvgyp',{method:'POST',headers:{'Accept':'application/json'},body:data});
+      var json=await res.json();
+      if(json.ok){form.classList.add('hidden');formSuccess.classList.remove('hidden');}
+      else{throw new Error('Error');}
+    }catch(err){btn.disabled=false;btn.textContent='Enviar solicitud →';alert('Hubo un problema al enviar. Escribinos a contacto@3rarq.com o por WhatsApp.');console.error(err);}
+  });
+})();
+</script>
+</body>
+</html>
