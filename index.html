@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="es" class="no-js scroll-smooth">
 <head>
-    <!-- Google Tag Manager -->
+<!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -498,11 +498,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         @media (prefers-reduced-motion: reduce) { #mobile-menu { transition: none !important; } #mob-toggle { transition: none !important; } #ham-icon, #close-icon { transition: none !important; } }
 
     </style>
-    <link rel="icon" type="image/png" href="assets/img/favicon.png">
-    <link rel="apple-touch-icon" href="assets/img/favicon.png">
+    <link rel="icon" type="image/png" href="/favicon.png?v=2">
+    <link rel="icon" href="/favicon.ico?v=2" sizes="any">
+    <link rel="apple-touch-icon" href="/favicon.png?v=2">
 </head>
 <body class="font-body text-brandDark bg-white overflow-x-hidden">
-    <!-- Google Tag Manager (noscript) -->
+<!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MVP3FL2M"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
@@ -523,7 +524,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <a href="#inicio"    class="nav-link hover:text-brandGreen">Inicio</a>
                 <a href="#servicios" class="nav-link hover:text-brandGreen">Servicios</a>
                 <a href="#proyectos" class="nav-link hover:text-brandGreen">Proyectos</a>
-                <span class="italic text-gray-400 cursor-default">Mi Guía <span class="normal-case font-normal text-[10px] bg-gray-100 text-gray-400 px-2 py-0.5 rounded-full tracking-normal align-middle">Próximamente</span></span>
+                <a href="/guia.html" class="nav-link hover:text-brandGreen">Mi Guía</a>
+                <a href="/articulos.html" class="nav-link hover:text-brandGreen">Saber más</a>
                 <a href="https://3rarquitectura.blogspot.com" target="_blank" class="nav-link hover:text-brandGreen">Blog</a>
 
                 <a href="https://www.instagram.com/3r.arquitectura/" target="_blank"
@@ -597,10 +599,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </a>
             </li>
             <li>
-                <span class="flex items-center h-12 border-b border-gray-100 italic text-gray-400 cursor-default">
-                    Mi Guía
-                    <span class="ml-2 normal-case font-normal text-[10px] bg-gray-100 text-gray-400 px-2 py-0.5 rounded-full tracking-normal">Próximamente</span>
-                </span>
+                <a href="/guia.html" class="mob-link flex items-center h-12 border-b border-gray-100 hover:text-brandGreen transition-colors">Mi Guía</a>
+            </li>
+            <li>
+                <a href="/articulos.html" class="mob-link flex items-center h-12 border-b border-gray-100 hover:text-brandGreen transition-colors">Saber más</a>
             </li>
             <li>
                 <a href="https://3rarquitectura.blogspot.com" target="_blank"
@@ -1224,7 +1226,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <!-- CTA -->
             <div class=js-reveal text-center mt-14 style=--delay: 0ms>
             <div class="js-reveal text-center mt-14" style="--delay: 0ms">
-                <a href="#presupuesto"
+                <a href="#servicios"
                    class="btn-press inline-block bg-brandGreen text-white px-12 py-5 rounded-full font-bold shadow-xl hover:bg-brandDark uppercase tracking-widest text-sm">
                     Solicitar presupuesto →
                 </a>
@@ -1290,155 +1292,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 
     <!-- ═══════════════════════════════════════════ SOLICITAR PRESUPUESTO -->
-    <section id="presupuesto" class="py-24 px-6 bg-gray-50">
-        <div class="max-w-2xl mx-auto">
-
-            <div class="js-reveal text-center mb-10">
-                <h2 class="font-display text-4xl font-bold italic uppercase mb-4 text-brandDark">Solicitar presupuesto</h2>
-                <p class="text-gray-500 text-base leading-relaxed">
-                    Seleccioná los espacios que querés intervenir, adjuntá medidas, fotos o planos del espacio,
-                    y te respondemos con una propuesta adaptada a tu proyecto.
-                </p>
-            </div>
-
-            <form id="presupuestoForm"
-                  class="js-reveal space-y-7"
-                  action="https://formspree.io/f/mvzbvgyp"
-                  method="POST"
-                  novalidate
-                  style="--delay: 80ms">
-
-                <div class="grid sm:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-xs font-mono font-bold uppercase mb-2">Nombre *</label>
-                        <input type="text" name="nombre" required placeholder="Tu nombre"
-                               class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm"
-                               style="transition: border-color 180ms cubic-bezier(0.4,0,0.2,1);"
-                               onfocus="this.style.borderColor='#8daf14'" onblur="this.style.borderColor='#e5e7eb'">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-mono font-bold uppercase mb-2">Email *</label>
-                        <input type="email" name="email" required placeholder="hola@empresa.com"
-                               class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm"
-                               style="transition: border-color 180ms cubic-bezier(0.4,0,0.2,1);"
-                               onfocus="this.style.borderColor='#8daf14'" onblur="this.style.borderColor='#e5e7eb'">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-mono font-bold uppercase mb-3">Espacios a intervenir</label>
-                    <div class="flex flex-wrap gap-3" id="espaciosSelector">
-
-                        <label class="cursor-pointer select-none">
-                            <input type="checkbox" class="hidden peer" name="espacio" value="Cocina">
-                            <span class="block px-5 py-2 rounded-full border border-gray-300 text-sm font-mono font-semibold text-gray-600
-                                         peer-checked:bg-brandDark peer-checked:text-white peer-checked:border-brandDark"
-                                  style="transition: background-color 160ms cubic-bezier(0.4,0,0.2,1), color 160ms cubic-bezier(0.4,0,0.2,1), border-color 160ms cubic-bezier(0.4,0,0.2,1);">Cocina</span>
-                        </label>
-                        <label class="cursor-pointer select-none">
-                            <input type="checkbox" class="hidden peer" name="espacio" value="Baño">
-                            <span class="block px-5 py-2 rounded-full border border-gray-300 text-sm font-mono font-semibold text-gray-600
-                                         peer-checked:bg-brandDark peer-checked:text-white peer-checked:border-brandDark"
-                                  style="transition: background-color 160ms cubic-bezier(0.4,0,0.2,1), color 160ms cubic-bezier(0.4,0,0.2,1), border-color 160ms cubic-bezier(0.4,0,0.2,1);">Baño</span>
-                        </label>
-                        <label class="cursor-pointer select-none">
-                            <input type="checkbox" class="hidden peer" name="espacio" value="Living">
-                            <span class="block px-5 py-2 rounded-full border border-gray-300 text-sm font-mono font-semibold text-gray-600
-                                         peer-checked:bg-brandDark peer-checked:text-white peer-checked:border-brandDark"
-                                  style="transition: background-color 160ms cubic-bezier(0.4,0,0.2,1), color 160ms cubic-bezier(0.4,0,0.2,1), border-color 160ms cubic-bezier(0.4,0,0.2,1);">Living</span>
-                        </label>
-                        <label class="cursor-pointer select-none">
-                            <input type="checkbox" class="hidden peer" name="espacio" value="Dormitorio">
-                            <span class="block px-5 py-2 rounded-full border border-gray-300 text-sm font-mono font-semibold text-gray-600
-                                         peer-checked:bg-brandDark peer-checked:text-white peer-checked:border-brandDark"
-                                  style="transition: background-color 160ms cubic-bezier(0.4,0,0.2,1), color 160ms cubic-bezier(0.4,0,0.2,1), border-color 160ms cubic-bezier(0.4,0,0.2,1);">Dormitorio</span>
-                        </label>
-                        <label class="cursor-pointer select-none">
-                            <input type="checkbox" class="hidden peer" name="espacio" value="Oficina">
-                            <span class="block px-5 py-2 rounded-full border border-gray-300 text-sm font-mono font-semibold text-gray-600
-                                         peer-checked:bg-brandDark peer-checked:text-white peer-checked:border-brandDark"
-                                  style="transition: background-color 160ms cubic-bezier(0.4,0,0.2,1), color 160ms cubic-bezier(0.4,0,0.2,1), border-color 160ms cubic-bezier(0.4,0,0.2,1);">Oficina</span>
-                        </label>
-                        <label class="cursor-pointer select-none">
-                            <input type="checkbox" class="hidden peer" name="espacio" value="Local comercial">
-                            <span class="block px-5 py-2 rounded-full border border-gray-300 text-sm font-mono font-semibold text-gray-600
-                                         peer-checked:bg-brandDark peer-checked:text-white peer-checked:border-brandDark"
-                                  style="transition: background-color 160ms cubic-bezier(0.4,0,0.2,1), color 160ms cubic-bezier(0.4,0,0.2,1), border-color 160ms cubic-bezier(0.4,0,0.2,1);">Local comercial</span>
-                        </label>
-                        <label class="cursor-pointer select-none">
-                            <input type="checkbox" class="hidden peer" name="espacio" value="Fachada">
-                            <span class="block px-5 py-2 rounded-full border border-gray-300 text-sm font-mono font-semibold text-gray-600
-                                         peer-checked:bg-brandDark peer-checked:text-white peer-checked:border-brandDark"
-                                  style="transition: background-color 160ms cubic-bezier(0.4,0,0.2,1), color 160ms cubic-bezier(0.4,0,0.2,1), border-color 160ms cubic-bezier(0.4,0,0.2,1);">Fachada</span>
-                        </label>
-                        <label class="cursor-pointer select-none">
-                            <input type="checkbox" class="hidden peer" name="espacio" value="Exterior">
-                            <span class="block px-5 py-2 rounded-full border border-gray-300 text-sm font-mono font-semibold text-gray-600
-                                         peer-checked:bg-brandDark peer-checked:text-white peer-checked:border-brandDark"
-                                  style="transition: background-color 160ms cubic-bezier(0.4,0,0.2,1), color 160ms cubic-bezier(0.4,0,0.2,1), border-color 160ms cubic-bezier(0.4,0,0.2,1);">Exterior</span>
-                        </label>
-                        <label class="cursor-pointer select-none">
-                            <input type="checkbox" class="hidden peer" name="espacio" value="Otro">
-                            <span class="block px-5 py-2 rounded-full border border-gray-300 text-sm font-mono font-semibold text-gray-600
-                                         peer-checked:bg-brandDark peer-checked:text-white peer-checked:border-brandDark"
-                                  style="transition: background-color 160ms cubic-bezier(0.4,0,0.2,1), color 160ms cubic-bezier(0.4,0,0.2,1), border-color 160ms cubic-bezier(0.4,0,0.2,1);">Otro</span>
-                        </label>
-
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-mono font-bold uppercase mb-2">Descripción del proyecto</label>
-                    <textarea name="descripcion" rows="3" placeholder="Contanos sobre el espacio, qué querés lograr, si tenés planos, etc."
-                              class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm"
-                              style="transition: border-color 180ms cubic-bezier(0.4,0,0.2,1);"
-                              onfocus="this.style.borderColor='#8daf14'" onblur="this.style.borderColor='#e5e7eb'"></textarea>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-mono font-bold uppercase mb-2">
-                        Link de fotos/planos
-                        <span class="normal-case font-normal text-gray-400 ml-1">(Google Drive, WeTransfer, etc. — opcional)</span>
-                    </label>
-                    <input type="url" name="link_archivos" placeholder="https://drive.google.com/..."
-                           class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 outline-none text-sm"
-                           style="transition: border-color 180ms cubic-bezier(0.4,0,0.2,1);"
-                           onfocus="this.style.borderColor='#8daf14'" onblur="this.style.borderColor='#e5e7eb'">
-                    <p class="mt-2 text-xs text-gray-400">
-                        También podés enviarnos las fotos y planos por
-                        <a href="https://wa.me/59896699876" target="_blank"
-                           class="underline"
-                           style="transition: color 160ms cubic-bezier(0.4,0,0.2,1);"
-                           onmouseover="this.style.color='#8daf14'" onmouseout="this.style.color=''">WhatsApp</a>.
-                    </p>
-                </div>
-
-                <button type="submit"
-                        class="btn-press w-full bg-brandGreen text-white font-mono font-bold py-4 rounded-xl hover:bg-brandDark uppercase tracking-wide text-sm">
-                    Enviar solicitud →
-                </button>
-
-            </form>
-
-            <div id="formSuccess"
-                 class="hidden mt-8 p-6 bg-white border border-brandGreen rounded-2xl text-center">
-                <div class="w-10 h-10 mx-auto mb-4 text-brandGreen">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                        <polyline points="22 4 12 14.01 9 11.01"/>
-                    </svg>
-                </div>
-                <h3 class="font-display text-xl font-bold italic text-brandDark mb-2">¡Solicitud enviada!</h3>
-                <p class="text-gray-500 text-sm leading-relaxed">
-                    Recibimos tu consulta. Te respondemos en las próximas 24–48 horas hábiles a tu email.<br>
-                    Si tenés urgencia, escribinos por <a href="https://wa.me/59896699876" target="_blank"
-                    class="underline hover:text-brandGreen" style="transition: color 160ms cubic-bezier(0.4,0,0.2,1);">WhatsApp</a>.
-                </p>
-            </div>
-
-        </div>
-    </section>
 
 
     <!-- ═══════════════════════════════════════════ GUÍA -->
@@ -1448,7 +1301,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="js-reveal text-left" style="--delay: 0ms">
                 <h2 class="font-display text-4xl font-bold mb-6 italic text-white">¿Planeas una reforma?</h2>
                 <p class="text-lg italic text-gray-400 mb-8">
-                    volqué mis 10 años de experiencia en una guía práctica para que transformes tu hogar sin estrés ni errores costosos.
+                    Volqué mis 10 años de experiencia en una guía práctica para que transformes tu hogar sin estrés ni errores costosos.
                 </p>
                 <ul class="space-y-4 mb-10">
                     <li class="flex items-center gap-3">
@@ -1464,7 +1317,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         Tips exclusivos de diseño arquitectónico.
                     </li>
                 </ul>
-                <span class="btn-press inline-block bg-white/20 text-white/50 px-10 py-5 rounded-full font-bold text-lg cursor-default select-none">Próximamente</span>
+                <a href="/guia.html" class="btn-press inline-block bg-brandGreen text-white px-10 py-5 rounded-full font-bold text-lg hover:bg-white hover:text-brandDark transition">Descargar la guía gratis →</a>
             </div>
 
             <div class="js-reveal" style="--delay: 120ms">
@@ -1595,7 +1448,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <li><a href="#inicio"    class="nav-link text-gray-600 hover:text-brandGreen">Inicio</a></li>
                         <li><a href="#servicios" class="nav-link text-gray-600 hover:text-brandGreen">Servicios</a></li>
                         <li><a href="#proyectos" class="nav-link text-gray-600 hover:text-brandGreen">Proyectos</a></li>
-                        <li><span class="text-gray-400 cursor-default">Mi Guía <span class="text-[10px] bg-gray-100 text-gray-400 px-2 py-0.5 rounded-full align-middle">Próximamente</span></span></li>
+                        <li><a href="/guia.html" class="nav-link text-gray-600 hover:text-brandGreen">Mi Guía</a></li>
+                        <li><a href="/articulos.html" class="nav-link text-gray-600 hover:text-brandGreen">Saber más</a></li>
                         <li><a href="https://3rarquitectura.blogspot.com" target="_blank"
                                class="nav-link text-gray-600 hover:text-brandGreen">Blog</a></li>
                     </ul>
@@ -1661,7 +1515,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <span class="hidden sm:inline">WhatsApp</span>
         </a>
 
-        <a href="#presupuesto"
+        <a href="#servicios"
            class="fab fab-enter-2 flex items-center gap-2 bg-brandDark text-white pl-3 pr-5 py-3 rounded-full shadow-xl hover:bg-brandGreen text-sm font-mono font-bold"
            aria-label="Solicitar presupuesto">
             <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -2152,45 +2006,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             }
         );
         document.querySelectorAll('.js-reveal').forEach(el => revealObserver.observe(el));
-
-        // ── Formulario presupuesto: envío AJAX a Formspree ───────────────────
-        const form        = document.getElementById('presupuestoForm');
-        const formSuccess = document.getElementById('formSuccess');
-
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const submitBtn = form.querySelector('button[type="submit"]');
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Enviando…';
-
-            try {
-                const data = new FormData(form);
-
-                const espacios = [...form.querySelectorAll('input[name="espacio"]:checked')]
-                    .map(cb => cb.value).join(', ');
-                if (espacios) data.set('espacios_seleccionados', espacios);
-
-                const res  = await fetch('https://formspree.io/f/mvzbvgyp', {
-                    method:  'POST',
-                    headers: { 'Accept': 'application/json' },
-                    body:    data
-                });
-                const json = await res.json();
-
-                if (json.ok) {
-                    form.classList.add('hidden');
-                    formSuccess.classList.remove('hidden');
-                } else {
-                    throw new Error((json.errors || []).map(e => e.message).join(', ') || 'Error al enviar');
-                }
-            } catch (err) {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Enviar solicitud →';
-                alert('Hubo un problema al enviar el formulario. Por favor escribinos directamente a contacto@3rarq.com o por WhatsApp.');
-                console.error(err);
-            }
-        });
     </script>
 
 
