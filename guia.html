@@ -137,13 +137,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <ul class="mt-6 space-y-3">
         <li class="flex items-start gap-3"><span class="node mt-2"></span><span class="text-ink">Presupuesto realista, comparador de proveedores y cronograma.</span></li>
         <li class="flex items-start gap-3"><span class="node mt-2"></span><span class="text-ink">Checklists de contrato y un plan para cuando algo se desvía.</span></li>
-        <li class="flex items-start gap-3"><span class="node mt-2"></span><span class="text-ink">Te la enviamos a tu correo, y la descargas al instante aquí.</span></li>
+        <li class="flex items-start gap-3"><span class="node mt-2"></span><span class="text-ink">Te la enviamos a tu correo apenas confirmas tu dirección.</span></li>
       </ul>
     </div>
     <div class="reveal">
       <div class="border border-line rounded-2xl p-8 sm:p-10">
         <div class="kick mb-1">Deja tus datos</div>
-        <p class="text-graytxt text-sm mb-6">Te enviamos la guía a tu correo (y la descargas aquí mismo).</p>
+        <p class="text-graytxt text-sm mb-6">Te enviamos la guía a tu correo. Revisa tu bandeja para confirmar tu dirección.</p>
         <form id="mcForm" class="space-y-4" novalidate>
           <div>
             <label class="block text-xs font-semibold uppercase tracking-wide text-graytxt mb-1">Nombre</label>
@@ -153,13 +153,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <label class="block text-xs font-semibold uppercase tracking-wide text-graytxt mb-1">Email</label>
             <input id="mcEmail" type="email" required placeholder="tunombre@correo.com" class="w-full border border-line rounded-xl px-4 py-3 text-sm outline-none focus:border-green">
           </div>
-          <button type="submit" class="w-full bg-ink text-white font-semibold rounded-full px-7 py-3.5 hover:bg-green hover:text-ink transition">Enviar y descargar la guía</button>
+          <button type="submit" class="w-full bg-ink text-white font-semibold rounded-full px-7 py-3.5 hover:bg-green hover:text-ink transition">Enviar y recibir la guía</button>
           <p id="mcMsg" class="text-sm text-center hidden"></p>
         </form>
         <div id="mcDone" class="hidden text-center">
-          <p class="font-semibold text-ink">¡Listo! Revisá tu correo 📬</p>
-          <p class="text-graytxt text-sm mt-1 mb-5">También puedes descargarla ahora mismo:</p>
-          <a id="mcDownload" href="/Guia_3R_Reforma.pdf" target="_blank" class="inline-block bg-green text-ink font-semibold rounded-full px-7 py-3.5 hover:bg-ink hover:text-white transition">Descargar la guía (PDF)</a>
+          <p class="font-semibold text-ink">Casi listo 📬</p>
+          <p class="text-graytxt text-sm mt-1">Te enviamos un correo para <b>confirmar tu dirección</b>. Haz clic en el enlace del mail y recibes la guía al instante.</p>
+          <p class="text-graytxt text-xs mt-3">¿No lo ves? Revisa las carpetas de Spam o Promociones.</p>
         </div>
         <p class="text-[11px] text-graytxt mt-4 leading-relaxed text-center">Sin spam. Te escribimos solo con cosas útiles sobre reformas y diseño.</p>
       </div>
@@ -173,7 +173,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="kick mb-6 reveal">Preguntas frecuentes</div>
     <div class="divide-y divide-line">
       <details class="py-5 group reveal"><summary class="flex justify-between items-center cursor-pointer font-semibold text-ink list-none">¿En qué formato viene?<span class="text-green group-open:rotate-45 transition">+</span></summary><p class="mt-3 text-graytxt leading-relaxed">Es un PDF de 16 páginas. Lo puedes imprimir y completar a mano, o escribir encima desde la computadora.</p></details>
-      <details class="py-5 group reveal"><summary class="flex justify-between items-center cursor-pointer font-semibold text-ink list-none">¿Cómo lo recibo?<span class="text-green group-open:rotate-45 transition">+</span></summary><p class="mt-3 text-graytxt leading-relaxed">Te llega a tu correo apenas dejas tus datos, y además la descargas al instante desde esta misma página.</p></details>
+      <details class="py-5 group reveal"><summary class="flex justify-between items-center cursor-pointer font-semibold text-ink list-none">¿Cómo lo recibo?<span class="text-green group-open:rotate-45 transition">+</span></summary><p class="mt-3 text-graytxt leading-relaxed">Te llega a tu correo apenas confirmas tu dirección. Te enviamos un mail con un enlace: haces clic y recibes la guía.</p></details>
       <details class="py-5 group reveal"><summary class="flex justify-between items-center cursor-pointer font-semibold text-ink list-none">¿Tiene algún costo?<span class="text-green group-open:rotate-45 transition">+</span></summary><p class="mt-3 text-graytxt leading-relaxed">No, es totalmente gratis. Solo te pedimos tu nombre y tu mail para enviártela.</p></details>
       <details class="py-5 group reveal"><summary class="flex justify-between items-center cursor-pointer font-semibold text-ink list-none">¿Para quién es?<span class="text-green group-open:rotate-45 transition">+</span></summary><p class="mt-3 text-graytxt leading-relaxed">Para cualquiera que esté por reformar su casa y quiera hacerlo con criterio, sin perderse ni gastar de más.</p></details>
     </div>
@@ -205,31 +205,43 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   const MC_U      = "27c6af2622c42ebd944ed9014";    // valor de u= del form embebido
   const MC_ID     = "cb66dadaf2";   // valor de id= del form embebido
   const PDF_URL   = "/Guia_3R_Reforma.pdf"; // dónde subiste el PDF
+  const MC_ORIGEN = "Guia_WEB3R";        // valor que clasifica el lead (campo oculto ORIGEN en Mailchimp)
   // =====================================================================
   (function(){
     const f=document.getElementById('mcForm'); if(!f) return;
     const dl=document.getElementById('mcDownload'); if(dl) dl.href=PDF_URL;
     const msg=document.getElementById('mcMsg'), done=document.getElementById('mcDone');
     function jsonp(url){return new Promise(function(res,rej){var cb='mc_'+Date.now();window[cb]=function(d){res(d);try{delete window[cb];}catch(e){}s.remove();};var s=document.createElement('script');s.onerror=function(){rej();};s.src=url+'&c='+cb;document.body.appendChild(s);});}
+    // Dominios de correo temporal/desechable bloqueados (primer filtro).
+    // El filtro REAL es la confirmación por correo: un dominio inexistente nunca recibe el mail.
+    var BAD_DOMAINS=['mailinator.com','yopmail.com','guerrillamail.com','10minutemail.com','tempmail.com','temp-mail.org','throwawaymail.com','getnada.com','trashmail.com','sharklasers.com','maildrop.cc','dispostable.com','fakeinbox.com','mailnesia.com','mintemail.com','mohmal.com','spam4.me','tempr.email','emailondeck.com'];
+    function emailValido(em){
+      var re=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      if(!re.test(em)) return 'Escribe un correo válido (ej. tunombre@empresa.com).';
+      var dom=em.split('@')[1].toLowerCase();
+      if(BAD_DOMAINS.indexOf(dom)!==-1) return 'Usa un correo personal o de tu empresa, no uno temporal.';
+      return '';
+    }
     f.addEventListener('submit',async function(e){
       e.preventDefault();
       var name=document.getElementById('mcName').value.trim();
       var email=document.getElementById('mcEmail').value.trim();
       var btn=f.querySelector('button[type="submit"]');
-      if(!email) return;
+      var vErr=emailValido(email);
+      if(vErr){ msg.textContent=vErr; msg.classList.remove('hidden'); return; }
       btn.disabled=true; btn.textContent='Enviando…'; msg.classList.add('hidden');
       var base='https://'+MC_SERVER+'.list-manage.com/subscribe/post-json?u='+MC_U+'&id='+MC_ID;
-      var url=base+'&EMAIL='+encodeURIComponent(email)+'&FNAME='+encodeURIComponent(name);
+      var url=base+'&EMAIL='+encodeURIComponent(email)+'&FNAME='+encodeURIComponent(name)+'&ORIGEN='+encodeURIComponent(MC_ORIGEN);
       try{
         var data=await jsonp(url);
         if(data.result==='success' || /already subscribed/i.test(data.msg||'')){
           f.classList.add('hidden'); done.classList.remove('hidden');
         }else{
-          btn.disabled=false; btn.textContent='Enviar y descargar la guía';
+          btn.disabled=false; btn.textContent='Enviar y recibir la guía';
           msg.textContent=(data.msg||'Revisá el mail e intentá de nuevo.').replace(/<[^>]+>/g,''); msg.classList.remove('hidden');
         }
       }catch(err){
-        btn.disabled=false; btn.textContent='Enviar y descargar la guía';
+        btn.disabled=false; btn.textContent='Enviar y recibir la guía';
         msg.textContent='Hubo un problema. Probá de nuevo en un momento.'; msg.classList.remove('hidden');
       }
     });
