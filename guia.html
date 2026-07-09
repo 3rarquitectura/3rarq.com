@@ -41,6 +41,8 @@ tailwind.config = {
     <link rel="icon" type="image/png" href="/favicon.png?v=2">
     <link rel="icon" href="/favicon.ico?v=2" sizes="any">
     <link rel="apple-touch-icon" href="/favicon.png?v=2">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18/build/css/intlTelInput.min.css">
+<style>.iti{width:100%}.iti__country-list{text-align:left}</style>
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -153,6 +155,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <label class="block text-xs font-semibold uppercase tracking-wide text-graytxt mb-1">Email</label>
             <input id="mcEmail" type="email" required placeholder="tunombre@correo.com" class="w-full border border-line rounded-xl px-4 py-3 text-sm outline-none focus:border-green">
           </div>
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wide text-graytxt mb-1">Teléfono</label>
+            <input id="mcPhone" type="tel" required placeholder="Tu teléfono" class="w-full border border-line rounded-xl px-4 py-3 text-sm outline-none focus:border-green">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wide text-graytxt mb-1">Mensaje <span class="normal-case font-normal text-gray-400">(opcional)</span></label>
+            <textarea id="mcMensaje" rows="3" placeholder="Cuéntanos sobre tu proyecto (opcional)" class="w-full border border-line rounded-xl px-4 py-3 text-sm outline-none focus:border-green"></textarea>
+          </div>
           <button type="submit" class="w-full bg-ink text-white font-semibold rounded-full px-7 py-3.5 hover:bg-green hover:text-ink transition">Enviar y recibir la guía</button>
           <p id="mcMsg" class="text-sm text-center hidden"></p>
         </form>
@@ -188,7 +198,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <p class="text-graytxt text-sm mt-1">Diseñamos sensaciones creando tus espacios.</p>
     </div>
     <div class="text-sm text-graytxt text-center sm:text-right">
-      <p>contacto@3rarq.com · 096 699 876</p>
+      <p>3r.arquitectura@gmail.com · 096 699 876</p>
       <p class="mt-1"><a href="https://instagram.com/3r.arquitectura" class="hover:text-ink">@3r.arquitectura</a></p>
     </div>
   </div>
@@ -206,6 +216,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   const MC_ID     = "cb66dadaf2";   // valor de id= del form embebido
   const PDF_URL   = "/Guia_3R_Reforma.pdf"; // dónde subiste el PDF
   const MC_ORIGEN = "Guia_WEB3R";        // valor que clasifica el lead (campo oculto ORIGEN en Mailchimp)
+  const MC_RESULTADO = "Tu guía para planificar una reforma"; // se muestra en el correo (*|RESULTADO|*)
+  const MC_RESULTURL = "https://3rarq.com/Guia_3R_Reforma.pdf"; // enlace del correo (*|RESULTURL|*)
   // =====================================================================
   (function(){
     const f=document.getElementById('mcForm'); if(!f) return;
@@ -226,12 +238,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       e.preventDefault();
       var name=document.getElementById('mcName').value.trim();
       var email=document.getElementById('mcEmail').value.trim();
+      var phone=(window.itiGuia&&window.itiGuia.getNumber())||document.getElementById('mcPhone').value.trim();
+      var mensaje=document.getElementById('mcMensaje').value.trim();
       var btn=f.querySelector('button[type="submit"]');
       var vErr=emailValido(email);
       if(vErr){ msg.textContent=vErr; msg.classList.remove('hidden'); return; }
+      if(!phone){ msg.textContent='Por favor, deja tu teléfono.'; msg.classList.remove('hidden'); return; }
       btn.disabled=true; btn.textContent='Enviando…'; msg.classList.add('hidden');
       var base='https://'+MC_SERVER+'.list-manage.com/subscribe/post-json?u='+MC_U+'&id='+MC_ID;
-      var url=base+'&EMAIL='+encodeURIComponent(email)+'&FNAME='+encodeURIComponent(name)+'&ORIGEN='+encodeURIComponent(MC_ORIGEN);
+      var url=base+'&EMAIL='+encodeURIComponent(email)+'&FNAME='+encodeURIComponent(name)+'&ORIGEN='+encodeURIComponent(MC_ORIGEN)+'&RESULTADO='+encodeURIComponent(MC_RESULTADO)+'&RESULTURL='+encodeURIComponent(MC_RESULTURL)+'&TELEFONO='+encodeURIComponent(phone)+'&MENSAJE='+encodeURIComponent(mensaje);
       try{
         var data=await jsonp(url);
         if(data.result==='success' || /already subscribed/i.test(data.msg||'')){
@@ -247,5 +262,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     });
   })();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18/build/js/intlTelInput.min.js"></script>
+<script>window.itiGuia=window.intlTelInput(document.getElementById("mcPhone"),{initialCountry:"uy",separateDialCode:true,preferredCountries:["uy","ar","ve","es"],utilsScript:"https://cdn.jsdelivr.net/npm/intl-tel-input@18/build/js/utils.js"});</script>
 </body>
 </html>
