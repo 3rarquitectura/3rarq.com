@@ -248,7 +248,7 @@ async function submitEmail(){
   var resultado=RESULTS[key].name; // nombre del servicio → *|RESULTADO|* en el correo
   var resulturl=RESULTS[key].url;  // página del servicio → *|RESULTURL|* en el correo
   var base='https://'+MC_SERVER+'.list-manage.com/subscribe/post-json?u='+MC_U+'&id='+MC_ID;
-  var url=base+'&EMAIL='+encodeURIComponent(email)+'&FNAME='+encodeURIComponent(name)+'&ORIGEN='+encodeURIComponent(origen)+'&RESULTADO='+encodeURIComponent(resultado)+'&RESULTURL='+encodeURIComponent(resulturl)+'&TELEFONO='+encodeURIComponent(phone)+'&MENSAJE='+encodeURIComponent(mensaje);
+  var url=base+'&EMAIL='+encodeURIComponent(email)+'&FNAME='+encodeURIComponent(name)+'&ORIGEN='+encodeURIComponent(origen)+'&RESULTADO='+encodeURIComponent(resultado)+'&RESULTURL='+encodeURIComponent(resulturl)+'&PHONE='+encodeURIComponent(phone)+'&MENSAJE='+encodeURIComponent(mensaje);
 
   try{
     var data=await jsonp(url);

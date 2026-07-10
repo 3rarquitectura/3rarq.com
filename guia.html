@@ -246,7 +246,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if(!phone){ msg.textContent='Por favor, deja tu teléfono.'; msg.classList.remove('hidden'); return; }
       btn.disabled=true; btn.textContent='Enviando…'; msg.classList.add('hidden');
       var base='https://'+MC_SERVER+'.list-manage.com/subscribe/post-json?u='+MC_U+'&id='+MC_ID;
-      var url=base+'&EMAIL='+encodeURIComponent(email)+'&FNAME='+encodeURIComponent(name)+'&ORIGEN='+encodeURIComponent(MC_ORIGEN)+'&RESULTADO='+encodeURIComponent(MC_RESULTADO)+'&RESULTURL='+encodeURIComponent(MC_RESULTURL)+'&TELEFONO='+encodeURIComponent(phone)+'&MENSAJE='+encodeURIComponent(mensaje);
+      var url=base+'&EMAIL='+encodeURIComponent(email)+'&FNAME='+encodeURIComponent(name)+'&ORIGEN='+encodeURIComponent(MC_ORIGEN)+'&RESULTADO='+encodeURIComponent(MC_RESULTADO)+'&RESULTURL='+encodeURIComponent(MC_RESULTURL)+'&PHONE='+encodeURIComponent(phone)+'&MENSAJE='+encodeURIComponent(mensaje);
       try{
         var data=await jsonp(url);
         if(data.result==='success' || /already subscribed/i.test(data.msg||'')){
