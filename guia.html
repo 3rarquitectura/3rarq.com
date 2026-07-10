@@ -216,7 +216,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   const MC_ID     = "cb66dadaf2";   // valor de id= del form embebido
   const PDF_URL   = "/Guia_3R_Reforma.pdf"; // dónde subiste el PDF
   const MC_ORIGEN = "Guia_WEB3R";        // valor que clasifica el lead (campo oculto ORIGEN en Mailchimp)
-  const MC_RESULTADO = "Tu guía para planificar una reforma"; // se muestra en el correo (*|RESULTADO|*)
+  const MC_RESULTADO = "Aquí tienes tu guía para planificar una reforma:"; // se muestra en el correo (*|RESULTADO|*)
   const MC_RESULTURL = "https://3rarq.com/Guia_3R_Reforma.pdf"; // enlace del correo (*|RESULTURL|*)
   // =====================================================================
   (function(){
@@ -238,7 +238,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       e.preventDefault();
       var name=document.getElementById('mcName').value.trim();
       var email=document.getElementById('mcEmail').value.trim();
-      var phone=(window.itiGuia&&window.itiGuia.getNumber())||document.getElementById('mcPhone').value.trim();
+      var phone=window.itiGuia?(window.itiGuia.getNumber()||('+'+((window.itiGuia.getSelectedCountryData()||{}).dialCode||'')+document.getElementById('mcPhone').value.trim())):document.getElementById('mcPhone').value.trim();
       var mensaje=document.getElementById('mcMensaje').value.trim();
       var btn=f.querySelector('button[type="submit"]');
       var vErr=emailValido(email);
@@ -246,7 +246,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if(!phone){ msg.textContent='Por favor, deja tu teléfono.'; msg.classList.remove('hidden'); return; }
       btn.disabled=true; btn.textContent='Enviando…'; msg.classList.add('hidden');
       var base='https://'+MC_SERVER+'.list-manage.com/subscribe/post-json?u='+MC_U+'&id='+MC_ID;
-      var url=base+'&EMAIL='+encodeURIComponent(email)+'&FNAME='+encodeURIComponent(name)+'&ORIGEN='+encodeURIComponent(MC_ORIGEN)+'&RESULTADO='+encodeURIComponent(MC_RESULTADO)+'&RESULTURL='+encodeURIComponent(MC_RESULTURL)+'&PHONE='+encodeURIComponent(phone)+'&MENSAJE='+encodeURIComponent(mensaje);
+      var url=base+'&EMAIL='+encodeURIComponent(email)+'&FNAME='+encodeURIComponent(name)+'&ORIGEN='+encodeURIComponent(MC_ORIGEN)+'&RESULTADO='+encodeURIComponent(MC_RESULTADO)+'&RESULTURL='+encodeURIComponent(MC_RESULTURL)+'&TELEFONO='+encodeURIComponent(phone)+'&MENSAJE='+encodeURIComponent(mensaje);
       try{
         var data=await jsonp(url);
         if(data.result==='success' || /already subscribed/i.test(data.msg||'')){

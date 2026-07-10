@@ -812,6 +812,7 @@ document.querySelectorAll('.js-reveal').forEach(function(el){revealObserver.obse
       var data=new FormData(form); try{var _n=window.itiPre&&window.itiPre.getNumber(); if(_n) data.set('telefono',_n);}catch(e){}
       var sel=[].slice.call(form.querySelectorAll('input[type="checkbox"]:checked')).map(function(c){return c.value;}).join(', ');
       if(sel) data.set('seleccion',sel);
+      try{var _e=(form.querySelector('[name="email"]')||{}).value||'';var _nm=(form.querySelector('[name="nombre"]')||{}).value||'';var _ph=window.itiPre?(window.itiPre.getNumber()||('+'+((window.itiPre.getSelectedCountryData()||{}).dialCode||'')+((form.querySelector('[name="telefono"]')||{}).value||''))):'';var _cb='mc_'+Date.now();window[_cb]=function(){};var _sc=document.createElement('script');_sc.src='https://us10.list-manage.com/subscribe/post-json?u=27c6af2622c42ebd944ed9014&id=cb66dadaf2'+'&EMAIL='+encodeURIComponent(_e)+'&FNAME='+encodeURIComponent(_nm)+'&TELEFONO='+encodeURIComponent(_ph)+'&ORIGEN=PRESUP_REFORMA'+'&RESULTADO='+encodeURIComponent('Recibimos tu solicitud de presupuesto de Asesoría y Reformas. Te contactaremos muy pronto. Mientras tanto, puedes conocer más aquí:')+'&RESULTURL='+encodeURIComponent('https://3rarq.com/asesoria-reformas.html')+'&c='+_cb;document.body.appendChild(_sc);}catch(_er){}
       var res=await fetch('https://formspree.io/f/mvzbvgyp',{method:'POST',headers:{'Accept':'application/json'},body:data});
       var json=await res.json();
       if(json.ok){form.classList.add('hidden');formSuccess.classList.remove('hidden');}

@@ -231,7 +231,7 @@ function emailValido(em){
 async function submitEmail(){
   var name=document.getElementById('qName').value.trim();
   var email=document.getElementById('qEmail').value.trim();
-  var phone=(window.itiQuiz&&window.itiQuiz.getNumber())||document.getElementById('qPhone').value.trim();
+  var phone=window.itiQuiz?(window.itiQuiz.getNumber()||('+'+((window.itiQuiz.getSelectedCountryData()||{}).dialCode||'')+document.getElementById('qPhone').value.trim())):document.getElementById('qPhone').value.trim();
   var mensaje=document.getElementById('qMensaje').value.trim();
   var msg=document.getElementById('qMsg');
   var btn=document.getElementById('qBtn');
@@ -245,10 +245,10 @@ async function submitEmail(){
 
   var key=score();
   var origen=RESULTS[key].tag; // QUIZ_REFORMA / QUIZ_LOCAL / QUIZ_FACHADA / QUIZ_BIM / QUIZ_NUBE
-  var resultado=RESULTS[key].name; // nombre del servicio → *|RESULTADO|* en el correo
+  var resultado='Según tu test, el servicio que mejor encaja con tu proyecto es '+RESULTS[key].name+':'; // nombre del servicio → *|RESULTADO|* en el correo
   var resulturl=RESULTS[key].url;  // página del servicio → *|RESULTURL|* en el correo
   var base='https://'+MC_SERVER+'.list-manage.com/subscribe/post-json?u='+MC_U+'&id='+MC_ID;
-  var url=base+'&EMAIL='+encodeURIComponent(email)+'&FNAME='+encodeURIComponent(name)+'&ORIGEN='+encodeURIComponent(origen)+'&RESULTADO='+encodeURIComponent(resultado)+'&RESULTURL='+encodeURIComponent(resulturl)+'&PHONE='+encodeURIComponent(phone)+'&MENSAJE='+encodeURIComponent(mensaje);
+  var url=base+'&EMAIL='+encodeURIComponent(email)+'&FNAME='+encodeURIComponent(name)+'&ORIGEN='+encodeURIComponent(origen)+'&RESULTADO='+encodeURIComponent(resultado)+'&RESULTURL='+encodeURIComponent(resulturl)+'&TELEFONO='+encodeURIComponent(phone)+'&MENSAJE='+encodeURIComponent(mensaje);
 
   try{
     var data=await jsonp(url);
