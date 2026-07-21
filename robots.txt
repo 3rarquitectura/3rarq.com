@@ -1,0 +1,44 @@
+# robots.txt — 3R.Arquitectura
+# Permite indexación de GoogleBot, GPTBot, Gemini, Perplexity y otros crawlers de IA
+
+User-agent: *
+Allow: /
+Disallow: /proyectos/  # Opcional: si quieres que no indexen carpeta específica
+
+# GoogleBot — Google Search, Gemini
+User-agent: Googlebot
+Allow: /
+
+# OpenAI — ChatGPT, GPT-4
+User-agent: GPTBot
+Allow: /
+Crawl-delay: 1
+
+# Anthropic — Claude
+User-agent: Claude-Web
+Allow: /
+
+# Perplexity AI
+User-agent: PerplexityBot
+Allow: /
+
+# Microsoft — Copilot
+User-agent: Bingbot
+Allow: /
+
+# Meta
+User-agent: facebookexternalhit
+Allow: /
+
+# Otras IAs
+User-agent: CCBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: DuckAssistant
+Allow: /
+
+# Sitemap
+Sitemap: https://3rarq.com/sitemap.xml

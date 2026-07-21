@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auditoría de modelos BIM: validar calidad y precisión | 3R.Arquitectura</title>
+  <meta name="description" content="Auditar un modelo BIM antes de usarlo en obra: validar geometría, información, nomenclatura y estándares.">
+  <meta name="keywords" content="auditoría BIM, validación modelo, control calidad BIM, Revit, LOD, Uruguay">
+  <meta name="author" content="3R.Arquitectura">
+  <meta property="og:title" content="Auditoría de modelos BIM: validar calidad y precisión">
+  <meta property="og:description" content="Un modelo BIM es solo útil si es confiable. Esto es cómo validarlo antes de que llegue a obra.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://3rarq.com/articulo-auditoria-bim.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="canonical" content="https://3rarq.com/articulo-auditoria-bim.html">
+  <link rel="icon" type="image/x-icon" href="https://3rarq.com/favicon.ico">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GTM-MVP3FL2M"></script>
+  <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'GTM-MVP3FL2M');</script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 17px; scroll-behavior: smooth; }
+    body { font-family: 'Quicksand', 'Helvetica Neue', sans-serif; background: #FFFFFF; color: #1A1A1A; line-height: 1.8; }
+    .wrapper { max-width: 740px; margin: 0 auto; padding: 0 24px 80px; }
+    .back-link { display: inline-block; margin-bottom: 32px; font-size: 14px; color: #888; text-decoration: none; font-weight: 500; }
+    .back-link:hover { color: #8daf14; }
+    .cover { width: calc(100% + 48px); margin: 0 -24px 48px; display: block; }
+    .meta { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid #E8E8E8; }
+    .meta-tag { display: inline-block; background: #2A1800; color: #8daf14; font-family: 'Consolas', monospace; font-size: 11px; letter-spacing: 2px; padding: 4px 10px; border-radius: 2px; text-transform: uppercase; }
+    .meta-date { font-family: 'Helvetica Neue', sans-serif; font-size: 13px; color: #888; font-weight: 300; }
+    h1 { font-family: 'Antonio', sans-serif; font-size: 2.1rem; font-weight: 900; line-height: 1.25; color: #0D0D0D; margin-bottom: 24px; }
+    h2 { font-family: 'Antonio', sans-serif; font-size: 1.25rem; font-weight: 900; color: #0D0D0D; margin-top: 52px; margin-bottom: 18px; padding-left: 16px; border-left: 3px solid #8daf14; }
+    p { margin-bottom: 20px; color: #2A2A2A; }
+    strong { color: #0D0D0D; font-weight: 700; }
+    .lead { font-size: 1.05rem; color: #555; font-style: italic; background: #F9F9F9; border-left: 3px solid #8daf14; padding: 14px 20px; margin-bottom: 40px; border-radius: 0 4px 4px 0; }
+    hr { border: none; border-top: 1px solid #E8E8E8; margin: 52px 0; }
+    .highlight-box { background: #F9F9F9; border-left: 3px solid #8daf14; padding: 16px 20px; margin: 24px 0; border-radius: 0 4px 4px 0; }
+    .faq-section { margin-top: 56px; }
+    .faq-title { font-family: 'Antonio', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #888; margin-bottom: 28px; }
+    .faq-item { margin-bottom: 32px; }
+    .faq-q { font-family: 'Helvetica Neue', sans-serif; font-size: 1rem; font-weight: 700; color: #0D0D0D; margin-bottom: 10px; }
+    .faq-a { font-size: 0.95rem; color: #444; line-height: 1.75; }
+    .cta-box { background: #1A1A1A; border-radius: 6px; padding: 28px 32px; margin-top: 52px; text-align: center; }
+    .cta-box p { font-size: 1.05rem; color: #FFF; margin: 0 0 16px; font-style: italic; }
+    .cta-button { display: inline-block; background: #8daf14; color: #1A1A1A; padding: 12px 28px; border-radius: 24px; text-decoration: none; font-weight: 700; font-size: 14px; transition: background 0.3s; }
+    .cta-button:hover { background: #7a9610; }
+    .article-footer { margin-top: 56px; padding-top: 24px; border-top: 1px solid #E8E8E8; font-family: 'Helvetica Neue', sans-serif; font-size: 13px; color: #888; text-align: center; }
+    .footer-brand { font-weight: 600; color: #444; }
+    ul { margin-left: 20px; margin-bottom: 20px; }
+    li { margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <article class="wrapper">
+    <a href="https://3rarq.com" class="back-link">← SABER MÁS</a>
+    
+    <svg class="cover" viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1200" height="600" fill="#FFFFFF"/>
+      <text x="600" y="80" font-family="Antonio, sans-serif" font-size="18" font-weight="900" fill="#333" text-anchor="middle">AUDITORÍA BIM: VALIDAR ANTES DE USAR</text>
+      <g id="modelo-sin-validar">
+        <circle cx="300" cy="300" r="60" fill="none" stroke="#C84000" stroke-width="2"/>
+        <text x="300" y="310" font-family="Antonio, sans-serif" font-size="32" font-weight="900" fill="#C84000" text-anchor="middle">?</text>
+        <text x="300" y="440" font-family="Quicksand, sans-serif" font-size="13" fill="#C84000" text-anchor="middle" font-weight="600">Sin validar</text>
+        <text x="300" y="465" font-family="Quicksand, sans-serif" font-size="11" fill="#888" text-anchor="middle">Riesgo en obra</text>
+      </g>
+      <line x1="420" y1="300" x2="510" y2="300" stroke="#8daf14" stroke-width="3"/>
+      <polygon points="510,300 495,290 500,300 495,310" fill="#8daf14"/>
+      <g id="modelo-validado">
+        <circle cx="700" cy="300" r="60" fill="none" stroke="#8daf14" stroke-width="2"/>
+        <path d="M 665 290 L 685 310 L 735 260" stroke="#8daf14" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="700" y="440" font-family="Quicksand, sans-serif" font-size="13" fill="#8daf14" text-anchor="middle" font-weight="600">Validado</text>
+        <text x="700" y="465" font-family="Quicksand, sans-serif" font-size="11" fill="#333" text-anchor="middle">Listo para usar</text>
+      </g>
+      <line x1="880" y1="300" x2="970" y2="300" stroke="#8daf14" stroke-width="3"/>
+      <polygon points="970,300 955,290 960,300 955,310" fill="#8daf14"/>
+      <g id="obra">
+        <rect x="1020" y="240" width="120" height="120" fill="none" stroke="#333" stroke-width="2"/>
+        <line x1="1050" y1="240" x2="1050" y2="360" stroke="#333" stroke-width="1"/>
+        <line x1="1020" y1="280" x2="1140" y2="280" stroke="#333" stroke-width="1"/>
+        <text x="1080" y="440" font-family="Quicksand, sans-serif" font-size="13" fill="#333" text-anchor="middle" font-weight="600">Obra segura</text>
+      </g>
+    </svg>
+
+    <div class="meta">
+      <span class="meta-tag">BIM · Calidad</span>
+      <span class="meta-date">Agosto 2026</span>
+      <span class="meta-author">3R.Arquitectura</span>
+    </div>
+
+    <h1>Auditoría de modelos BIM: validar calidad y precisión</h1>
+
+    <p class="lead">Un modelo BIM es solo útil si es confiable. Esto es cómo validar geometría, información y estándares antes de que el modelo llegue a obra.</p>
+
+    <h2>1. Por qué auditar un modelo BIM</h2>
+    <p>Un modelo mal hecho genera problemas en cascada: coordinación con errores, planos incorrectos, imprevistos en obra. Auditar el modelo <strong>antes</strong> de usarlo evita esos problemas.</p>
+    <div class="highlight-box">
+      <strong>El costo de un error en el modelo:</strong> Si se detecta en auditoría (antes de obra) cuesta pocas horas de corrección. Si se detecta en obra, cuesta retrabajo, paradas y sobrecostos.
+    </div>
+
+    <h2>2. Qué se audita en un modelo BIM</h2>
+    <h3>A. Geometría y precisión</h3>
+    <ul>
+      <li>¿Los elementos tienen las dimensiones correctas?</li>
+      <li>¿Hay elementos superpuestos o elementos "fantasma" (que no deberían existir)?</li>
+      <li>¿Las coordenadas del modelo coinciden con los datos del levantamiento?</li>
+      <li>¿Hay consistencia en las alturas y profundidades de los elementos?</li>
+    </ul>
+
+    <h3>B. Información y nomenclatura</h3>
+    <ul>
+      <li>¿Todos los elementos tienen la información requerida (código, material, especificaciones)?</li>
+      <li>¿La nomenclatura es consistente (ej: todos los muros se llaman igual)?</li>
+      <li>¿Hay información faltante o incompleta?</li>
+    </ul>
+
+    <h3>C. Estándares y protocolos</h3>
+    <ul>
+      <li>¿El LOD (Level of Development) coincide con lo acordado?</li>
+      <li>¿Se respetaron los estándares de clasificación por disciplina (arquitectura, estructura, MEP)?</li>
+      <li>¿El modelo es compatible con los softwares del cliente?</li>
+    </ul>
+
+    <h3>D. Coordinación interdisciplinar</h3>
+    <ul>
+      <li>¿Hay interferencias entre disciplinas (estructura chocando con instalaciones)?</li>
+      <li>¿Las zonas de traslapo están claramente documentadas?</li>
+    </ul>
+
+    <h2>3. Proceso de auditoría recomendado</h2>
+    <p><strong>Paso 1: Inspección visual del modelo.</strong> Abrir en Revit u otro software y revisar desde múltiples vistas (planta, cortes, 3D). Buscar inconsistencias obvias.</p>
+    <p><strong>Paso 2: Validación de geometría.</strong> Usar herramientas del software (Solids, Warnings, Model Checker) para detectar elementos problemáticos.</p>
+    <p><strong>Paso 3: Revisión de información.</strong> Auditar que los elementos requeridos tengan los parámetros definidos correctamente.</p>
+    <p><strong>Paso 4: Coordinación disciplinar.</strong> Cruzar modelos de arquitectura, estructura e instalaciones para detectar clashes.</p>
+    <p><strong>Paso 5: Generación de reporte.</strong> Documentar hallazgos, criticidad de cada uno, y recomendaciones de corrección.</p>
+
+    <h2>4. Hallazgos típicos y cómo corregirlos</h2>
+    <p><strong>Elementos sin información:</strong> El modelador olvidó asignar materiales o códigos. Corrección: asignar sistemáticamente la información faltante.</p>
+    <p><strong>Nomenclatura inconsistente:</strong> Los muros del nivel 1 se llaman "Wall-1", los del nivel 2 se llaman "Muro 2". Corrección: estandarizar nomenclatura antes de exportar.</p>
+    <p><strong>Interferencias no detectadas:</strong> El ducto pasa por dentro de la viga. Corrección: generar clash report y coordinar entre disciplinas.</p>
+    <p><strong>LOD inconsistente:</strong> Algunos elementos están modelados con mucho detalle, otros son simplificados. Corrección: definir claramente qué LOD se requiere y estandarizar.</p>
+
+    <h2>5. Tiempo y costo de una auditoría</h2>
+    <p>Modelo de edificio de 5.000 m²: 40–80 horas de auditoría detallada, dependiendo de complejidad.</p>
+    <p>Costo aproximado: 15–20% del costo de modelado. Casi siempre se paga solo con los problemas que evita.</p>
+
+    <hr>
+    <div class="faq-section">
+      <p class="faq-title">Preguntas frecuentes</p>
+      
+      <div class="faq-item">
+        <p class="faq-q">¿Se debe auditar todo modelo BIM?</p>
+        <p class="faq-a">Especialmente si el modelo va a usarse en coordinación entre disciplinas o si ya está en etapa de ejecución. Si es un modelo preliminar solo para conceptos, puede auditarse después.</p>
+      </div>
+
+      <div class="faq-item">
+        <p class="faq-q">¿Quién debe hacer la auditoría?</p>
+        <p class="faq-a">Un coordinador BIM externo es ideal — alguien sin sesgo hacia el trabajo original. Evita que los errores del modelador se reproduzcan en la auditoría.</p>
+      </div>
+
+      <div class="faq-item">
+        <p class="faq-q">¿Qué pasa si la auditoría encuentra muchos errores?</p>
+        <p class="faq-a">Se prioriza por severidad. Los críticos se corrigen inmediatamente. Los menores se puede dejar documentados si no afectan la usabilidad del modelo.</p>
+      </div>
+    </div>
+
+    <div class="cta-box">
+      <p>¿Necesitas auditar un modelo BIM antes de usarlo?</p>
+      <a href="https://3rarq.com/consultoria-bim.html" class="cta-button">AGENDAR REUNIÓN</a>
+    </div>
+
+    <div class="article-footer">
+      Artículo publicado por <span class="footer-brand">3R.Arquitectura</span> | Diseño · Reformas · BIM
+    </div>
+  </article>
+</body>
+</html>
