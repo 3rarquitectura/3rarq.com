@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es" class="no-js scroll-smooth">
 <head>
 <!-- Google Tag Manager -->
@@ -28,7 +28,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         }
     </script>
     <style>
-        /* ── Motion tokens ─────────────────────────────────────────────────── */
         :root {
             --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
             --ease-in-out:    cubic-bezier(0.4, 0, 0.2, 1);
@@ -38,7 +37,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             --dur-reveal:     500ms;
         }
 
-        /* ── Hero: entrada escalonada (fade-up + blur) ─────────────────────── */
         @keyframes hero-stagger {
             from {
                 opacity: 0;
@@ -57,33 +55,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         .hs-4   { animation: hero-stagger 700ms var(--ease-out-expo) 580ms  both; }
         .hs-img { animation: hero-stagger 800ms var(--ease-out-expo) 200ms  both; }
 
-        /* ── Fondo SVG técnico del hero ─────────────────────────────────────── */
-        #hero-bg-svg {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            overflow: visible;
-        }
-        #hero-bg-svg [data-depth] { will-change: transform; }
-        @keyframes hb-float-a {
-            0%, 100% { transform: translateY(0px);  }
-            40%      { transform: translateY(-8px); }
-            70%      { transform: translateY(5px);  }
-        }
-        @keyframes hb-float-b {
-            0%, 100% { transform: translateY(0px);  }
-            35%      { transform: translateY(7px);  }
-            65%      { transform: translateY(-6px); }
-        }
-        @keyframes hb-float-c {
-            0%, 100% { transform: translateY(0px);   }
-            50%      { transform: translateY(-10px); }
-        }
-
-                /* ── Scroll reveal ──────────────────────────────────────────────────── */
         .js .js-reveal {
             opacity: 0;
             transform: translateY(22px);
@@ -97,683 +68,228 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             transform: translateY(0);
         }
 
-        /* ── Card hover lift ────────────────────────────────────────────────── */
         .card-hover {
-            transition:
-                transform  var(--dur-micro) var(--ease-in-out),
-                box-shadow var(--dur-micro) var(--ease-in-out),
-                border-color var(--dur-ui) var(--ease-in-out);
-            will-change: transform;
+            transition: all var(--dur-ui) var(--ease-in-out);
         }
         .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.13);
+            transform: translateY(-4px);
+            border-color: #8daf14 !important;
+            box-shadow: 0 12px 24px rgba(0,0,0,0.06);
         }
 
-        /* ── Button press ───────────────────────────────────────────────────── */
-        .btn-press {
-            transition:
-                transform         var(--dur-micro) var(--ease-in-out),
-                background-color  var(--dur-ui)    var(--ease-in-out),
-                border-color      var(--dur-ui)    var(--ease-in-out),
-                color             var(--dur-ui)    var(--ease-in-out),
-                box-shadow        var(--dur-micro) var(--ease-in-out);
-        }
-        .btn-press:hover  { transform: translateY(-2px); }
-        .btn-press:active { transform: translateY(0) scale(0.97); transition-duration: 80ms; }
-
-        /* ── Floating action buttons ────────────────────────────────────────── */
-        .fab {
-            transition:
-                transform        var(--dur-micro) var(--ease-spring),
-                background-color var(--dur-ui)    var(--ease-in-out);
-            will-change: transform;
-        }
-        .fab:hover  { transform: translateY(-3px) scale(1.04); }
-        .fab:active { transform: scale(0.96); transition-duration: 80ms; }
-
-        /* ── Entrada de los FABs al cargar ──────────────────────────────────── */
-        @keyframes fab-in {
-            from { opacity: 0; transform: translateX(20px); }
-            to   { opacity: 1; transform: translateX(0); }
-        }
-        .fab-enter-1 { animation: fab-in 400ms var(--ease-out-expo) 800ms both; }
-        .fab-enter-2 { animation: fab-in 400ms var(--ease-out-expo) 920ms both; }
-
-        /* ── Nav links: subrayado deslizante ────────────────────────────────── */
-        .nav-link {
-            position: relative;
-            transition: color var(--dur-ui) var(--ease-in-out);
-        }
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -3px; left: 0;
-            width: 0; height: 1.5px;
-            background: #8daf14;
-            transition: width var(--dur-ui) var(--ease-out-expo);
-        }
-        .nav-link:hover::after { width: 100%; }
-
-        /* ── Ícono SVG de redes: scale en hover ─────────────────────────────── */
-        .icon-hover {
-            transition:
-                transform var(--dur-micro) var(--ease-spring),
-                color     var(--dur-ui)    var(--ease-in-out);
-        }
-        .icon-hover:hover { transform: scale(1.18); }
-
-        /* ── Coverflow proyectos ───────────────────────────────────────────── */
-
-        /* Tarjeta: posición absoluta gestionada por JS */
-        .cf-card {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            width: min(84vw, 480px);
-            transform-origin: center top;
-            transform: translateX(-50%);
-            transition:
-                transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
-                opacity   320ms cubic-bezier(0.4,  0, 0.2, 1);
-            cursor: pointer;
-            will-change: transform, opacity;
-        }
-        .cf-img-wrap {
-            position: relative;
-            aspect-ratio: 4 / 3;
-            border-radius: 1rem;
+        .art-cover {
+            aspect-ratio: 1200 / 440;
             overflow: hidden;
-            box-shadow: 0 8px 32px -8px rgba(0,0,0,0.18);
-        }
-        .cf-img-wrap img {
-            width: 100%; height: 100%;
-            object-fit: cover;
-            display: block;
-            transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .cf-card[data-active=true] .cf-img-wrap img { transform: scale(1.03); }
-        .cf-img-overlay {
-            position: absolute; inset: 0;
-            background: linear-gradient(to top,
-                rgba(0,0,0,0.50) 0%,
-                rgba(0,0,0,0.08) 45%,
-                transparent      100%);
-            pointer-events: none;
-        }
-        .cf-badge {
-            position: absolute;
-            top: 14px; left: 14px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 10px; font-weight: 700;
-            letter-spacing: 0.08em; text-transform: uppercase;
-            padding: 4px 10px;
-            border-radius: 999px;
-        }
-        .cf-badge-bim      { background: rgba(141,175,20,0.15); color: #8daf14; }
-        .cf-badge-reforma  { background: rgba(255,255,255,0.88); color: #1a1a1a; }
-        .cf-badge-asesoria { background: rgba(255,255,255,0.88); color: #1a1a1a; }
-        .cf-badge-metalico { background: rgba(255,255,255,0.88); color: #1a1a1a; }
-
-        .cf-info {
-            padding: 14px 4px 0;
-            /* oculto en tarjetas laterales, visible solo en activa */
-            transition: opacity 320ms cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .cf-card:not([data-active=true]) .cf-info { opacity: 0; pointer-events: none; }
-        .cf-title {
-            font-family: 'Antonio', sans-serif;
-            font-weight: 700; font-style: italic;
-            font-size: 1.25rem; line-height: 1.2;
-            color: #1a1a1a; margin: 0 0 4px;
-        }
-        .cf-meta {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 11px; font-weight: 600;
-            color: #9ca3af; letter-spacing: 0.04em;
-            margin: 0 0 6px;
-        }
-        .cf-desc {
-            font-family: 'Quicksand', sans-serif;
-            font-size: 0.875rem; color: #6b7280;
-            line-height: 1.5; margin: 0;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+            background: #f5f5f5;
         }
 
-        /* Flechas de navegación */
-        .cf-arrow {
-            position: absolute; top: 38%;
-            width: 44px; height: 44px;
-            border-radius: 50%;
-            background: white;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.09);
-            align-items: center; justify-content: center;
-            color: #1a1a1a;
-            z-index: 20;
-            transition:
-                background 220ms cubic-bezier(0.4,0,0.2,1),
-                border-color 220ms cubic-bezier(0.4,0,0.2,1),
-                transform 180ms cubic-bezier(0.4,0,0.2,1),
-                box-shadow 180ms cubic-bezier(0.4,0,0.2,1);
-        }
-        .cf-arrow:hover {
-            background: #1a1a1a; color: white;
-            border-color: #1a1a1a;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.18);
-        }
-        .cf-arrow:active { transform: scale(0.94); }
-        .cf-arrow-prev { left:  -22px; }
-        .cf-arrow-next { right: -22px; }
-        .cf-arrow:disabled { opacity: 0.3; cursor: default; }
-
-
-        /* ── Galería lightbox de proyectos ────────────────────────────────────────
-           Estructura: overlay > stage(img+flechas) > info-bar > thumbs-wrap      */
-        #cf-lightbox {
-            position: fixed; inset: 0; z-index: 9000;
-            background: rgba(8, 8, 8, 0.97);
-            display: flex; flex-direction: column;
-            opacity: 0; pointer-events: none;
-            transition: opacity 260ms cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        #cf-lightbox.open { opacity: 1; pointer-events: auto; }
-
-        /* Botón cerrar ─────────────────────────────────────────────── */
-        #cf-lb-close {
-            position: absolute; top: 16px; right: 16px; z-index: 10;
-            width: 44px; height: 44px; border-radius: 50%;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.15);
-            color: white; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: background 180ms ease, transform 180ms ease;
-        }
-        #cf-lb-close:hover  { background: rgba(255,255,255,0.18); }
-        #cf-lb-close:active { transform: scale(0.90); }
-
-        /* Stage: imagen principal + flechas ────────────────────────── */
-        #cf-lb-stage {
-            flex: 1; min-height: 0;
-            display: flex; align-items: center; justify-content: center;
-            position: relative;
-            padding: 64px 72px 12px;
-        }
-        #cf-lb-img {
-            max-width: 100%;
-            max-height: calc(100vh - 230px);
-            width: auto; height: auto;
-            object-fit: contain;
-            display: block;
-            border-radius: 6px;
-            user-select: none;
-            opacity: 1;
-            transition: opacity 200ms ease;
-        }
-        #cf-lb-img.fading { opacity: 0; }
-
-        /* Flechas ──────────────────────────────────────────────────── */
-        .cf-lb-arrow {
-            position: absolute; top: 50%; transform: translateY(-50%);
-            width: 56px; height: 88px;
-            display: flex; align-items: center; justify-content: center;
-            background: transparent; border: none; cursor: pointer;
-            color: rgba(255,255,255,0.35);
-            transition: color 180ms ease;
-            z-index: 5;
-        }
-        .cf-lb-arrow:hover,
-        .cf-lb-arrow:focus-visible { color: #8daf14; outline: none; }
-        .cf-lb-arrow svg { pointer-events: none; }
-        #cf-lb-prev { left: 6px; }
-        #cf-lb-next { right: 6px; }
-
-        /* Barra de info: título + descripción + contador ───────────── */
-        #cf-lb-info-bar {
-            display: flex; align-items: flex-start;
-            justify-content: space-between;
-            padding: 0 max(24px, calc((100vw - 1100px) / 2)) 10px;
-            gap: 20px;
-            flex-shrink: 0;
-        }
-        #cf-lb-title {
-            font-family: 'Antonio', sans-serif;
-            font-size: clamp(1rem, 2vw, 1.2rem);
-            font-weight: 700; font-style: italic;
-            color: rgba(255,255,255,0.92);
-            letter-spacing: 0.02em;
-            margin: 0 0 2px;
-        }
-        #cf-lb-desc {
-            font-family: 'Quicksand', sans-serif;
-            font-size: 0.8125rem;
-            color: rgba(200,200,200,0.65);
-            margin: 0; line-height: 1.4;
-        }
-        #cf-lb-counter {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.6875rem; font-weight: 500;
-            color: rgba(255,255,255,0.35);
-            white-space: nowrap; flex-shrink: 0;
-            padding-top: 4px;
-        }
-
-        /* Tira de miniaturas ───────────────────────────────────────── */
-        #cf-lb-thumbs-wrap {
-            flex-shrink: 0;
-            padding: 0 max(24px, calc((100vw - 1100px) / 2)) 24px;
-            overflow-x: auto;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(141,175,20,0.35) transparent;
-        }
-        #cf-lb-thumbs-wrap::-webkit-scrollbar { height: 3px; }
-        #cf-lb-thumbs-wrap::-webkit-scrollbar-thumb { background: rgba(141,175,20,0.35); border-radius: 2px; }
-        #cf-lb-thumbs {
-            display: flex; gap: 8px;
-            width: max-content;
-        }
-        .cf-lb-thumb {
-            width: 76px; height: 57px;
-            border-radius: 5px; overflow: hidden;
-            cursor: pointer; flex-shrink: 0;
-            opacity: 0.38;
-            border: 2px solid transparent;
-            transform: scale(0.93);
-            transition: opacity 180ms ease, border-color 180ms ease, transform 180ms ease;
-            background: none; padding: 0;
-        }
-        .cf-lb-thumb img {
-            width: 100%; height: 100%; object-fit: cover; display: block;
-            pointer-events: none;
-        }
-        .cf-lb-thumb:hover  { opacity: 0.72; transform: scale(0.97); }
-        .cf-lb-thumb.active { opacity: 1; border-color: #8daf14; transform: scale(1); }
-        .cf-lb-thumb:focus-visible { outline: 2px solid #8daf14; outline-offset: 2px; }
-
-        /* Imagen única: ocultar flechas, miniaturas y contador ──────── */
-        #cf-lightbox.single-img #cf-lb-prev,
-        #cf-lightbox.single-img #cf-lb-next,
-        #cf-lightbox.single-img #cf-lb-thumbs-wrap,
-        #cf-lightbox.single-img #cf-lb-counter { display: none; }
-
-        /* Mobile ───────────────────────────────────────────────────── */
-        @media (max-width: 767px) {
-            #cf-lb-stage       { padding: 56px 48px 8px; }
-            #cf-lb-img         { max-height: calc(100vh - 210px); }
-            .cf-lb-arrow       { width: 44px; height: 72px; }
-            #cf-lb-info-bar    { padding: 0 16px 8px; flex-wrap: wrap; }
-            #cf-lb-thumbs-wrap { padding: 0 16px 16px; }
-            .cf-lb-thumb       { width: 60px; height: 45px; }
-        }
-
-        /* Reduced motion ───────────────────────────────────────────── */
-                /* Video element (mismo tamaño que img) */
-        #cf-lb-video {
-            display: none;
-            max-width: 100%;
-            max-height: calc(100vh - 230px);
-            width: auto; height: auto;
-            border-radius: 6px;
-            background: #000;
-            outline: none;
-        }
-        @media (max-width: 767px) {
-            #cf-lb-video { max-height: calc(100vh - 210px); }
-        }
-
-        /* Icono play superpuesto en miniaturas de video */
-        .cf-lb-thumb { position: relative; }
-        .cf-lb-play-icon {
-            position: absolute; inset: 0;
-            display: flex; align-items: center; justify-content: center;
-            background: rgba(0, 0, 0, 0.42);
-            border-radius: 3px;
-            pointer-events: none;
-            color: #8daf14;
-        }
-        .cf-lb-play-icon svg { filter: drop-shadow(0 1px 4px rgba(0,0,0,0.6)); }
-
-        @media (prefers-reduced-motion: reduce) {
-            #cf-lightbox, #cf-lb-img, #cf-lb-video, .cf-lb-thumb { transition: none !important; }
-        }
-
-                @media (prefers-reduced-motion: reduce) {
-            .cf-card, .cf-img-wrap img, #cf-progress-bar {
-                transition: none !important;
-            }
-        }
-
-                /* ── Imagen de hero: scale muy sutil en hover ───────────────────────── */
-        .hero-img-wrap { overflow: hidden; }
-        .hero-img-wrap img:first-child {
-            transition: transform 600ms var(--ease-out-expo), opacity 300ms var(--ease-in-out);
-        }
-        .hero-img-wrap:hover img:first-child { transform: scale(1.03); }
-
-        /* ── prefers-reduced-motion: desactivar TODO el movimiento ─────────── */
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                animation-duration:        0.01ms !important;
-                animation-iteration-count: 1      !important;
-                transition-duration:       0.01ms !important;
-                scroll-behavior:           auto   !important;
-            }
-            /* Hero stagger: mostrar todo inmediatamente */
-            .hs-1, .hs-2, .hs-3, .hs-4, .hs-img {
-                opacity: 1;
-                transform: none;
-                filter: none;
-                animation: none;
-            }
-            /* SVG hero: grupos quietos, sin flotado */
-            #hero-bg-svg g { animation: none !important; }
-            .js .js-reveal {
-                opacity: 1;
-                transform: none;
-            }
-            .card-hover:hover,
-            .btn-press:hover,
-            .btn-press:active,
-            .fab:hover,
-            .fab:active { transform: none; }
-            .nav-link::after { display: none; }
-            .icon-hover:hover { transform: none; }
-            .hero-img-wrap:hover img:first-child { transform: none; }
-        }
-
-        /* ── Menú mobile (hamburguesa) ──────────────────────────────────────── */
-                #mob-toggle { display: flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; border-radius: 0.5rem; color: #1a1a1a; background: transparent; border: none; cursor: pointer; }
-        @media (min-width: 768px) { #mob-toggle { display: none !important; } }
-        #mobile-menu { position: fixed; top: 80px; left: 0; right: 0; z-index: 49; background: white; border-bottom: 1px solid #f0f0f0; box-shadow: 0 8px 32px -8px rgba(0,0,0,0.10); max-height: calc(100vh - 80px); overflow-y: auto; opacity: 0; transform: translateY(-6px); pointer-events: none; transition: opacity 220ms cubic-bezier(0.4,0,0.2,1), transform 260ms cubic-bezier(0.16,1,0.3,1); }
-        #mobile-menu.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
-        #ham-icon, #close-icon { transition: opacity 160ms ease; }
-        #close-icon { display: none; }
-        .mob-menu-open #ham-icon  { display: none; }
-        .mob-menu-open #close-icon { display: block; }
-        @media (prefers-reduced-motion: reduce) { #mobile-menu { transition: none !important; } #mob-toggle { transition: none !important; } #ham-icon, #close-icon { transition: none !important; } }
-
+        body { background-color: #ffffff; }
     </style>
-    <link rel="icon" type="image/png" href="/favicon.png?v=2">
-    <link rel="icon" href="/favicon.ico?v=2" sizes="any">
-    <link rel="apple-touch-icon" href="/favicon.png?v=2">
-<meta name="description" content="Artículos de 3R.Arquitectura sobre BIM, Scan-to-BIM, reformas y diseño con criterio.">
-<style>
-.prose-3r{max-width:720px;margin:0 auto;color:#374151;font-size:1.06rem;line-height:1.75;}
-.prose-3r h2{font-family:'Antonio',sans-serif;color:#1a1a1a;font-weight:700;font-size:1.95rem;letter-spacing:-.01em;margin:2.6rem 0 1rem;line-height:1.12;}
-.prose-3r h2:first-child{margin-top:0;}
-.prose-3r h3{color:#1a1a1a;font-weight:700;font-size:1.18rem;margin:1.9rem 0 .5rem;}
-.prose-3r p{margin:0 0 1.15rem;}
-.prose-3r strong{color:#1a1a1a;font-weight:600;}
-.prose-3r ul{margin:0 0 1.25rem;padding:0;list-style:none;}
-.prose-3r li{position:relative;padding-left:1.5rem;margin-bottom:.55rem;}
-.prose-3r li::before{content:"";position:absolute;left:0;top:.62em;width:7px;height:7px;border-radius:50%;background:#8daf14;}
-.art-cover svg{width:100%;height:auto;display:block;border-radius:16px;}
-</style>
 </head>
 <body class="font-body text-brandDark bg-white overflow-x-hidden">
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MVP3FL2M"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
-<script>document.documentElement.className=document.documentElement.className.replace("no-js","js");</script>
-    <!-- ═══════════════════════════════════════════ NAV -->
-    <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
 
-            <a href="/" class="flex items-center gap-3">
-                <img src="assets/img/logo_3r_t.png" class="h-10 w-auto" alt="Logo 3R">
-                <span class="font-display font-bold text-lg tracking-tighter uppercase">3R. Arquitectura</span>
-            </a>
+<main class="min-h-screen">
+<section class="py-16 px-6 sm:py-24 bg-white border-b border-gray-100">
+  <div class="max-w-5xl mx-auto">
+    <p class="text-xs font-mono font-bold uppercase tracking-widest text-brandGreen">Saber más</p>
+    <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-bold uppercase italic tracking-tight text-brandDark mt-3 leading-none">Artículos</h1>
+    <p class="mt-5 text-lg text-gray-500 leading-relaxed max-w-2xl">Ideas y criterio sobre BIM, Scan-to-BIM, reformas y diseño. Para decidir mejor antes de construir.</p>
+  </div>
+</section>
 
-            <!-- Nav desktop -->
-            <div class="hidden md:flex items-center gap-7 text-xs font-mono font-bold uppercase tracking-widest">
-                <a href="/#inicio"    class="nav-link hover:text-brandGreen">Inicio</a>
-                <a href="/#servicios" class="nav-link hover:text-brandGreen">Servicios</a>
-                <a href="/#proyectos" class="nav-link hover:text-brandGreen">Proyectos</a>
-                <a href="/guia.html" class="nav-link hover:text-brandGreen">Mi Guía</a>
-                <a href="/articulos.html" class="nav-link hover:text-brandGreen">Saber más</a>
-                <a href="https://3rarquitectura.blogspot.com" target="_blank" class="nav-link hover:text-brandGreen">Blog</a>
+<section class="pb-24 px-6 bg-white">
+  <div class="max-w-7xl mx-auto">
+    <!-- ASESORÍAS -->
+    <div class="mb-16">
+      <h2 class="text-2xl font-display font-bold text-brandDark mb-8 border-l-4 border-brandGreen pl-4">Asesorías y Reformas</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Art 01 -->
+        <a href="01-articulo-reforma-local-comercial.html" class="js-reveal card-hover block bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+          <div class="art-cover" style="background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);"></div>
+          <div class="p-5">
+            <p class="text-xs font-mono font-bold uppercase tracking-widest text-brandGreen">Asesoría</p>
+            <h3 class="font-display font-bold text-lg mt-2 text-brandDark leading-tight">Reforma de local comercial sin sorpresas</h3>
+            <p class="text-gray-500 text-sm mt-2 leading-relaxed">Por qué los costos se disparan y cómo un proyecto ejecutivo los controla</p>
+            <p class="mt-4 text-xs font-mono font-bold uppercase tracking-widest text-brandDark">Leer →</p>
+          </div>
+        </a>
 
-                <a href="https://www.instagram.com/3r.arquitectura/" target="_blank"
-                   class="icon-hover text-brandDark hover:text-brandGreen" aria-label="Instagram @3r.arquitectura">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="2" y="2" width="20" height="20" rx="5"/>
-                        <circle cx="12" cy="12" r="4"/>
-                        <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/>
-                    </svg>
-                </a>
-                <a href="https://www.linkedin.com/company/3rarquitectura/" target="_blank"
-                   class="icon-hover text-brandDark hover:text-brandGreen" aria-label="LinkedIn 3rarquitectura">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/>
-                        <rect x="2" y="9" width="4" height="12"/>
-                        <circle cx="4" cy="4" r="2"/>
-                    </svg>
-                </a>
+        <!-- Art 03 -->
+        <a href="03-articulo-diseno-airbnb.html" class="js-reveal card-hover block bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+          <div class="art-cover" style="background: linear-gradient(135deg, #f5f5f5 0%, #efefef 100%);"></div>
+          <div class="p-5">
+            <p class="text-xs font-mono font-bold uppercase tracking-widest text-brandGreen">Diseño</p>
+            <h3 class="font-display font-bold text-lg mt-2 text-brandDark leading-tight">Diseño de apartamento Airbnb</h3>
+            <p class="text-gray-500 text-sm mt-2 leading-relaxed">Cómo optimizar cada metro cuadrado para alquiler turístico de corta estadía</p>
+            <p class="mt-4 text-xs font-mono font-bold uppercase tracking-widest text-brandDark">Leer →</p>
+          </div>
+        </a>
 
-                <a href="https://wa.me/59896699876" target="_blank"
-                   class="btn-press bg-brandDark text-white px-5 py-2 rounded-full hover:bg-brandGreen">
-                    Contacto
-                </a>
-            </div>
+        <!-- Art 05 -->
+        <a href="05-articulo-reforma-presupuesto.html" class="js-reveal card-hover block bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+          <div class="art-cover" style="background: linear-gradient(135deg, #f9f9f9 0%, #f0f0f0 100%);"></div>
+          <div class="p-5">
+            <p class="text-xs font-mono font-bold uppercase tracking-widest text-brandGreen">Presupuesto</p>
+            <h3 class="font-display font-bold text-lg mt-2 text-brandDark leading-tight">Cómo comparar presupuestos de reforma</h3>
+            <p class="text-gray-500 text-sm mt-2 leading-relaxed">3 presupuestos muy diferentes: cuál elegir sin quedarse a mitad de camino</p>
+            <p class="mt-4 text-xs font-mono font-bold uppercase tracking-widest text-brandDark">Leer →</p>
+          </div>
+        </a>
 
-            <!-- Botón hamburguesa (solo mobile) -->
-            <button id="mob-toggle"
-                    aria-label="Abrir menú"
-                    aria-expanded="false"
-                    aria-controls="mobile-menu">
-                <!-- Ícono ☰ -->
-                <svg id="ham-icon" class="w-6 h-6" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2"
-                     stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="3" y1="6"  x2="21" y2="6"/>
-                    <line x1="3" y1="12" x2="21" y2="12"/>
-                    <line x1="3" y1="18" x2="21" y2="18"/>
-                </svg>
-                <!-- Ícono ✕ -->
-                <svg id="close-icon" class="w-6 h-6" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2"
-                     stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="18" y1="6"  x2="6" y2="18"/>
-                    <line x1="6"  y1="6"  x2="18" y2="18"/>
-                </svg>
-            </button>
-
-        </div>
-    </nav>
-
-    <!-- Panel menú mobile -->
-    <div id="mobile-menu" role="navigation" aria-label="Menú mobile">
-        <ul class="flex flex-col px-6 py-6 gap-1 font-mono font-bold uppercase tracking-widest text-sm">
-            <li>
-                <a href="/#inicio"
-                   class="mob-link flex items-center h-12 border-b border-gray-100 hover:text-brandGreen transition-colors">
-                    Inicio
-                </a>
-            </li>
-            <li>
-                <a href="/#servicios"
-                   class="mob-link flex items-center h-12 border-b border-gray-100 hover:text-brandGreen transition-colors">
-                    Servicios
-                </a>
-            </li>
-            <li>
-                <a href="/#proyectos"
-                   class="mob-link flex items-center h-12 border-b border-gray-100 hover:text-brandGreen transition-colors">
-                    Proyectos
-                </a>
-            </li>
-            <li>
-                <a href="/guia.html" class="mob-link flex items-center h-12 border-b border-gray-100 hover:text-brandGreen transition-colors">Mi Guía</a>
-            </li>
-            <li>
-                <a href="/articulos.html" class="mob-link flex items-center h-12 border-b border-gray-100 hover:text-brandGreen transition-colors">Saber más</a>
-            </li>
-            <li>
-                <a href="https://3rarquitectura.blogspot.com" target="_blank"
-                   class="mob-link flex items-center h-12 border-b border-gray-100 hover:text-brandGreen transition-colors">
-                    Blog
-                </a>
-            </li>
-            <li class="pt-4 flex items-center gap-4">
-                <a href="https://www.instagram.com/3r.arquitectura/" target="_blank"
-                   class="icon-hover text-brandDark hover:text-brandGreen" aria-label="Instagram @3r.arquitectura">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="2" y="2" width="20" height="20" rx="5"/>
-                        <circle cx="12" cy="12" r="4"/>
-                        <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/>
-                    </svg>
-                </a>
-                <a href="https://www.linkedin.com/company/3rarquitectura/" target="_blank"
-                   class="icon-hover text-brandDark hover:text-brandGreen" aria-label="LinkedIn 3rarquitectura">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/>
-                        <rect x="2" y="9" width="4" height="12"/>
-                        <circle cx="4" cy="4" r="2"/>
-                    </svg>
-                </a>
-            </li>
-            <li class="pt-4">
-                <a href="https://wa.me/59896699876" target="_blank"
-                   class="mob-link btn-press inline-block bg-brandDark text-white px-6 py-3 rounded-full hover:bg-brandGreen normal-case tracking-normal font-bold">
-                    Contacto →
-                </a>
-            </li>
-        </ul>
+        <!-- Art 08 -->
+        <a href="08-articulo-comparar-presupuestos.html" class="js-reveal card-hover block bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+          <div class="art-cover" style="background: linear-gradient(135deg, #f2f2f2 0%, #e8e8e8 100%);"></div>
+          <div class="p-5">
+            <p class="text-xs font-mono font-bold uppercase tracking-widest text-brandGreen">Comparativa</p>
+            <h3 class="font-display font-bold text-lg mt-2 text-brandDark leading-tight">Presupuesto de reforma: análisis detallado</h3>
+            <p class="text-gray-500 text-sm mt-2 leading-relaxed">Guía completa para evaluar propuestas y evitar trampas ocultas</p>
+            <p class="mt-4 text-xs font-mono font-bold uppercase tracking-widest text-brandDark">Leer →</p>
+          </div>
+        </a>
+      </div>
     </div>
 
+    <!-- BIM -->
+    <div class="mb-16">
+      <h2 class="text-2xl font-display font-bold text-brandDark mb-8 border-l-4 border-brandGreen pl-4">BIM y Coordinación Técnica</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Art 02 -->
+        <a href="02-articulo-nube-puntos-bim.html" class="js-reveal card-hover block bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+          <div class="art-cover" style="background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);"></div>
+          <div class="p-5">
+            <p class="text-xs font-mono font-bold uppercase tracking-widest text-brandGreen">BIM</p>
+            <h3 class="font-display font-bold text-lg mt-2 text-brandDark leading-tight">Nube de puntos a modelo BIM</h3>
+            <p class="text-gray-500 text-sm mt-2 leading-relaxed">Cómo transformar captura láser en documentación ejecutable sin errores</p>
+            <p class="mt-4 text-xs font-mono font-bold uppercase tracking-widest text-brandDark">Leer →</p>
+          </div>
+        </a>
 
-<main>
-<section class="pt-32 pb-10 px-6 bg-white"><div class="max-w-5xl mx-auto js-reveal">
-  <p class="text-xs font-mono font-bold uppercase tracking-widest text-brandGreen">Saber más</p>
-  <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-bold uppercase italic tracking-tight text-brandDark mt-3 leading-none">Artículos</h1>
-  <p class="mt-5 text-lg text-gray-500 leading-relaxed max-w-2xl">Ideas y criterio sobre BIM, Scan-to-BIM, reformas y diseño. Para decidir mejor antes de construir.</p>
-</div></section>
-<section class="pb-24 px-6 bg-white"><div class="max-w-5xl mx-auto grid sm:grid-cols-2 gap-8">
-<a href="articulo-reforma-local-comercial.html" class="js-reveal card-hover block bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:border-brandGreen">
-  <div class="art-cover"><svg viewBox="0 0 1200 440" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Reforma sin proyecto versus con proyecto ejecutivo">
-<rect width="1200" height="440" fill="#ffffff"/>
-<rect x="0" y="0" width="600" height="440" fill="#eceeea"/>
-<text x="60" y="62" font-family="monospace" font-size="15" letter-spacing="3" fill="#9ca3af">SIN PROYECTO</text>
-<text x="660" y="62" font-family="monospace" font-size="15" letter-spacing="3" fill="#8daf14">CON PROYECTO</text>
-<g stroke="#b9bdb4" stroke-width="2.4" fill="none" stroke-dasharray="9 8" stroke-linejoin="round"><path d="M120 150 L470 150 L470 360 L150 360 L150 210"/><line x1="300" y1="150" x2="300" y2="300"/><line x1="300" y1="300" x2="470" y2="300"/></g>
-<text x="372" y="252" font-family="'Antonio',sans-serif" font-size="120" fill="#cfd3cb" font-weight="700">?</text>
-<g stroke="#1a1a1a" stroke-width="2.6" fill="none" stroke-linejoin="round"><rect x="730" y="150" width="350" height="210"/><line x1="900" y1="150" x2="900" y2="360"/><line x1="900" y1="262" x2="1080" y2="262"/></g>
-<g stroke="#8daf14" stroke-width="2.6" fill="none"><line x1="730" y1="150" x2="730" y2="360"/></g>
-<circle cx="1062" cy="178" r="22" fill="#8daf14"/>
-<polyline points="1051,178 1059,187 1074,170" stroke="#ffffff" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-<line x1="600" y1="40" x2="600" y2="400" stroke="#d6d8d2" stroke-width="1"/>
-</svg></div>
-  <div class="p-7"><p class="text-xs font-mono font-bold uppercase tracking-widest text-brandGreen">Asesoría</p>
-    <h3 class="font-display font-bold text-xl mt-2 text-brandDark leading-tight">Reforma de local comercial: por qué los costos se disparan sin proyecto</h3>
-    <p class="text-gray-500 text-sm mt-3 leading-relaxed">Reforma de local comercial sin proyecto ejecutivo = costos imprevistos, atrasos y un resultado distinto al planeado. Qué ocurre y cómo evitarlo</p>
-    <p class="mt-5 text-xs font-mono font-bold uppercase tracking-widest text-brandDark">Leer artículo →</p></div></a><a href="articulo-nube-puntos-bim.html" class="js-reveal card-hover block bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:border-brandGreen">
-  <div class="art-cover"><svg viewBox="0 0 1200 440" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Nube de puntos transformándose en modelo BIM">
-<rect width="1200" height="440" fill="#f4f5f1"/>
-<text x="60" y="62" font-family="monospace" font-size="15" letter-spacing="3" fill="#9ca3af">SCAN · TO · BIM</text>
-<g><circle cx="245.0" cy="286.2" r="2.3" fill="#aab0a6"/><circle cx="344.1" cy="270.9" r="2.1" fill="#aab0a6"/><circle cx="256.6" cy="290.7" r="2.5" fill="#aab0a6"/><circle cx="188.8" cy="278.4" r="2.2" fill="#aab0a6"/><circle cx="282.3" cy="324.3" r="2.5" fill="#aab0a6"/><circle cx="169.8" cy="244.5" r="1.8" fill="#aab0a6"/><circle cx="169.0" cy="327.0" r="2.4" fill="#aab0a6"/><circle cx="295.6" cy="201.8" r="2.5" fill="#aab0a6"/><circle cx="356.3" cy="352.3" r="2.6" fill="#aab0a6"/><circle cx="287.3" cy="295.3" r="1.9" fill="#aab0a6"/><circle cx="183.1" cy="197.4" r="1.9" fill="#aab0a6"/><circle cx="261.0" cy="204.7" r="2.6" fill="#aab0a6"/><circle cx="189.9" cy="234.4" r="1.8" fill="#aab0a6"/><circle cx="156.3" cy="270.6" r="2.7" fill="#aab0a6"/><circle cx="242.5" cy="332.3" r="2.6" fill="#aab0a6"/><circle cx="259.0" cy="299.4" r="1.7" fill="#aab0a6"/><circle cx="255.0" cy="303.0" r="1.8" fill="#aab0a6"/><circle cx="246.0" cy="240.3" r="2.4" fill="#aab0a6"/><circle cx="359.5" cy="357.3" r="1.8" fill="#aab0a6"/><circle cx="326.4" cy="310.4" r="1.6" fill="#aab0a6"/><circle cx="216.2" cy="232.4" r="2.5" fill="#aab0a6"/><circle cx="210.7" cy="206.4" r="2.0" fill="#aab0a6"/><circle cx="310.9" cy="260.3" r="2.4" fill="#aab0a6"/><circle cx="327.8" cy="258.0" r="1.7" fill="#aab0a6"/><circle cx="351.2" cy="333.1" r="2.0" fill="#aab0a6"/><circle cx="150.1" cy="229.2" r="2.3" fill="#aab0a6"/><circle cx="341.2" cy="271.6" r="1.5" fill="#aab0a6"/><circle cx="355.9" cy="259.8" r="1.7" fill="#aab0a6"/><circle cx="165.3" cy="297.6" r="2.3" fill="#aab0a6"/><circle cx="313.5" cy="239.0" r="2.6" fill="#aab0a6"/><circle cx="168.3" cy="249.2" r="2.7" fill="#aab0a6"/><circle cx="352.5" cy="318.6" r="1.6" fill="#aab0a6"/><circle cx="174.8" cy="235.2" r="2.1" fill="#aab0a6"/><circle cx="171.2" cy="204.8" r="2.4" fill="#aab0a6"/><circle cx="317.4" cy="224.0" r="2.1" fill="#aab0a6"/><circle cx="267.5" cy="267.9" r="2.3" fill="#aab0a6"/><circle cx="190.0" cy="314.3" r="1.7" fill="#aab0a6"/><circle cx="177.5" cy="299.9" r="1.6" fill="#aab0a6"/><circle cx="174.5" cy="263.6" r="1.6" fill="#aab0a6"/><circle cx="194.7" cy="239.0" r="1.5" fill="#aab0a6"/><circle cx="353.9" cy="326.0" r="2.2" fill="#aab0a6"/><circle cx="213.9" cy="339.2" r="2.1" fill="#aab0a6"/><circle cx="194.2" cy="259.3" r="2.2" fill="#aab0a6"/><circle cx="329.4" cy="299.6" r="1.7" fill="#aab0a6"/><circle cx="171.1" cy="356.3" r="1.7" fill="#aab0a6"/><circle cx="194.8" cy="237.1" r="1.7" fill="#aab0a6"/><circle cx="312.3" cy="248.6" r="2.5" fill="#aab0a6"/><circle cx="212.2" cy="207.0" r="2.7" fill="#aab0a6"/><circle cx="168.9" cy="290.0" r="2.6" fill="#aab0a6"/><circle cx="201.0" cy="293.0" r="1.6" fill="#aab0a6"/><circle cx="228.1" cy="268.9" r="1.6" fill="#aab0a6"/><circle cx="351.4" cy="273.8" r="2.6" fill="#aab0a6"/><circle cx="270.7" cy="336.2" r="2.1" fill="#aab0a6"/><circle cx="188.4" cy="220.1" r="2.4" fill="#aab0a6"/><circle cx="340.8" cy="328.3" r="1.9" fill="#aab0a6"/><circle cx="202.4" cy="225.9" r="2.1" fill="#aab0a6"/><circle cx="305.3" cy="348.3" r="2.1" fill="#aab0a6"/><circle cx="191.3" cy="349.9" r="2.0" fill="#aab0a6"/><circle cx="335.3" cy="293.4" r="2.2" fill="#aab0a6"/><circle cx="238.5" cy="211.9" r="1.5" fill="#aab0a6"/><circle cx="158.1" cy="351.9" r="2.3" fill="#aab0a6"/><circle cx="200.1" cy="309.8" r="2.5" fill="#aab0a6"/><circle cx="204.0" cy="329.3" r="1.7" fill="#aab0a6"/><circle cx="275.3" cy="242.8" r="2.0" fill="#aab0a6"/><circle cx="186.8" cy="312.4" r="2.4" fill="#aab0a6"/><circle cx="164.4" cy="232.2" r="2.0" fill="#aab0a6"/><circle cx="267.5" cy="333.9" r="1.7" fill="#aab0a6"/><circle cx="279.0" cy="240.7" r="1.7" fill="#aab0a6"/><circle cx="342.6" cy="228.2" r="2.1" fill="#aab0a6"/><circle cx="153.5" cy="238.9" r="1.5" fill="#aab0a6"/><circle cx="243.6" cy="204.9" r="2.6" fill="#aab0a6"/><circle cx="187.0" cy="255.1" r="2.5" fill="#aab0a6"/><circle cx="270.2" cy="216.4" r="2.3" fill="#aab0a6"/><circle cx="226.1" cy="340.2" r="2.5" fill="#aab0a6"/><circle cx="355.9" cy="302.1" r="2.3" fill="#aab0a6"/><circle cx="295.2" cy="290.3" r="2.0" fill="#aab0a6"/><circle cx="179.5" cy="200.7" r="2.2" fill="#aab0a6"/><circle cx="153.8" cy="343.4" r="2.1" fill="#aab0a6"/><circle cx="297.2" cy="351.9" r="2.7" fill="#aab0a6"/><circle cx="154.5" cy="298.7" r="2.5" fill="#aab0a6"/><circle cx="251.3" cy="314.1" r="1.8" fill="#aab0a6"/><circle cx="217.0" cy="357.9" r="2.6" fill="#aab0a6"/><circle cx="165.8" cy="284.0" r="2.4" fill="#aab0a6"/><circle cx="304.8" cy="341.7" r="2.4" fill="#aab0a6"/><circle cx="304.8" cy="309.7" r="2.5" fill="#aab0a6"/><circle cx="316.6" cy="344.1" r="2.0" fill="#aab0a6"/><circle cx="223.9" cy="306.7" r="2.6" fill="#aab0a6"/><circle cx="339.2" cy="337.0" r="2.6" fill="#aab0a6"/><circle cx="237.6" cy="323.9" r="2.3" fill="#aab0a6"/><circle cx="331.3" cy="288.4" r="2.4" fill="#aab0a6"/><circle cx="281.2" cy="257.3" r="2.4" fill="#aab0a6"/><circle cx="272.4" cy="294.2" r="2.0" fill="#aab0a6"/><circle cx="166.8" cy="299.2" r="2.4" fill="#aab0a6"/><circle cx="358.6" cy="338.4" r="1.6" fill="#aab0a6"/><circle cx="302.9" cy="258.3" r="1.9" fill="#aab0a6"/><circle cx="304.4" cy="289.7" r="2.1" fill="#aab0a6"/><circle cx="242.5" cy="331.7" r="1.5" fill="#aab0a6"/><circle cx="167.6" cy="317.3" r="1.9" fill="#aab0a6"/><circle cx="156.3" cy="293.0" r="2.3" fill="#aab0a6"/><circle cx="251.0" cy="232.5" r="2.2" fill="#aab0a6"/><circle cx="296.7" cy="276.1" r="1.8" fill="#aab0a6"/><circle cx="279.0" cy="345.0" r="2.6" fill="#aab0a6"/><circle cx="203.7" cy="196.8" r="2.3" fill="#aab0a6"/><circle cx="213.2" cy="305.5" r="1.9" fill="#aab0a6"/><circle cx="192.5" cy="222.6" r="2.3" fill="#aab0a6"/><circle cx="340.2" cy="302.6" r="2.2" fill="#aab0a6"/><circle cx="242.8" cy="340.4" r="2.1" fill="#aab0a6"/><circle cx="218.7" cy="303.5" r="2.0" fill="#aab0a6"/><circle cx="191.7" cy="265.2" r="2.7" fill="#aab0a6"/><circle cx="319.3" cy="344.0" r="2.3" fill="#aab0a6"/><circle cx="334.9" cy="257.7" r="2.3" fill="#aab0a6"/><circle cx="272.5" cy="246.6" r="2.4" fill="#aab0a6"/><circle cx="178.6" cy="275.9" r="2.7" fill="#aab0a6"/><circle cx="325.8" cy="333.3" r="1.5" fill="#aab0a6"/><circle cx="299.4" cy="349.9" r="2.2" fill="#aab0a6"/><circle cx="208.1" cy="222.6" r="2.4" fill="#aab0a6"/><circle cx="244.6" cy="239.9" r="1.8" fill="#aab0a6"/><circle cx="195.0" cy="262.5" r="2.0" fill="#aab0a6"/><circle cx="281.4" cy="275.5" r="1.6" fill="#aab0a6"/><circle cx="216.2" cy="331.8" r="1.7" fill="#aab0a6"/><circle cx="356.2" cy="268.8" r="2.0" fill="#aab0a6"/><circle cx="165.7" cy="200.1" r="1.6" fill="#aab0a6"/><circle cx="333.3" cy="201.8" r="1.8" fill="#aab0a6"/><circle cx="298.8" cy="288.0" r="2.6" fill="#aab0a6"/><circle cx="214.9" cy="324.0" r="2.2" fill="#aab0a6"/><circle cx="154.0" cy="217.1" r="2.1" fill="#aab0a6"/><circle cx="245.5" cy="199.0" r="2.7" fill="#aab0a6"/><circle cx="324.2" cy="233.7" r="2.2" fill="#aab0a6"/><circle cx="179.6" cy="202.7" r="2.7" fill="#aab0a6"/><circle cx="282.1" cy="267.8" r="2.3" fill="#aab0a6"/><circle cx="263.9" cy="160.5" r="2.5" fill="#aab0a6"/><circle cx="194.8" cy="190.8" r="1.6" fill="#aab0a6"/><circle cx="314.7" cy="175.1" r="2.2" fill="#aab0a6"/><circle cx="268.5" cy="177.1" r="2.4" fill="#aab0a6"/><circle cx="201.8" cy="147.8" r="1.6" fill="#aab0a6"/><circle cx="318.8" cy="177.1" r="2.6" fill="#aab0a6"/><circle cx="243.5" cy="160.4" r="1.7" fill="#aab0a6"/><circle cx="263.9" cy="147.0" r="2.1" fill="#aab0a6"/><circle cx="256.6" cy="170.6" r="1.7" fill="#aab0a6"/><circle cx="299.2" cy="174.2" r="2.1" fill="#aab0a6"/><circle cx="349.5" cy="186.3" r="2.2" fill="#aab0a6"/><circle cx="193.3" cy="167.2" r="1.6" fill="#aab0a6"/><circle cx="224.9" cy="149.6" r="2.6" fill="#aab0a6"/><circle cx="238.1" cy="186.0" r="2.0" fill="#aab0a6"/><circle cx="288.9" cy="138.1" r="2.1" fill="#aab0a6"/><circle cx="196.7" cy="174.7" r="2.2" fill="#aab0a6"/><circle cx="218.0" cy="141.4" r="1.9" fill="#aab0a6"/><circle cx="308.3" cy="174.5" r="1.8" fill="#aab0a6"/><circle cx="227.5" cy="176.8" r="2.3" fill="#aab0a6"/><circle cx="254.9" cy="166.8" r="2.2" fill="#aab0a6"/><circle cx="325.7" cy="185.0" r="1.8" fill="#aab0a6"/><circle cx="156.5" cy="192.7" r="2.4" fill="#aab0a6"/><circle cx="269.2" cy="174.1" r="1.9" fill="#aab0a6"/><circle cx="302.2" cy="186.0" r="1.5" fill="#aab0a6"/><circle cx="248.7" cy="129.9" r="1.8" fill="#aab0a6"/><circle cx="213.7" cy="150.9" r="1.6" fill="#aab0a6"/><circle cx="268.8" cy="171.8" r="1.7" fill="#aab0a6"/><circle cx="255.3" cy="192.2" r="2.4" fill="#aab0a6"/><circle cx="326.6" cy="188.6" r="2.0" fill="#aab0a6"/><circle cx="336.1" cy="177.7" r="2.6" fill="#aab0a6"/><circle cx="311.9" cy="173.8" r="2.4" fill="#aab0a6"/><circle cx="195.1" cy="180.1" r="1.6" fill="#aab0a6"/><circle cx="280.6" cy="167.4" r="2.7" fill="#aab0a6"/><circle cx="216.2" cy="163.9" r="2.6" fill="#aab0a6"/><circle cx="214.7" cy="144.3" r="1.6" fill="#aab0a6"/><circle cx="256.6" cy="103.6" r="2.6" fill="#aab0a6"/><circle cx="251.8" cy="142.3" r="2.0" fill="#aab0a6"/><circle cx="327.5" cy="167.9" r="2.1" fill="#aab0a6"/><circle cx="275.9" cy="147.3" r="2.7" fill="#aab0a6"/><circle cx="229.0" cy="151.0" r="1.8" fill="#aab0a6"/><circle cx="255.5" cy="156.9" r="2.1" fill="#aab0a6"/><circle cx="192.9" cy="185.1" r="2.6" fill="#aab0a6"/><circle cx="331.9" cy="180.1" r="2.4" fill="#aab0a6"/><circle cx="206.6" cy="147.4" r="2.1" fill="#aab0a6"/><circle cx="291.4" cy="174.9" r="2.7" fill="#aab0a6"/><circle cx="299.6" cy="145.3" r="2.5" fill="#aab0a6"/><circle cx="280.0" cy="192.2" r="2.2" fill="#aab0a6"/><circle cx="207.2" cy="146.6" r="1.6" fill="#aab0a6"/><circle cx="296.8" cy="175.1" r="2.2" fill="#aab0a6"/><circle cx="295.2" cy="144.1" r="2.0" fill="#aab0a6"/><circle cx="302.0" cy="188.4" r="1.7" fill="#aab0a6"/><circle cx="306.6" cy="153.6" r="1.6" fill="#aab0a6"/><circle cx="167.1" cy="187.3" r="2.1" fill="#aab0a6"/><circle cx="256.2" cy="147.7" r="1.6" fill="#aab0a6"/><circle cx="222.2" cy="151.6" r="2.0" fill="#aab0a6"/><circle cx="199.1" cy="185.1" r="2.3" fill="#aab0a6"/><circle cx="283.4" cy="163.3" r="2.0" fill="#aab0a6"/><circle cx="255.1" cy="133.2" r="1.8" fill="#aab0a6"/><circle cx="257.1" cy="107.9" r="2.2" fill="#aab0a6"/><circle cx="316.0" cy="192.7" r="2.0" fill="#aab0a6"/><circle cx="214.6" cy="172.3" r="2.4" fill="#aab0a6"/><circle cx="286.9" cy="127.2" r="2.1" fill="#aab0a6"/><circle cx="289.7" cy="133.0" r="2.7" fill="#aab0a6"/><circle cx="248.8" cy="121.9" r="2.6" fill="#aab0a6"/><circle cx="229.4" cy="144.0" r="2.4" fill="#aab0a6"/><circle cx="223.4" cy="175.2" r="1.8" fill="#aab0a6"/><circle cx="307.2" cy="151.3" r="1.6" fill="#aab0a6"/><circle cx="272.3" cy="153.7" r="2.6" fill="#aab0a6"/><circle cx="277.9" cy="179.0" r="2.4" fill="#aab0a6"/><circle cx="259.2" cy="131.9" r="2.2" fill="#aab0a6"/></g>
-<g stroke="#8daf14" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="540" y1="248" x2="660" y2="248"/><polyline points="630,222 662,248 630,274"/></g>
-<g stroke="#1a1a1a" stroke-width="2.4" fill="none" stroke-linejoin="round"><rect x="840" y="200" width="210" height="158"/><polyline points="840,200 945,108 1050,200"/><line x1="912" y1="358" x2="912" y2="280"/><line x1="912" y1="280" x2="978" y2="280"/><line x1="978" y1="280" x2="978" y2="358"/></g>
-<g stroke="#8daf14" stroke-width="2.4" fill="none" stroke-linejoin="round"><polyline points="840,200 945,108 1050,200"/></g>
-<text x="255" y="406" text-anchor="middle" font-family="monospace" font-size="15" letter-spacing="2" fill="#6b7280">NUBE DE PUNTOS</text>
-<text x="945" y="406" text-anchor="middle" font-family="monospace" font-size="15" letter-spacing="2" fill="#1a1a1a">MODELO BIM</text>
-</svg></div>
-  <div class="p-7"><p class="text-xs font-mono font-bold uppercase tracking-widest text-brandGreen">BIM</p>
-    <h3 class="font-display font-bold text-xl mt-2 text-brandDark leading-tight">Cómo convertir una nube de puntos en un modelo BIM ejecutable</h3>
-    <p class="text-gray-500 text-sm mt-3 leading-relaxed">Convertir una nube de puntos a modelo BIM no es solo procesar datos: es cerrar la cadena Scan-to-BIM entre la captura y la entrega</p>
-    <p class="mt-5 text-xs font-mono font-bold uppercase tracking-widest text-brandDark">Leer artículo →</p></div></a>
-</div></section>
+        <!-- Art 04 -->
+        <a href="04-articulo-interferencias-bim.html" class="js-reveal card-hover block bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+          <div class="art-cover" style="background: linear-gradient(135deg, #f5f5f5 0%, #ebebeb 100%);"></div>
+          <div class="p-5">
+            <p class="text-xs font-mono font-bold uppercase tracking-widest text-brandGreen">Coordinación</p>
+            <h3 class="font-display font-bold text-lg mt-2 text-brandDark leading-tight">Interferencias BIM: prevenir clashes</h3>
+            <p class="text-gray-500 text-sm mt-2 leading-relaxed">Cómo evitar que la arquitectura choque con estructura e instalaciones</p>
+            <p class="mt-4 text-xs font-mono font-bold uppercase tracking-widest text-brandDark">Leer →</p>
+          </div>
+        </a>
+
+        <!-- Art 06 -->
+        <a href="06-articulo-guia-nube-bim.html" class="js-reveal card-hover block bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+          <div class="art-cover" style="background: linear-gradient(135deg, #f9f9f9 0%, #efefef 100%);"></div>
+          <div class="p-5">
+            <p class="text-xs font-mono font-bold uppercase tracking-widest text-brandGreen">Guía</p>
+            <h3 class="font-display font-bold text-lg mt-2 text-brandDark leading-tight">Guía de nube de puntos a BIM</h3>
+            <p class="text-gray-500 text-sm mt-2 leading-relaxed">Paso a paso: desde captura hasta modelo LOD 300 listo para obra</p>
+            <p class="mt-4 text-xs font-mono font-bold uppercase tracking-widest text-brandDark">Leer →</p>
+          </div>
+        </a>
+
+        <!-- Art 07 -->
+        <a href="07-articulo-asbuilt-bim.html" class="js-reveal card-hover block bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+          <div class="art-cover" style="background: linear-gradient(135deg, #f3f3f3 0%, #e9e9e9 100%);"></div>
+          <div class="p-5">
+            <p class="text-xs font-mono font-bold uppercase tracking-widest text-brandGreen">Documentación</p>
+            <h3 class="font-display font-bold text-lg mt-2 text-brandDark leading-tight">As-Built en Scan-to-BIM</h3>
+            <p class="text-gray-500 text-sm mt-2 leading-relaxed">Qué es y cuándo necesitás un modelo as-built de edificios existentes</p>
+            <p class="mt-4 text-xs font-mono font-bold uppercase tracking-widest text-brandDark">Leer →</p>
+          </div>
+        </a>
+
+        <!-- Art 10 -->
+        <a href="10-articulo-auditoria-bim.html" class="js-reveal card-hover block bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+          <div class="art-cover" style="background: linear-gradient(135deg, #f6f6f6 0%, #ececec 100%);"></div>
+          <div class="p-5">
+            <p class="text-xs font-mono font-bold uppercase tracking-widest text-brandGreen">Auditoría</p>
+            <h3 class="font-display font-bold text-lg mt-2 text-brandDark leading-tight">Auditoría de modelos BIM</h3>
+            <p class="text-gray-500 text-sm mt-2 leading-relaxed">Cómo validar que un modelo BIM es correcto antes de usar en obra</p>
+            <p class="mt-4 text-xs font-mono font-bold uppercase tracking-widest text-brandDark">Leer →</p>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- REVESTIMIENTOS -->
+    <div>
+      <h2 class="text-2xl font-display font-bold text-brandDark mb-8 border-l-4 border-brandGreen pl-4">Revestimientos Metálicos</h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Art 09 -->
+        <a href="09-articulo-gestion-revestimientos.html" class="js-reveal card-hover block bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+          <div class="art-cover" style="background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);"></div>
+          <div class="p-5">
+            <p class="text-xs font-mono font-bold uppercase tracking-widest text-brandGreen">Gestión</p>
+            <h3 class="font-display font-bold text-lg mt-2 text-brandDark leading-tight">Gestión de revestimientos en obra</h3>
+            <p class="text-gray-500 text-sm mt-2 leading-relaxed">Plazos, inspección técnica y control de calidad en fachada metálica</p>
+            <p class="mt-4 text-xs font-mono font-bold uppercase tracking-widest text-brandDark">Leer →</p>
+          </div>
+        </a>
+
+        <!-- Art 11 -->
+        <a href="11-articulo-proveedor-revestimiento.html" class="js-reveal card-hover block bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+          <div class="art-cover" style="background: linear-gradient(135deg, #f5f5f5 0%, #efefef 100%);"></div>
+          <div class="p-5">
+            <p class="text-xs font-mono font-bold uppercase tracking-widest text-brandGreen">Proveedor</p>
+            <h3 class="font-display font-bold text-lg mt-2 text-brandDark leading-tight">Elegir proveedor de revestimiento</h3>
+            <p class="text-gray-500 text-sm mt-2 leading-relaxed">Criterios técnicos para seleccionar metalúrgica o distribuidor WPC</p>
+            <p class="mt-4 text-xs font-mono font-bold uppercase tracking-widest text-brandDark">Leer →</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
 </main>
-    <footer class="py-16 border-t border-gray-100 bg-white">
-        <div class="max-w-7xl mx-auto px-6">
 
-            <div class="grid md:grid-cols-3 gap-12 mb-12">
-
-                <div>
-                    <div class="flex items-center gap-3 mb-4">
-                        <img src="assets/img/logo_3r_t.png" class="h-9 w-auto" alt="Logo 3R">
-                        <span class="font-display font-bold text-base tracking-tighter uppercase">3R. Arquitectura</span>
-                    </div>
-                    <p class="text-sm text-gray-500 italic leading-relaxed">Diseñamos sensaciones creando tus espacios.</p>
+<footer class="py-16 border-t border-gray-100 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid md:grid-cols-3 gap-12 mb-12">
+            <div>
+                <div class="flex items-center gap-3 mb-4">
+                    <img src="assets/img/logo_3r_t.png" class="h-9 w-auto" alt="Logo 3R">
+                    <span class="font-display font-bold text-base tracking-tighter uppercase">3R. Arquitectura</span>
                 </div>
-
-                <div>
-                    <p class="text-xs font-mono font-bold uppercase tracking-widest text-gray-400 mb-4">Navegación</p>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="/#inicio"    class="nav-link text-gray-600 hover:text-brandGreen">Inicio</a></li>
-                        <li><a href="/#servicios" class="nav-link text-gray-600 hover:text-brandGreen">Servicios</a></li>
-                        <li><a href="/#proyectos" class="nav-link text-gray-600 hover:text-brandGreen">Proyectos</a></li>
-                        <li><a href="/guia.html" class="nav-link text-gray-600 hover:text-brandGreen">Mi Guía</a></li>
-                        <li><a href="/articulos.html" class="nav-link text-gray-600 hover:text-brandGreen">Saber más</a></li>
-                        <li><a href="https://3rarquitectura.blogspot.com" target="_blank"
-                               class="nav-link text-gray-600 hover:text-brandGreen">Blog</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <p class="text-xs font-mono font-bold uppercase tracking-widest text-gray-400 mb-4">Contacto</p>
-                    <ul class="space-y-2 text-sm text-gray-600">
-                        <li>
-                            <a href="mailto:contacto@3rarq.com"
-                               class="nav-link hover:text-brandGreen">
-                                contacto@3rarq.com
-                            </a>
-                        </li>
-                        <li>
-                            <a href="https://wa.me/59896699876" target="_blank"
-                               class="nav-link hover:text-brandGreen">
-                                +598 96 699 876
-                            </a>
-                        </li>
-                        <li class="pt-3 flex items-center gap-4">
-                            <a href="https://www.instagram.com/3r.arquitectura/" target="_blank"
-                               class="icon-hover text-gray-500 hover:text-brandGreen" aria-label="Instagram @3r.arquitectura">
-                                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="2" y="2" width="20" height="20" rx="5"/>
-                                    <circle cx="12" cy="12" r="4"/>
-                                    <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/>
-                                </svg>
-                            </a>
-                            <a href="https://www.linkedin.com/company/3rarquitectura/" target="_blank"
-                               class="icon-hover text-gray-500 hover:text-brandGreen" aria-label="LinkedIn 3rarquitectura">
-                                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/>
-                                    <rect x="2" y="9" width="4" height="12"/>
-                                    <circle cx="4" cy="4" r="2"/>
-                                </svg>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
+                <p class="text-sm text-gray-500 italic leading-relaxed">Diseñamos sensaciones creando tus espacios.</p>
             </div>
-
-            <div class="border-t border-gray-100 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-400 font-mono">
-                <p>© 2026 3R.Arquitectura · Montevideo, Uruguay</p>
-                <p>Arq. Rocío Rojas Romero</p>
+            <div>
+                <p class="text-xs font-mono font-bold uppercase tracking-widest text-gray-400 mb-4">Navegación</p>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="/" class="text-gray-600 hover:text-brandGreen transition-colors">Inicio</a></li>
+                    <li><a href="/consultoria-bim.html" class="text-gray-600 hover:text-brandGreen transition-colors">BIM</a></li>
+                    <li><a href="/asesoria-reformas.html" class="text-gray-600 hover:text-brandGreen transition-colors">Reformas</a></li>
+                    <li><a href="/fachadas-metalicas.html" class="text-gray-600 hover:text-brandGreen transition-colors">Revestimientos</a></li>
+                </ul>
             </div>
-
+            <div>
+                <p class="text-xs font-mono font-bold uppercase tracking-widest text-gray-400 mb-4">Contacto</p>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="mailto:contacto@3rarq.com" class="text-gray-600 hover:text-brandGreen transition-colors">contacto@3rarq.com</a></li>
+                    <li><a href="tel:+59896699876" class="text-gray-600 hover:text-brandGreen transition-colors">+598 96 699 876</a></li>
+                    <li><a href="https://wa.me/59896699876" target="_blank" class="text-gray-600 hover:text-brandGreen transition-colors">WhatsApp</a></li>
+                </ul>
+            </div>
         </div>
-    </footer>
+        <div class="border-t border-gray-100 pt-8 text-center">
+            <p class="text-xs text-gray-500">© 2026 3R. Arquitectura. Todos los derechos reservados.</p>
+        </div>
+    </div>
+</footer>
+
 <script>
-(function(){var t=document.getElementById('mob-toggle'),m=document.getElementById('mobile-menu');if(!t||!m)return;
-function o(){m.classList.add('open');document.body.classList.add('mob-menu-open');t.setAttribute('aria-expanded','true');}
-function c(){m.classList.remove('open');document.body.classList.remove('mob-menu-open');t.setAttribute('aria-expanded','false');}
-t.addEventListener('click',function(e){e.stopPropagation();m.classList.contains('open')?c():o();});
-m.querySelectorAll('.mob-link').forEach(function(l){l.addEventListener('click',c);});
-document.addEventListener('click',function(e){if(!m.contains(e.target)&&!t.contains(e.target))c();});
-document.addEventListener('keydown',function(e){if(e.key==='Escape')c();});
-window.addEventListener('resize',function(){if(window.innerWidth>=768)c();});})();
-var ro=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in-view');ro.unobserve(e.target);}});},{threshold:0.1,rootMargin:'0px 0px -48px 0px'});
-document.querySelectorAll('.js-reveal').forEach(function(el){ro.observe(el);});
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('in-view');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.js-reveal').forEach(el => observer.observe(el));
 </script>
 </body>
 </html>
