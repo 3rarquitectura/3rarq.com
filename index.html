@@ -429,6 +429,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             max-width: 100%;
             max-height: calc(100vh - 230px);
             width: auto; height: auto;
+            object-fit: contain;
             border-radius: 6px;
             background: #000;
             outline: none;
@@ -1896,11 +1897,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 if (item.type === 'video') {
                     lbImg.style.display   = 'none';
                     lbVideo.style.display = 'block';
+                    lbVideo.removeAttribute('poster');
                     lbVideo.src    = item.src;
-                    lbVideo.poster = poster;
                     lbVideo.load();
                     if (!reduced) {
-                        lbVideo.play().catch(function () {});
+                        var tryPlay = function () { lbVideo.play().catch(function () {}); };
+                        tryPlay();
+                        lbVideo.addEventListener('loadeddata', tryPlay, { once: true });
                     }
                 } else {
                     pauseVideo();
