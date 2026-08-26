@@ -7,6 +7,12 @@
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
+  <url>
+    <loc>https://3rarq.com/articulos.html</loc>
+    <lastmod>2026-08-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
 
   <!-- Páginas de Servicios -->
   <url>
@@ -53,6 +59,18 @@
     <changefreq>never</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://3rarq.com/13-articulo-diseno-interior-local-comercial.html</loc>
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://3rarq.com/16-articulo-atraso-apertura-consultorio.html</loc>
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.8</priority>
+  </url>
 
   <!-- Artículos — BIM -->
   <url>
@@ -85,6 +103,24 @@
     <changefreq>never</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://3rarq.com/12-articulo-externalizar-bim.html</loc>
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://3rarq.com/15-articulo-deteccion-interferencias-bim.html</loc>
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://3rarq.com/19-articulo-nube-puntos-bim-agrimensura.html</loc>
+    <lastmod>2026-08-13</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.8</priority>
+  </url>
 
   <!-- Artículos — REVESTIMIENTOS -->
   <url>
@@ -98,6 +134,50 @@
     <lastmod>2026-07-21</lastmod>
     <changefreq>never</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://3rarq.com/14-articulo-instalacion-revestimiento-metalico.html</loc>
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://3rarq.com/17-articulo-plazos-revestimiento-fachada.html</loc>
+    <lastmod>2026-08-13</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://3rarq.com/18-articulo-proveedor-revestimiento-no-estandar.html</loc>
+    <lastmod>2026-08-13</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Artículos — DISEÑO DE ESPACIOS -->
+  <url>
+    <loc>https://3rarq.com/20-articulo-bano-pequeno-diseno.html</loc>
+    <lastmod>2026-08-13</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://3rarq.com/21-articulo-diseno-cuarto-funcional.html</loc>
+    <lastmod>2026-08-13</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://3rarq.com/22-articulo-decoracion-paredes-diseno.html</loc>
+    <lastmod>2026-08-13</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://3rarq.com/23-articulo-decoracion-living-diseno.html</loc>
+    <lastmod>2026-08-13</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.7</priority>
   </url>
 
   <!-- Páginas estáticas adicionales (si existen) -->
