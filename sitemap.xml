@@ -9,7 +9,7 @@
   </url>
   <url>
     <loc>https://3rarq.com/articulos.html</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -37,48 +37,42 @@
   <!-- Artículos — ASESORÍA -->
   <url>
     <loc>https://3rarq.com/01-articulo-reforma-local-comercial.html</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>never</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://3rarq.com/03-articulo-diseno-airbnb.html</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>never</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://3rarq.com/05-articulo-reforma-presupuesto.html</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>never</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://3rarq.com/08-articulo-comparar-presupuestos.html</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>never</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://3rarq.com/13-articulo-diseno-interior-local-comercial.html</loc>
-    <lastmod>2026-07-22</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>never</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://3rarq.com/16-articulo-atraso-apertura-consultorio.html</loc>
-    <lastmod>2026-07-22</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>never</changefreq>
     <priority>0.8</priority>
   </url>
 
   <!-- Artículos — BIM -->
-  <url>
-    <loc>https://3rarq.com/02-articulo-nube-puntos-bim.html</loc>
-    <lastmod>2026-07-21</lastmod>
-    <changefreq>never</changefreq>
-    <priority>0.8</priority>
-  </url>
   <url>
     <loc>https://3rarq.com/04-articulo-interferencias-bim.html</loc>
     <lastmod>2026-07-21</lastmod>
@@ -86,38 +80,32 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://3rarq.com/06-articulo-guia-nube-bim.html</loc>
-    <lastmod>2026-07-21</lastmod>
-    <changefreq>never</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://3rarq.com/07-articulo-asbuilt-bim.html</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>never</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://3rarq.com/10-articulo-auditoria-bim.html</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>never</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://3rarq.com/12-articulo-externalizar-bim.html</loc>
-    <lastmod>2026-07-22</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>never</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://3rarq.com/15-articulo-deteccion-interferencias-bim.html</loc>
-    <lastmod>2026-07-22</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>never</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://3rarq.com/19-articulo-nube-puntos-bim-agrimensura.html</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>never</changefreq>
     <priority>0.8</priority>
   </url>
@@ -125,31 +113,31 @@
   <!-- Artículos — REVESTIMIENTOS -->
   <url>
     <loc>https://3rarq.com/09-articulo-gestion-revestimientos.html</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>never</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://3rarq.com/11-articulo-proveedor-revestimiento.html</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>never</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://3rarq.com/14-articulo-instalacion-revestimiento-metalico.html</loc>
-    <lastmod>2026-07-22</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>never</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://3rarq.com/17-articulo-plazos-revestimiento-fachada.html</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>never</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://3rarq.com/18-articulo-proveedor-revestimiento-no-estandar.html</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>never</changefreq>
     <priority>0.8</priority>
   </url>
@@ -157,25 +145,25 @@
   <!-- Artículos — DISEÑO DE ESPACIOS -->
   <url>
     <loc>https://3rarq.com/20-articulo-bano-pequeno-diseno.html</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>never</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://3rarq.com/21-articulo-diseno-cuarto-funcional.html</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>never</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://3rarq.com/22-articulo-decoracion-paredes-diseno.html</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>never</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://3rarq.com/23-articulo-decoracion-living-diseno.html</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>never</changefreq>
     <priority>0.7</priority>
   </url>
@@ -196,5 +184,35 @@
   <url>
     <loc>https://3rarq.com/desafio-45.html</loc>
     <lastmod>2026-10-27</lastmod>
+  </url>
+  <url>
+    <loc>https://3rarq.com/24-articulo-revestimiento-metalico-paisajismo.html</loc>
+    <lastmod>2026-11-01</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://3rarq.com/25-articulo-documentacion-cotizar-obra-local-comercial.html</loc>
+    <lastmod>2026-11-01</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://3rarq.com/26-articulo-modelo-as-built-gestion-edificios.html</loc>
+    <lastmod>2026-11-01</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://3rarq.com/27-articulo-reforma-bano-completa-o-terminaciones.html</loc>
+    <lastmod>2026-11-01</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://3rarq.com/28-articulo-detalle-constructivo-revestimiento-metalico.html</loc>
+    <lastmod>2026-11-01</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>
