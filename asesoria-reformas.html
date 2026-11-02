@@ -1184,7 +1184,7 @@ document.querySelectorAll('.js-reveal').forEach(function(el){revealObserver.obse
       var json=await res.json();
       if(json.ok){form.classList.add('hidden');formSuccess.classList.remove('hidden');}
       else{throw new Error('Error');}
-    }catch(err){btn.disabled=false;btn.textContent='Enviar solicitud →';alert('Hubo un problema al enviar. Escribinos a contacto@3rarq.com o por WhatsApp.');console.error(err);}
+    }catch(err){btn.disabled=false;btn.textContent='Enviar solicitud →';alert('Hubo un problema al enviar. Escríbenos a contacto@3rarq.com o por WhatsApp.');console.error(err);}
   });
 })();
 </script>
